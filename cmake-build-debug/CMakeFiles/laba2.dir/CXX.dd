@@ -1,0 +1,11 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles/laba2.dir/main.cpp.obj: dyndep
+
+build CMakeFiles/laba2.dir/interface.cpp.obj: dyndep
+
+build CMakeFiles/laba2.dir/test.cpp.obj: dyndep
+
+build CMakeFiles/laba2.dir/smart_pointers/functionalTests.cpp.obj: dyndep
+
+build CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj: dyndep
+
