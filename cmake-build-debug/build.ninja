@@ -94,21 +94,6 @@ build CMakeFiles/laba2.dir/test.cpp.obj: CXX_COMPILER__laba2_scanned_Debug C$:/U
   OBJECT_FILE_DIR = CMakeFiles\laba2.dir
   dyndep = CMakeFiles/laba2.dir/CXX.dd
 
-build CMakeFiles/laba2.dir/smart_pointers/functionalTests.cpp.obj.ddi: CXX_SCAN__laba2_Debug C$:/Users/makar/CLionProjects/laba2/smart_pointers/functionalTests.cpp || cmake_object_order_depends_target_laba2
-  DEP_FILE = CMakeFiles\laba2.dir\smart_pointers\functionalTests.cpp.obj.ddi.d
-  DYNDEP_INTERMEDIATE_FILE = CMakeFiles\laba2.dir\smart_pointers\functionalTests.cpp.obj.ddi
-  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
-  OBJ_FILE = CMakeFiles\laba2.dir\smart_pointers\functionalTests.cpp.obj
-  PREPROCESSED_OUTPUT_FILE = CMakeFiles\laba2.dir\smart_pointers\functionalTests.cpp.obj.ddi.i
-
-build CMakeFiles/laba2.dir/smart_pointers/functionalTests.cpp.obj: CXX_COMPILER__laba2_scanned_Debug C$:/Users/makar/CLionProjects/laba2/smart_pointers/functionalTests.cpp | CMakeFiles/laba2.dir/smart_pointers/functionalTests.cpp.obj.modmap || cmake_object_order_depends_target_laba2 CMakeFiles/laba2.dir/CXX.dd
-  DEP_FILE = CMakeFiles\laba2.dir\smart_pointers\functionalTests.cpp.obj.d
-  DYNDEP_MODULE_MAP_FILE = CMakeFiles\laba2.dir\smart_pointers\functionalTests.cpp.obj.modmap
-  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\laba2.dir
-  OBJECT_FILE_DIR = CMakeFiles\laba2.dir\smart_pointers
-  dyndep = CMakeFiles/laba2.dir/CXX.dd
-
 build CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj.ddi: CXX_SCAN__laba2_Debug C$:/Users/makar/CLionProjects/laba2/smart_pointers/Tests.cpp || cmake_object_order_depends_target_laba2
   DEP_FILE = CMakeFiles\laba2.dir\smart_pointers\Tests.cpp.obj.ddi.d
   DYNDEP_INTERMEDIATE_FILE = CMakeFiles\laba2.dir\smart_pointers\Tests.cpp.obj.ddi
@@ -124,7 +109,7 @@ build CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj: CXX_COMPILER__laba2_sca
   OBJECT_FILE_DIR = CMakeFiles\laba2.dir\smart_pointers
   dyndep = CMakeFiles/laba2.dir/CXX.dd
 
-build CMakeFiles/laba2.dir/CXX.dd | C$:/Users/makar/CLionProjects/laba2/cmake-build-debug/CMakeFiles/laba2.dir/CXXModules.json CMakeFiles/laba2.dir/main.cpp.obj.modmap CMakeFiles/laba2.dir/interface.cpp.obj.modmap CMakeFiles/laba2.dir/test.cpp.obj.modmap CMakeFiles/laba2.dir/smart_pointers/functionalTests.cpp.obj.modmap CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj.modmap: CXX_DYNDEP__laba2_Debug CMakeFiles/laba2.dir/main.cpp.obj.ddi CMakeFiles/laba2.dir/interface.cpp.obj.ddi CMakeFiles/laba2.dir/test.cpp.obj.ddi CMakeFiles/laba2.dir/smart_pointers/functionalTests.cpp.obj.ddi CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj.ddi | C$:/Users/makar/CLionProjects/laba2/cmake-build-debug/CMakeFiles/laba2.dir/CXXDependInfo.json
+build CMakeFiles/laba2.dir/CXX.dd | C$:/Users/makar/CLionProjects/laba2/cmake-build-debug/CMakeFiles/laba2.dir/CXXModules.json CMakeFiles/laba2.dir/main.cpp.obj.modmap CMakeFiles/laba2.dir/interface.cpp.obj.modmap CMakeFiles/laba2.dir/test.cpp.obj.modmap CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj.modmap: CXX_DYNDEP__laba2_Debug CMakeFiles/laba2.dir/main.cpp.obj.ddi CMakeFiles/laba2.dir/interface.cpp.obj.ddi CMakeFiles/laba2.dir/test.cpp.obj.ddi CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj.ddi | C$:/Users/makar/CLionProjects/laba2/cmake-build-debug/CMakeFiles/laba2.dir/CXXDependInfo.json
 
 
 # =============================================================================
@@ -134,7 +119,7 @@ build CMakeFiles/laba2.dir/CXX.dd | C$:/Users/makar/CLionProjects/laba2/cmake-bu
 #############################################
 # Link the executable laba2.exe
 
-build laba2.exe: CXX_EXECUTABLE_LINKER__laba2_Debug CMakeFiles/laba2.dir/main.cpp.obj CMakeFiles/laba2.dir/interface.cpp.obj CMakeFiles/laba2.dir/test.cpp.obj CMakeFiles/laba2.dir/smart_pointers/functionalTests.cpp.obj CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj
+build laba2.exe: CXX_EXECUTABLE_LINKER__laba2_Debug CMakeFiles/laba2.dir/main.cpp.obj CMakeFiles/laba2.dir/interface.cpp.obj CMakeFiles/laba2.dir/test.cpp.obj CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\laba2.dir

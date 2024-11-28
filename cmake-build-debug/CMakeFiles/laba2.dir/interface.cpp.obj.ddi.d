@@ -238,12 +238,13 @@ CMakeFiles\laba2.dir\interface.cpp.obj.ddi: \
  C:/mingw64/include/c++/14.2.0/condition_variable \
  C:/mingw64/include/c++/14.2.0/bits/atomic_futex.h \
  C:/mingw64/include/c++/14.2.0/bits/std_function.h \
- C:/Users/makar/CLionProjects/laba2/test.h \
+ C:/Users/makar/CLionProjects/laba2/BubbleSorter.h \
+ C:/Users/makar/CLionProjects/laba2/ISorter.h \
  C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h \
+ C:/Users/makar/CLionProjects/laba2/test.h \
  C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h \
  C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h \
  C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h \
- C:/Users/makar/CLionProjects/laba2/smart_pointers/sharedPointer.h \
  C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.tpp \
  C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.tpp \
  C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h \
@@ -252,7 +253,7 @@ CMakeFiles\laba2.dir\interface.cpp.obj.ddi: \
  C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedList.tpp \
  C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.tpp \
  C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.h \
- C:/Users/makar/CLionProjects/laba2/ISorter.h \
  C:/Users/makar/CLionProjects/laba2/HeapSorter.h \
  C:/Users/makar/CLionProjects/laba2/MergeSorter.h \
+ C:/Users/makar/CLionProjects/laba2/CountingSorter.h \
  C:/Users/makar/CLionProjects/laba2/smart_pointers/uniquePointer.h

@@ -7,6 +7,16 @@ add_executable(laba2 main.cpp
         interface.cpp
         test.cpp
         ${DATA_STRUCTURES}
-        smart_pointers/functionalTests.cpp
         smart_pointers/Tests.cpp
-        BubbleSorter.h)
+        BubbleSorter.h
+        DataStructures/ArraySequence.tpp
+        DataStructures/DynamicArray.tpp
+        DataStructures/ImmutableArraySequence.tpp
+        DataStructures/LinkedList.tpp
+        DataStructures/ListSequence.tpp
+        DataStructures/LinkedListSmart.h
+        DataStructures/ListSequence.h
+        DataStructures/DynamicArraySmart.h
+        DataStructures/ArraySequence.h
+        DataStructures/ImmutableSequence.h
+        CountingSorter.h)

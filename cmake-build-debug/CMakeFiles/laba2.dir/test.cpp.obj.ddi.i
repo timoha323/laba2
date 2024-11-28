@@ -103586,139 +103586,141 @@ template<class T>
 class Sequence {
 public:
     virtual T GetFirst() const = 0;
+
     virtual T GetLast() const = 0;
+
     virtual T Get(int index) const = 0;
+
     virtual Sequence<T> *GetSubsequence(int startIndex, int endIndex) const = 0;
+
     virtual int GetLength() const = 0;
+
     virtual void Append(const T &item) = 0;
+
     virtual void Prepend(const T &item) = 0;
+
     virtual void InsertAt(const T &item, int index) = 0;
+
     virtual void Set(int index, const T &item) = 0;
+
     virtual Sequence<T> *Concat(Sequence<T> *list) const = 0;
+
     virtual ~Sequence() {}
 };
 # 8 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 1
-
+# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArraySmart.h" 1
 
 
 
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h" 1
-# 6 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 2
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 1
-
-
-
-
-# 1 "C:/Users/makar/CLionProjects/laba2/smart_pointers/sharedPointer.h" 1
+# 5 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArraySmart.h" 2
+# 1 "C:/Users/makar/CLionProjects/laba2/smart_pointers/uniquePointer.h" 1
        
 
-template<typename T>
-class SharedPointer {
+template <typename T>
+class UniquePtr {
 private:
     T* ptr;
-    size_t *referenceCount;
-
-    void clean(){
-        if (referenceCount && --(*referenceCount) == 0) {
-            delete ptr;
-            delete referenceCount;
-        }
-    }
 
 public:
-    explicit SharedPointer(T *p = nullptr) : ptr(p), referenceCount(new size_t(1)) {}
 
-    SharedPointer(const SharedPointer &other)
-            : ptr(other.ptr), referenceCount(other.referenceCount) {
-        if (referenceCount) {
-            ++(*referenceCount);
-        }
+    UniquePtr() : ptr(nullptr) {}
+
+    explicit UniquePtr(T* p) : ptr(p) {}
+
+    UniquePtr(const UniquePtr<T>&) = delete;
+
+    UniquePtr& operator=(const UniquePtr<T>&) = delete;
+
+    UniquePtr(UniquePtr<T>&& other) noexcept : ptr(other.ptr) {
+        other.ptr = nullptr;
     }
 
-    SharedPointer &operator=(const SharedPointer &other) {
+    UniquePtr& operator=(UniquePtr<T>&& other) noexcept {
         if (this != &other) {
-            clean();
+            delete ptr;
             ptr = other.ptr;
-            referenceCount = other.referenceCount;
-            if (referenceCount) {
-                ++(*referenceCount);
-            }
+            other.ptr = nullptr;
         }
         return *this;
     }
-    ~SharedPointer() {
-        clean();
+
+    ~UniquePtr() {
+        delete ptr;
     }
 
-    T &operator*() const { return *ptr; }
-    T *operator->() const { return ptr; }
+    T& operator*() const {
+        return *ptr;
+    }
 
-    size_t use_count() const { return referenceCount ? *referenceCount : 0; }
+    T* operator->() const {
+        return ptr;
+    }
 
-    void reset(T *p = nullptr) {
-        clean();
+    void reset(T* p = nullptr) {
+        delete ptr;
         ptr = p;
-        referenceCount = new size_t(1);
     }
 
-    T getRefCount() const {
-        return referenceCount ? *referenceCount : 0;
+    T *release() {
+        T *temp = ptr;
+        ptr = nullptr;
+        return temp;
     }
 
-    bool null() const {
+    T* get() const {
+        return ptr;
+    }
+
+    bool isNull() const {
         return ptr == nullptr;
     }
 };
 
-template<typename T>
-class SharedPointer<T[]> {
-private:
-    T* ptr;
-    size_t *referenceCount;
 
-    void clean(){
-        if (referenceCount && --(*referenceCount) == 0) {
-            delete[] ptr;
-            delete referenceCount;
-        }
-    }
+template<typename T>
+class UniquePtr<T[]> {
+private:
+    T *ptr;
 
 public:
-    explicit SharedPointer(T *p = nullptr) : ptr(p), referenceCount(new size_t(1)) {}
-
-    SharedPointer(const SharedPointer &other)
-            : ptr(other.ptr), referenceCount(other.referenceCount) {
-        if (referenceCount) {
-            ++(*referenceCount);
-        }
+    explicit UniquePtr(T *p = nullptr) : ptr(p) {}
+    ~UniquePtr() {
+        delete[] ptr;
     }
 
-    SharedPointer &operator=(const SharedPointer &other) {
+    UniquePtr(const UniquePtr &) = delete;
+    UniquePtr &operator=(const UniquePtr &) = delete;
+
+    UniquePtr(UniquePtr &&other) noexcept : ptr(other.ptr) {
+        other.ptr = nullptr;
+    }
+
+    UniquePtr &operator=(UniquePtr &&other) noexcept {
         if (this != &other) {
-            clean();
+            delete[] ptr;
             ptr = other.ptr;
-            referenceCount = other.referenceCount;
-            if (referenceCount) {
-                ++(*referenceCount);
-            }
+            other.ptr = nullptr;
         }
         return *this;
-    }
-    ~SharedPointer() {
-        clean();
     }
 
     T &operator*() const { return *ptr; }
     T *operator->() const { return ptr; }
-
-    size_t use_count() const { return referenceCount ? *referenceCount : 0; }
+    T &operator[]() const { return (*ptr)[]; }
 
     void reset(T *p = nullptr) {
-        clean();
+        delete[] ptr;
         ptr = p;
-        referenceCount = new size_t(1);
     }
+
+    T *release() {
+        T *temp = ptr;
+        ptr = nullptr;
+        return temp;
+    }
+
+    T* get() const { return ptr; }
 
     bool null() const {
         return ptr == nullptr;
@@ -103730,308 +103732,493 @@ public:
     T& operator[](size_t i) {
         return ptr[i];
     }
+};
+# 6 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArraySmart.h" 2
+
+
+
+
+
+
+template <typename T>
+class DynamicArraySmart : public Sequence<T> {
+private:
+    UniquePtr<T[]> data;
+    int capacity;
+    int length;
+
+    void resize(int newCapacity) {
+        UniquePtr<T[]> newData(new T[newCapacity]);
+        for (int i = 0; i < length; ++i) {
+            newData[i] = std::move(data[i]);
+        }
+        data = std::move(newData);
+        capacity = newCapacity;
+    }
+
+public:
+    DynamicArraySmart() : data(nullptr), capacity(0), length(0) {}
+
+    DynamicArraySmart(const T* inputData, int size) : data(nullptr), capacity(size), length(size) {
+        if (size > 0) {
+            data.reset(new T[size]);
+            for (int i = 0; i < size; ++i) {
+                this->data[i] = inputData[i];
+            }
+        }
+    }
+
+    ~DynamicArraySmart() override = default;
+
+    T GetFirst() const override {
+        if (length == 0)
+            throw std::out_of_range("DynamicArraySmart is empty");
+        return data[0];
+    }
+
+    T GetLast() const override {
+        if (length == 0)
+            throw std::out_of_range("DynamicArraySmart is empty");
+        return data[length - 1];
+    }
+
+    T Get(int index) const override {
+        if (index < 0 || index >= length)
+            throw std::out_of_range("Index out of range");
+        return data[index];
+    }
+
+    Sequence<T>* GetSubsequence(int startIndex, int endIndex) const override {
+        if (startIndex < 0 || endIndex >= length || startIndex > endIndex)
+            throw std::out_of_range("Invalid subsequence indices");
+
+        auto* subseq = new DynamicArraySmart<T>();
+        for (int i = startIndex; i <= endIndex; ++i) {
+            subseq->Append(data[i]);
+        }
+        return subseq;
+    }
+
+    int GetLength() const override {
+        return length;
+    }
+
+    void Append(const T& item) override {
+        if (length == capacity) {
+            int newCapacity = capacity == 0 ? 1 : capacity * 2;
+            resize(newCapacity);
+        }
+        data[length++] = item;
+    }
+
+    void Prepend(const T& item) override {
+        if (length == capacity) {
+            int newCapacity = capacity == 0 ? 1 : capacity * 2;
+            resize(newCapacity);
+        }
+        for (int i = length; i > 0; --i) {
+            data[i] = std::move(data[i - 1]);
+        }
+        data[0] = item;
+        ++length;
+    }
+
+    void InsertAt(const T& item, int index) override {
+        if (index < 0 || index > length)
+            throw std::out_of_range("Index out of range");
+        if (length == capacity) {
+            int newCapacity = capacity == 0 ? 1 : capacity * 2;
+            resize(newCapacity);
+        }
+        for (int i = length; i > index; --i) {
+            data[i] = std::move(data[i - 1]);
+        }
+        data[index] = item;
+        ++length;
+    }
+
+    Sequence<T>* Concat(Sequence<T>* list) const override {
+        auto* newArray = new DynamicArraySmart<T>();
+        for (int i = 0; i < length; ++i) {
+            newArray->Append(data[i]);
+        }
+        for (int i = 0; i < list->GetLength(); ++i) {
+            newArray->Append(list->Get(i));
+        }
+        return newArray;
+    }
+
+    void Set(int index, const T& item) override {
+        if (index < 0 || index >= length)
+            throw std::out_of_range("Index out of range");
+        data[index] = item;
+    }
+};
+# 9 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedListSmart.h" 1
+
+
+
+
+# 1 "C:/Users/makar/CLionProjects/laba2/smart_pointers/sharedPointer.h" 1
+
+
+
+
+
+template<typename T>
+class SharedPointer
+ {
+private:
+    T *ptr;
+    size_t *ref_count;
+
+    void add_ref() {
+        if (ref_count) {
+            ++(*ref_count);
+        }
+    }
+
+    void release() {
+        if (ref_count) {
+            --(*ref_count);
+            if (*ref_count == 0) {
+                delete ptr;
+                delete ref_count;
+            }
+            ptr = nullptr;
+            ref_count = nullptr;
+        }
+    }
+
+public:
+    explicit SharedPointer
+(T *p = nullptr)
+            : ptr(p), ref_count(p ? new size_t(1) : nullptr) {}
+
+    SharedPointer
+(const SharedPointer
+<T> &other)
+            : ptr(other.ptr), ref_count(other.ref_count) {
+        add_ref();
+    }
+
+    template<typename U>
+    SharedPointer
+(const SharedPointer
+<U> &other)
+            : ptr(other.ptr), ref_count(other.ref_count) {
+        add_ref();
+    }
+
+    SharedPointer
+<T> &operator=(const SharedPointer
+<T> &other) {
+        if (this != &other) {
+            release();
+            ptr = other.ptr;
+            ref_count = other.ref_count;
+            add_ref();
+        }
+        return *this;
+    }
+
+    template<typename U>
+    SharedPointer
+<T> &operator=(const SharedPointer
+<U> &other) {
+        release();
+        ptr = other.ptr;
+        ref_count = other.ref_count;
+        add_ref();
+        return *this;
+    }
+
+    ~SharedPointer
+() {
+        release();
+    }
+
+    T &operator*() const {
+        return *ptr;
+    }
+
+    T *operator->() const {
+        return ptr;
+    }
+
+    explicit operator bool() const {
+        return ptr != nullptr;
+    }
+
+    bool operator!() const {
+        return ptr == nullptr;
+    }
+
+    void reset(T *p = nullptr) {
+        release();
+        if (p) {
+            ptr = p;
+            ref_count = new size_t(1);
+        } else {
+            ptr = nullptr;
+            ref_count = nullptr;
+        }
+    }
+
+    size_t use_count() const {
+        return ref_count ? *ref_count : 0;
+    }
+};
+
+template<typename T>
+class SharedPointer
+<T[]> {
+private:
+    T *ptr;
+    size_t *ref_count;
+
+    void add_ref() {
+        if (ref_count) {
+            ++(*ref_count);
+        }
+    }
+
+    void release() {
+        if (ref_count) {
+            --(*ref_count);
+            if (*ref_count == 0) {
+                delete[] ptr;
+                delete ref_count;
+            }
+            ptr = nullptr;
+            ref_count = nullptr;
+        }
+    }
+
+public:
+    explicit SharedPointer
+(T *p = nullptr)
+            : ptr(p), ref_count(p ? new size_t(1) : nullptr) {}
+
+    SharedPointer
+(const SharedPointer
+<T[]> &other)
+            : ptr(other.ptr), ref_count(other.ref_count) {
+        add_ref();
+    }
+
+    template<typename U>
+    SharedPointer
+(const SharedPointer
+<U[]> &other)
+            : ptr(other.ptr), ref_count(other.ref_count) {
+        add_ref();
+    }
+
+    SharedPointer
+<T[]> &operator=(const SharedPointer
+<T[]> &other) {
+        if (this != &other) {
+            release();
+            ptr = other.ptr;
+            ref_count = other.ref_count;
+            add_ref();
+        }
+        return *this;
+    }
+
+    template<typename U>
+    SharedPointer
+<T[]> &operator=(const SharedPointer
+<U[]> &other) {
+        release();
+        ptr = other.ptr;
+        ref_count = other.ref_count;
+        add_ref();
+        return *this;
+    }
+
+    ~SharedPointer
+() {
+        release();
+    }
+
+    T &operator*() const {
+        return *ptr;
+    }
+
+    T *operator->() const {
+        return ptr;
+    }
+
+
+    explicit operator bool() const {
+        return ptr != nullptr;
+    }
+
+    bool operator!() const {
+        return ptr == nullptr;
+    }
+
+    void reset(T *p = nullptr) {
+        release();
+        if (p) {
+            ptr = p;
+            ref_count = new size_t(1);
+        } else {
+            ptr = nullptr;
+            ref_count = nullptr;
+        }
+    }
+
+    size_t use_count() const {
+        return ref_count ? *ref_count : 0;
+    }
+
+    T &operator[](size_t index) const {
+        return ptr[index];
+    }
 
 };
-# 6 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 2
+# 6 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedListSmart.h" 2
 
 
 
 
-template<class T>
-class DynamicArray {
+
+
+template <typename T>
+class LinkedListSmart : public Sequence<T> {
 private:
-    T* data;
+    struct Node {
+        SharedPointer<T> data;
+        SharedPointer<Node> next;
+
+        explicit Node(const T& item) : data(new T(item)), next(nullptr) {}
+    };
+
+    SharedPointer<Node> head;
     size_t length;
 
 public:
-    DynamicArray();
-    DynamicArray(T* items, int count);
-    DynamicArray(int size);
-    DynamicArray(const DynamicArray<T>& dynamicArray);
-    ~DynamicArray();
+    LinkedListSmart() : head(nullptr), length(0) {}
 
-    T Get(int index) const;
-    void Set(int index, T value);
-    int GetSize() const;
-    void Resize(int newSize);
-
-    T& operator[](int index);
-    const T& operator[](int index) const;
-};
-
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.tpp" 1
-
-
-
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 1
-# 5 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.tpp" 2
-
-template<class T>
-T& DynamicArray<T>::operator[](int index) {
-    if (index < 0 || index >= length) {
-        throw std::out_of_range("Index out of range");
-    }
-    return data[index];
-}
-
-template<class T>
-const T& DynamicArray<T>::operator[](int index) const {
-    if (index < 0 || index >= length) {
-        throw std::out_of_range("Index out of range");
-    }
-    return data[index];
-}
-
-template<class T>
-DynamicArray<T>::DynamicArray() : data(nullptr), length(0) {}
-
-template<class T>
-DynamicArray<T>::DynamicArray(T* items, int count) : length(count) {
-    data = new T[length];
-    for (int i = 0; i < count; ++i) {
-        data[i] = items[i];
-    }
-}
-
-template<class T>
-DynamicArray<T>::DynamicArray(int size) : length(size) {
-    data = new T[length];
-}
-
-template<class T>
-DynamicArray<T>::DynamicArray(const DynamicArray<T>& dynamicArray)
-        : length(dynamicArray.length) {
-    data = new T[length];
-    for (size_t i = 0; i < length; ++i) {
-        data[i] = dynamicArray.data[i];
-    }
-}
-
-template<class T>
-DynamicArray<T>::~DynamicArray() {
-    delete[] data;
-}
-
-template<class T>
-T DynamicArray<T>::Get(int index) const {
-    if (index < 0 || index >= length) {
-        throw std::out_of_range("Index out of range");
-    }
-    return data[index];
-}
-
-template<class T>
-void DynamicArray<T>::Set(int index, T value) {
-    if (index < 0 || index >= length) {
-        throw std::out_of_range("Index out of range");
-    }
-    data[index] = value;
-}
-
-template<class T>
-int DynamicArray<T>::GetSize() const {
-    return length;
-}
-
-template<class T>
-void DynamicArray<T>::Resize(int newSize) {
-    if (newSize < 0) {
-        throw std::length_error("New size must be greater than or equal to zero.");
-    }
-
-    T* newData = (newSize > 0) ? new T[newSize] : nullptr;
-    int elementsToCopy = (newSize > length) ? length : newSize;
-
-
-    for (int i = 0; i < elementsToCopy; ++i) {
-        newData[i] = data[i];
-    }
-
-    delete[] data;
-    data = newData;
-    length = newSize;
-
-}
-# 33 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 2
-# 7 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 2
-
-
-
-
-
-template<class T>
-class ArraySequence : public Sequence<T> {
-private:
-    DynamicArray<T>* data;
-    int length;
-    int capacity;
-
-    void ensureCapacity(int minCapacity);
-
-public:
-    ArraySequence();
-    ArraySequence(const T* items, int count);
-    ArraySequence(const ArraySequence<T>& arraySequence);
-    ~ArraySequence();
-
-    T GetFirst() const override;
-    T GetLast() const override;
-    T Get(int index) const override;
-    Sequence<T>* GetSubsequence(int startIndex, int endIndex) const override;
-    int GetLength() const override;
-    void Append(const T& item) override;
-    void Prepend(const T& item) override;
-    void InsertAt(const T& item, int index) override;
-    void Set(int index, const T& item) override;
-    Sequence<T>* Concat(Sequence<T>* list) const override;
-};
-
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.tpp" 1
-
-
-
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 1
-# 5 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.tpp" 2
-
-
-template<class T>
-ArraySequence<T>::ArraySequence() : data(new DynamicArray<T>(10)), length(0), capacity(10) {}
-
-template<class T>
-ArraySequence<T>::ArraySequence(const T* items, int count) : data(new DynamicArray<T>(count)), length(count), capacity(count) {
-    for (int i = 0; i < count; ++i) {
-        data->Set(i, items[i]);
-    }
-}
-
-template<class T>
-ArraySequence<T>::ArraySequence(const ArraySequence<T>& arraySequence)
-        : data(new DynamicArray<T>(arraySequence.capacity)), length(arraySequence.length), capacity(arraySequence.capacity) {
-    for (int i = 0; i < length; ++i) {
-        data->Set(i, arraySequence.data->Get(i));
-    }
-}
-
-template<class T>
-ArraySequence<T>::~ArraySequence() {
-    delete data;
-}
-
-template<class T>
-T ArraySequence<T>::GetFirst() const {
-    if (length == 0) {
-        throw std::out_of_range("Array is empty");
-    }
-    return data->Get(0);
-}
-
-template<class T>
-T ArraySequence<T>::GetLast() const {
-    if (length == 0) {
-        throw std::out_of_range("Array is empty");
-    }
-    return data->Get(length - 1);
-}
-
-template<class T>
-T ArraySequence<T>::Get(int index) const {
-    if (index < 0 || index >= length) {
-        throw std::out_of_range("Index out of range");
-    }
-    return data->Get(index);
-}
-
-template<class T>
-Sequence<T>* ArraySequence<T>::GetSubsequence(int startIndex, int endIndex) const {
-    if (startIndex < 0 || endIndex >= length || startIndex > endIndex) {
-        throw std::out_of_range("Index out of range");
-    }
-    int subLength = endIndex - startIndex + 1;
-    T* items = new T[subLength];
-    for (int i = 0; i < subLength; ++i) {
-        items[i] = data->Get(startIndex + i);
-    }
-    Sequence<T>* subsequence = new ArraySequence<T>(items, subLength);
-    delete[] items;
-    return subsequence;
-}
-
-template<class T>
-int ArraySequence<T>::GetLength() const {
-    return length;
-}
-
-template<class T>
-void ArraySequence<T>::ensureCapacity(int minCapacity) {
-    if (minCapacity > capacity) {
-        int newCapacity = capacity * 2;
-        if (newCapacity < minCapacity) {
-            newCapacity = minCapacity;
+    LinkedListSmart(const T* data, int size) : head(nullptr), length(0) {
+        for (int i = 0; i < size; ++i) {
+            Append(data[i]);
         }
-        data->Resize(newCapacity);
-        capacity = newCapacity;
     }
-}
 
-template<class T>
-void ArraySequence<T>::Append(const T& item) {
-    ensureCapacity(length + 1);
-    data->Set(length, item);
-    length++;
-}
+    ~LinkedListSmart() override = default;
 
-template<class T>
-void ArraySequence<T>::Prepend(const T& item) {
-    ensureCapacity(length + 1);
-    for (int i = length; i > 0; --i) {
-        data->Set(i, data->Get(i - 1));
+    T GetFirst() const override {
+        if (!head)
+            throw std::out_of_range("LinkedListSmart is empty");
+        return *(head->data);
     }
-    data->Set(0, item);
-    length++;
-}
 
-template<class T>
-void ArraySequence<T>::InsertAt(const T& item, int index) {
-    if (index < 0 || index > length) {
-        throw std::out_of_range("Index out of range");
+    T GetLast() const override {
+        if (!head)
+            throw std::out_of_range("LinkedListSmart is empty");
+        SharedPointer<Node> current = head;
+        while (current->next) {
+            current = current->next;
+        }
+        return *(current->data);
     }
-    ensureCapacity(length + 1);
-    for (int i = length; i > index; --i) {
-        data->Set(i, data->Get(i - 1));
+
+    T Get(int index) const override {
+        if (index < 0 || static_cast<size_t>(index) >= length)
+            throw std::out_of_range("Index out of range");
+        SharedPointer<Node> current = head;
+        for (int i = 0; i < index; ++i) {
+            current = current->next;
+        }
+        return *(current->data);
     }
-    data->Set(index, item);
-    length++;
-}
 
-template<class T>
-void ArraySequence<T>::Set(int index, const T& item) {
-    if (index < 0 || index >= length) {
-        throw std::out_of_range("Index out of range");
+    Sequence<T>* GetSubsequence(int startIndex, int endIndex) const override {
+        if (startIndex < 0 || endIndex >= static_cast<int>(length) || startIndex > endIndex)
+            throw std::out_of_range("Invalid subsequence indices");
+
+        auto* subseq = new LinkedListSmart<T>();
+        SharedPointer<Node> current = head;
+        for (int i = 0; i <= endIndex; ++i) {
+            if (i >= startIndex) {
+                subseq->Append(*(current->data));
+            }
+            current = current->next;
+        }
+        return subseq;
     }
-    data->Set(index, item);
-}
 
-template<class T>
-Sequence<T>* ArraySequence<T>::Concat(Sequence<T>* list) const {
-    int newLength = length + list->GetLength();
-    T* newArray = new T[newLength];
-    for (int i = 0; i < length; ++i) {
-        newArray[i] = data->Get(i);
+    int GetLength() const override {
+        return static_cast<int>(length);
     }
-    for (int i = 0; i < list->GetLength(); ++i) {
-        newArray[length + i] = list->Get(i);
+
+    void Append(const T& item) override {
+        auto newNode = SharedPointer<Node>(new Node(item));
+        if (!head) {
+            head = newNode;
+        } else {
+            SharedPointer<Node> current = head;
+            while (current->next) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+        ++length;
     }
-    Sequence<T>* newSequence = new ArraySequence<T>(newArray, newLength);
-    delete[] newArray;
-    return newSequence;
-}
-# 40 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 2
-# 9 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.h" 1
 
+    void Prepend(const T& item) override {
+        auto newNode = SharedPointer<Node>(new Node(item));
+        newNode->next = head;
+        head = newNode;
+        ++length;
+    }
 
+    void InsertAt(const T& item, int index) override {
+        if (index < 0 || index > static_cast<int>(length))
+            throw std::out_of_range("Index out of range");
+        if (index == 0) {
+            Prepend(item);
+        } else {
+            SharedPointer<Node> current = head;
+            for (int i = 0; i < index - 1; ++i) {
+                current = current->next;
+            }
+            auto newNode = SharedPointer<Node>(new Node(item));
+            newNode->next = current->next;
+            current->next = newNode;
+            ++length;
+        }
+    }
 
+    Sequence<T>* Concat(Sequence<T>* list) const override {
+        auto* newList = new LinkedListSmart<T>();
+        SharedPointer<Node> current = head;
+        while (current) {
+            newList->Append(*(current->data));
+            current = current->next;
+        }
+        for (int i = 0; i < list->GetLength(); ++i) {
+            newList->Append(list->Get(i));
+        }
+        return newList;
+    }
 
+    void Set(int index, const T& item) override {
+        if (index < 0 || static_cast<size_t>(index) >= length)
+            throw std::out_of_range("Index out of range");
+        SharedPointer<Node> current = head;
+        for (int i = 0; i < index; ++i) {
+            current = current->next;
+        }
+        *(current->data) = item;
+    }
+};
+# 10 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedList.h" 1
 # 10 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedList.h"
 template<class T>
@@ -104268,124 +104455,6 @@ void LinkedList<T>::Set(int index, const T& value) {
     current->value = value;
 }
 # 96 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedList.h" 2
-# 6 "C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.h" 2
-
-
-
-template<class T>
-class ListSequence : public Sequence<T> {
-private:
-    LinkedList<T> list;
-
-public:
-    ListSequence();
-    ListSequence(const T* items, int count);
-    ListSequence(const ListSequence<T>& sequence);
-    ListSequence(const LinkedList<T>& list);
-
-    T GetFirst() const override;
-    T GetLast() const override;
-    T Get(int index) const override;
-    Sequence<T>* GetSubsequence(int startIndex, int endIndex) const override;
-    int GetLength() const override;
-    void Append(const T& item) override;
-    void Prepend(const T& item) override;
-    void InsertAt(const T& item, int index) override;
-    void Set(int index, const T& item) override;
-    Sequence<T>* Concat(Sequence<T>* list) const override;
-};
-
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.tpp" 1
-
-
-
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.h" 1
-# 5 "C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.tpp" 2
-
-template<class T>
-ListSequence<T>::ListSequence() : list() {}
-
-template<class T>
-ListSequence<T>::ListSequence(const T* items, int count) : list(items, count) {}
-
-template<class T>
-ListSequence<T>::ListSequence(const ListSequence<T>& sequence) : list(sequence.list) {}
-
-template<class T>
-ListSequence<T>::ListSequence(const LinkedList<T>& list) : list(list) {}
-
-template<class T>
-T ListSequence<T>::GetFirst() const {
-    if (list.GetLength() == 0) throw std::out_of_range("Sequence is empty");
-    return list.GetFirst();
-}
-
-template<class T>
-T ListSequence<T>::GetLast() const {
-    if (list.GetLength() == 0) throw std::out_of_range("Sequence is empty");
-    return list.GetLast();
-}
-
-template<class T>
-T ListSequence<T>::Get(int index) const {
-    if (index < 0 || index >= list.GetLength()) throw std::out_of_range("Index out of range");
-    return list.Get(index);
-}
-
-template<class T>
-Sequence<T>* ListSequence<T>::GetSubsequence(int startIndex, int endIndex) const {
-    if (startIndex < 0 || endIndex >= list.GetLength() || startIndex > endIndex)
-        throw std::out_of_range("Index out of range");
-
-    ListSequence<T>* subList = new ListSequence<T>();
-    for (int i = startIndex; i <= endIndex; ++i) {
-        subList->Append(list.Get(i));
-    }
-    return subList;
-}
-
-template<class T>
-int ListSequence<T>::GetLength() const {
-    return list.GetLength();
-}
-
-template<class T>
-void ListSequence<T>::Append(const T& item) {
-    list.Append(item);
-}
-
-template<class T>
-void ListSequence<T>::Prepend(const T& item) {
-    list.Prepend(item);
-}
-
-template<class T>
-void ListSequence<T>::InsertAt(const T& item, int index) {
-    list.InsertAt(item, index);
-}
-
-template<class T>
-void ListSequence<T>::Set(int index, const T& item) {
-    if (index < 0 || index >= list.GetLength()) {
-        throw std::out_of_range("Index out of range");
-    }
-    list.Set(index, item);
-}
-
-template<class T>
-Sequence<T>* ListSequence<T>::Concat(Sequence<T>* otherList) const {
-    ListSequence<T>* result = new ListSequence<T>();
-    for (int i = 0; i < this->GetLength(); i++) {
-        result->Append(this->Get(i));
-    }
-    for (int i = 0; i < otherList->GetLength(); i++) {
-        result->Append(otherList->Get(i));
-    }
-    return result;
-}
-# 33 "C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.h" 2
-# 10 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedList.h" 1
 # 11 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/ISorter.h" 1
 
@@ -104514,6 +104583,86 @@ private:
     }
 };
 # 14 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 1 "C:/Users/makar/CLionProjects/laba2/BubbleSorter.h" 1
+
+
+
+
+
+template <typename T>
+class BubbleSorter : public ISorter<T> {
+public:
+    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
+        bubbleSort(seq, Compare);
+        return seq;
+    }
+
+private:
+    void bubbleSort(Sequence<T>* seq, int (*Compare)(T, T)) {
+        int n = seq->GetLength();
+        for (int i = 0; i < n - 1; ++i) {
+            for (int j = 0; j < n - i - 1; ++j) {
+                if (Compare(seq->Get(j), seq->Get(j + 1)) > 0) {
+                    T temp = seq->Get(j);
+                    seq->Set(j, seq->Get(j + 1));
+                    seq->Set(j + 1, temp);
+                }
+            }
+        }
+    }
+};
+# 15 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 1 "C:/Users/makar/CLionProjects/laba2/CountingSorter.h" 1
+
+
+
+
+
+template <typename T>
+class CountingSorter : public ISorter<T> {
+public:
+    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
+        countingSort(seq, Compare);
+        return seq;
+    }
+
+private:
+    void countingSort(Sequence<T>* seq, int (*Compare)(T, T)) {
+        int n = seq->GetLength();
+
+        T minElement = seq->Get(0);
+        T maxElement = seq->Get(0);
+
+        for (int i = 1; i < n; ++i) {
+            if (Compare(seq->Get(i), minElement) < 0) {
+                minElement = seq->Get(i);
+            }
+            if (Compare(seq->Get(i), maxElement) > 0) {
+                maxElement = seq->Get(i);
+            }
+        }
+
+        int range = maxElement - minElement + 1;
+
+        int* count = new int[range]();
+
+        for (int i = 0; i < n; ++i) {
+            count[seq->Get(i) - minElement]++;
+        }
+
+        int index = 0;
+        for (int i = 0; i < range; ++i) {
+            while (count[i] > 0) {
+                seq->Set(index, minElement + i);
+                index++;
+                count[i]--;
+            }
+        }
+
+        delete[] count;
+    }
+};
+# 16 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 
 namespace {
 
@@ -104663,13 +104812,14 @@ void runFunctionalTests() {
     LinkedList<SorterInfo> sorters;
     sorters.Append({"HeapSorter", new HeapSorter<int>()});
     sorters.Append({"MergeSorter", new MergeSorter<int>()});
+    sorters.Append({"BubbleSorter", new BubbleSorter<int>()});
 
     LinkedList<SequenceInfo> sequences;
     sequences.Append({"ArraySequence", [](const int* data, int size) -> Sequence<int>* {
-        return new ArraySequence<int>(data, size);
+        return new DynamicArraySmart <int>(data, size);
     }});
     sequences.Append({"ListSequence", [](const int* data, int size) -> Sequence<int>* {
-        return new ListSequence<int>(data, size);
+        return new LinkedListSmart<int>(data, size);
     }});
 
     for (auto scenarioIt = testScenarios.begin(); scenarioIt != testScenarios.end(); ++scenarioIt) {
@@ -104698,31 +104848,31 @@ void runFunctionalTests() {
 
                 if (scenario.data.GetLength() == 0) {
                     
-# 197 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                    (void) ((!!(
-# 197 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                    seq->GetLength() == 0 && "Sorted empty sequence should have length 0."
-# 197 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                    )) || (_assert(
-# 197 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                    "seq->GetLength() == 0 && \"Sorted empty sequence should have length 0.\""
-# 197 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
-                   ,"C:/Users/makar/CLionProjects/laba2/test.cpp",197),0))
-# 197 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+                   ,"C:/Users/makar/CLionProjects/laba2/test.cpp",200),0))
+# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                                                                                                  ;
                 } else {
                     
-# 199 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                    (void) ((!!(
-# 199 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                    isSorted(seq, compareInt) && "Sequence is not sorted correctly."
-# 199 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                    )) || (_assert(
-# 199 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                    "isSorted(seq, compareInt) && \"Sequence is not sorted correctly.\""
-# 199 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
-                   ,"C:/Users/makar/CLionProjects/laba2/test.cpp",199),0))
-# 199 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+                   ,"C:/Users/makar/CLionProjects/laba2/test.cpp",202),0))
+# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                                                                                            ;
                 }
 
@@ -104760,11 +104910,13 @@ void runPerformanceTests() {
 
     sorters.Append({"HeapSorter", new HeapSorter<int>()});
     sorters.Append({"MergeSorter", new MergeSorter<int>()});
+    sorters.Append({"BubbleSorter", new BubbleSorter<int>()});
+    sorters.Append({"CountingSorter", new CountingSorter<int>()});
 
     LinkedList<SequenceInfo> sequences;
 
     sequences.Append({"ArraySequence", [](const int* data, int size) -> Sequence<int>* {
-        return new ArraySequence<int>(data, size);
+        return new DynamicArraySmart<int>(data, size);
     }});
 
     LinkedList<PerformanceResult> performanceResults;
@@ -104797,31 +104949,31 @@ void runPerformanceTests() {
                     auto end = std::chrono::high_resolution_clock::now();
                     if (!data.GetLength()) {
                         
-# 272 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                        (void) ((!!(
-# 272 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                        seq->GetLength() == 0 && "Sorted empty sequence should have length 0."
-# 272 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                        )) || (_assert(
-# 272 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                        "seq->GetLength() == 0 && \"Sorted empty sequence should have length 0.\""
-# 272 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
-                       ,"C:/Users/makar/CLionProjects/laba2/test.cpp",272),0))
-# 272 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+                       ,"C:/Users/makar/CLionProjects/laba2/test.cpp",277),0))
+# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                                                                                                      ;
                     } else {
                         
-# 274 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                        (void) ((!!(
-# 274 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                        isSorted(seq, compareInt) && "Sequence is not sorted correctly."
-# 274 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                        )) || (_assert(
-# 274 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                        "isSorted(seq, compareInt) && \"Sequence is not sorted correctly.\""
-# 274 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
-                       ,"C:/Users/makar/CLionProjects/laba2/test.cpp",274),0))
-# 274 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+                       ,"C:/Users/makar/CLionProjects/laba2/test.cpp",279),0))
+# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                                                                                                ;
                     }
                     std::chrono::duration<double> duration = end - start;

@@ -5,12 +5,14 @@
 #include <random>
 #include <vector>
 #include "DataStructures/Sequence.h"
-#include "DataStructures/ArraySequence.h"
-#include "DataStructures/ListSequence.h"
+#include "DataStructures/DynamicArraySmart.h"
+#include "DataStructures/LinkedListSmart.h"
 #include "DataStructures/LinkedList.h"
 #include "ISorter.h"
 #include "HeapSorter.h"
 #include "MergeSorter.h"
+#include "BubbleSorter.h"
+#include "CountingSorter.h"
 
 namespace {
 
@@ -160,13 +162,14 @@ void runFunctionalTests() {
     LinkedList<SorterInfo> sorters;
     sorters.Append({"HeapSorter", new HeapSorter<int>()});
     sorters.Append({"MergeSorter", new MergeSorter<int>()});
+    sorters.Append({"BubbleSorter", new BubbleSorter<int>()});
 
     LinkedList<SequenceInfo> sequences;
     sequences.Append({"ArraySequence", [](const int* data, int size) -> Sequence<int>* {
-        return new ArraySequence<int>(data, size);
+        return new DynamicArraySmart <int>(data, size);
     }});
     sequences.Append({"ListSequence", [](const int* data, int size) -> Sequence<int>* {
-        return new ListSequence<int>(data, size);
+        return new LinkedListSmart<int>(data, size);
     }});
 
     for (auto scenarioIt = testScenarios.begin(); scenarioIt != testScenarios.end(); ++scenarioIt) {
@@ -233,11 +236,13 @@ void runPerformanceTests() {
 
     sorters.Append({"HeapSorter", new HeapSorter<int>()});
     sorters.Append({"MergeSorter", new MergeSorter<int>()});
+    sorters.Append({"BubbleSorter", new BubbleSorter<int>()});
+    sorters.Append({"CountingSorter", new CountingSorter<int>()});
 
     LinkedList<SequenceInfo> sequences;
 
     sequences.Append({"ArraySequence", [](const int* data, int size) -> Sequence<int>* {
-        return new ArraySequence<int>(data, size);
+        return new DynamicArraySmart<int>(data, size);
     }});
 
     LinkedList<PerformanceResult> performanceResults;

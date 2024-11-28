@@ -30,7 +30,7 @@ ArraySequence<T>::~ArraySequence() {
 template<class T>
 T ArraySequence<T>::GetFirst() const {
     if (length == 0) {
-        throw std::out_of_range(EMPTY_ARRAY_SEQ);
+        throw std::out_of_range(EMPTYARRAYSEQ);
     }
     return data->Get(0);
 }
@@ -38,7 +38,7 @@ T ArraySequence<T>::GetFirst() const {
 template<class T>
 T ArraySequence<T>::GetLast() const {
     if (length == 0) {
-        throw std::out_of_range(EMPTY_ARRAY_SEQ);
+        throw std::out_of_range(EMPTYARRAYSEQ);
     }
     return data->Get(length - 1);
 }

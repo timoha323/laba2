@@ -42859,124 +42859,223 @@ public:
 };
 # 2 "C:/Users/makar/CLionProjects/laba2/smart_pointers/Tests.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/smart_pointers/sharedPointer.h" 1
-       
+
+
+
+
 
 template<typename T>
-class SharedPointer {
+class SharedPointer
+ {
 private:
-    T* ptr;
-    size_t *referenceCount;
+    T *ptr;
+    size_t *ref_count;
 
-    void clean(){
-        if (referenceCount && --(*referenceCount) == 0) {
-            delete ptr;
-            delete referenceCount;
+    void add_ref() {
+        if (ref_count) {
+            ++(*ref_count);
+        }
+    }
+
+    void release() {
+        if (ref_count) {
+            --(*ref_count);
+            if (*ref_count == 0) {
+                delete ptr;
+                delete ref_count;
+            }
+            ptr = nullptr;
+            ref_count = nullptr;
         }
     }
 
 public:
-    explicit SharedPointer(T *p = nullptr) : ptr(p), referenceCount(new size_t(1)) {}
+    explicit SharedPointer
+(T *p = nullptr)
+            : ptr(p), ref_count(p ? new size_t(1) : nullptr) {}
 
-    SharedPointer(const SharedPointer &other)
-            : ptr(other.ptr), referenceCount(other.referenceCount) {
-        if (referenceCount) {
-            ++(*referenceCount);
-        }
+    SharedPointer
+(const SharedPointer
+<T> &other)
+            : ptr(other.ptr), ref_count(other.ref_count) {
+        add_ref();
     }
 
-    SharedPointer &operator=(const SharedPointer &other) {
+    template<typename U>
+    SharedPointer
+(const SharedPointer
+<U> &other)
+            : ptr(other.ptr), ref_count(other.ref_count) {
+        add_ref();
+    }
+
+    SharedPointer
+<T> &operator=(const SharedPointer
+<T> &other) {
         if (this != &other) {
-            clean();
+            release();
             ptr = other.ptr;
-            referenceCount = other.referenceCount;
-            if (referenceCount) {
-                ++(*referenceCount);
-            }
+            ref_count = other.ref_count;
+            add_ref();
         }
         return *this;
     }
-    ~SharedPointer() {
-        clean();
+
+    template<typename U>
+    SharedPointer
+<T> &operator=(const SharedPointer
+<U> &other) {
+        release();
+        ptr = other.ptr;
+        ref_count = other.ref_count;
+        add_ref();
+        return *this;
     }
 
-    T &operator*() const { return *ptr; }
-    T *operator->() const { return ptr; }
+    ~SharedPointer
+() {
+        release();
+    }
 
-    size_t use_count() const { return referenceCount ? *referenceCount : 0; }
+    T &operator*() const {
+        return *ptr;
+    }
+
+    T *operator->() const {
+        return ptr;
+    }
+
+    explicit operator bool() const {
+        return ptr != nullptr;
+    }
+
+    bool operator!() const {
+        return ptr == nullptr;
+    }
 
     void reset(T *p = nullptr) {
-        clean();
-        ptr = p;
-        referenceCount = new size_t(1);
+        release();
+        if (p) {
+            ptr = p;
+            ref_count = new size_t(1);
+        } else {
+            ptr = nullptr;
+            ref_count = nullptr;
+        }
     }
 
-    T getRefCount() const {
-        return referenceCount ? *referenceCount : 0;
-    }
-
-    bool null() const {
-        return ptr == nullptr;
+    size_t use_count() const {
+        return ref_count ? *ref_count : 0;
     }
 };
 
 template<typename T>
-class SharedPointer<T[]> {
+class SharedPointer
+<T[]> {
 private:
-    T* ptr;
-    size_t *referenceCount;
+    T *ptr;
+    size_t *ref_count;
 
-    void clean(){
-        if (referenceCount && --(*referenceCount) == 0) {
-            delete[] ptr;
-            delete referenceCount;
+    void add_ref() {
+        if (ref_count) {
+            ++(*ref_count);
+        }
+    }
+
+    void release() {
+        if (ref_count) {
+            --(*ref_count);
+            if (*ref_count == 0) {
+                delete[] ptr;
+                delete ref_count;
+            }
+            ptr = nullptr;
+            ref_count = nullptr;
         }
     }
 
 public:
-    explicit SharedPointer(T *p = nullptr) : ptr(p), referenceCount(new size_t(1)) {}
+    explicit SharedPointer
+(T *p = nullptr)
+            : ptr(p), ref_count(p ? new size_t(1) : nullptr) {}
 
-    SharedPointer(const SharedPointer &other)
-            : ptr(other.ptr), referenceCount(other.referenceCount) {
-        if (referenceCount) {
-            ++(*referenceCount);
-        }
+    SharedPointer
+(const SharedPointer
+<T[]> &other)
+            : ptr(other.ptr), ref_count(other.ref_count) {
+        add_ref();
     }
 
-    SharedPointer &operator=(const SharedPointer &other) {
+    template<typename U>
+    SharedPointer
+(const SharedPointer
+<U[]> &other)
+            : ptr(other.ptr), ref_count(other.ref_count) {
+        add_ref();
+    }
+
+    SharedPointer
+<T[]> &operator=(const SharedPointer
+<T[]> &other) {
         if (this != &other) {
-            clean();
+            release();
             ptr = other.ptr;
-            referenceCount = other.referenceCount;
-            if (referenceCount) {
-                ++(*referenceCount);
-            }
+            ref_count = other.ref_count;
+            add_ref();
         }
         return *this;
     }
-    ~SharedPointer() {
-        clean();
+
+    template<typename U>
+    SharedPointer
+<T[]> &operator=(const SharedPointer
+<U[]> &other) {
+        release();
+        ptr = other.ptr;
+        ref_count = other.ref_count;
+        add_ref();
+        return *this;
     }
 
-    T &operator*() const { return *ptr; }
-    T *operator->() const { return ptr; }
-
-    size_t use_count() const { return referenceCount ? *referenceCount : 0; }
-
-    void reset(T *p = nullptr) {
-        clean();
-        ptr = p;
-        referenceCount = new size_t(1);
+    ~SharedPointer
+() {
+        release();
     }
 
-    bool null() const {
+    T &operator*() const {
+        return *ptr;
+    }
+
+    T *operator->() const {
+        return ptr;
+    }
+
+
+    explicit operator bool() const {
+        return ptr != nullptr;
+    }
+
+    bool operator!() const {
         return ptr == nullptr;
     }
 
-    const T& operator[](size_t i) const{
-        return ptr[i];
+    void reset(T *p = nullptr) {
+        release();
+        if (p) {
+            ptr = p;
+            ref_count = new size_t(1);
+        } else {
+            ptr = nullptr;
+            ref_count = nullptr;
+        }
     }
-    T& operator[](size_t i) {
-        return ptr[i];
+
+    size_t use_count() const {
+        return ref_count ? *ref_count : 0;
+    }
+
+    T &operator[](size_t index) const {
+        return ptr[index];
     }
 
 };

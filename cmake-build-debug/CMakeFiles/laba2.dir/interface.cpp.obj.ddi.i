@@ -113210,6 +113210,78 @@ namespace std
 
 }
 # 10 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
+# 1 "C:/Users/makar/CLionProjects/laba2/BubbleSorter.h" 1
+
+
+
+# 1 "C:/Users/makar/CLionProjects/laba2/ISorter.h" 1
+
+
+
+# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h" 1
+
+
+
+
+# 4 "C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h"
+template<class T>
+class Sequence {
+public:
+    virtual T GetFirst() const = 0;
+
+    virtual T GetLast() const = 0;
+
+    virtual T Get(int index) const = 0;
+
+    virtual Sequence<T> *GetSubsequence(int startIndex, int endIndex) const = 0;
+
+    virtual int GetLength() const = 0;
+
+    virtual void Append(const T &item) = 0;
+
+    virtual void Prepend(const T &item) = 0;
+
+    virtual void InsertAt(const T &item, int index) = 0;
+
+    virtual void Set(int index, const T &item) = 0;
+
+    virtual Sequence<T> *Concat(Sequence<T> *list) const = 0;
+
+    virtual ~Sequence() {}
+};
+# 5 "C:/Users/makar/CLionProjects/laba2/ISorter.h" 2
+
+template <typename T>
+class ISorter {
+public:
+    virtual Sequence<T>* sort(Sequence<T>* seq, int (*cmp)(T, T)) = 0;
+    virtual ~ISorter() {}
+};
+# 5 "C:/Users/makar/CLionProjects/laba2/BubbleSorter.h" 2
+
+template <typename T>
+class BubbleSorter : public ISorter<T> {
+public:
+    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
+        bubbleSort(seq, Compare);
+        return seq;
+    }
+
+private:
+    void bubbleSort(Sequence<T>* seq, int (*Compare)(T, T)) {
+        int n = seq->GetLength();
+        for (int i = 0; i < n - 1; ++i) {
+            for (int j = 0; j < n - i - 1; ++j) {
+                if (Compare(seq->Get(j), seq->Get(j + 1)) > 0) {
+                    T temp = seq->Get(j);
+                    seq->Set(j, seq->Get(j + 1));
+                    seq->Set(j + 1, temp);
+                }
+            }
+        }
+    }
+};
+# 11 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/test.h" 1
 
 
@@ -113218,8 +113290,6 @@ namespace std
 
 
 
-
-# 8 "C:/Users/makar/CLionProjects/laba2/test.h"
 struct PerformanceResult {
     int data_size;
     std::string generator_name;
@@ -113230,27 +113300,8 @@ struct PerformanceResult {
 void runTests();
 
 int compareInt(int a, int b);
-# 11 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
-# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h" 1
-
-
-
-template<class T>
-class Sequence {
-public:
-    virtual T GetFirst() const = 0;
-    virtual T GetLast() const = 0;
-    virtual T Get(int index) const = 0;
-    virtual Sequence<T> *GetSubsequence(int startIndex, int endIndex) const = 0;
-    virtual int GetLength() const = 0;
-    virtual void Append(const T &item) = 0;
-    virtual void Prepend(const T &item) = 0;
-    virtual void InsertAt(const T &item, int index) = 0;
-    virtual void Set(int index, const T &item) = 0;
-    virtual Sequence<T> *Concat(Sequence<T> *list) const = 0;
-    virtual ~Sequence() {}
-};
 # 12 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
+
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 1
 
 
@@ -113259,137 +113310,7 @@ public:
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h" 1
 # 6 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 1
-
-
-
-
-# 1 "C:/Users/makar/CLionProjects/laba2/smart_pointers/sharedPointer.h" 1
-       
-
-template<typename T>
-class SharedPointer {
-private:
-    T* ptr;
-    size_t *referenceCount;
-
-    void clean(){
-        if (referenceCount && --(*referenceCount) == 0) {
-            delete ptr;
-            delete referenceCount;
-        }
-    }
-
-public:
-    explicit SharedPointer(T *p = nullptr) : ptr(p), referenceCount(new size_t(1)) {}
-
-    SharedPointer(const SharedPointer &other)
-            : ptr(other.ptr), referenceCount(other.referenceCount) {
-        if (referenceCount) {
-            ++(*referenceCount);
-        }
-    }
-
-    SharedPointer &operator=(const SharedPointer &other) {
-        if (this != &other) {
-            clean();
-            ptr = other.ptr;
-            referenceCount = other.referenceCount;
-            if (referenceCount) {
-                ++(*referenceCount);
-            }
-        }
-        return *this;
-    }
-    ~SharedPointer() {
-        clean();
-    }
-
-    T &operator*() const { return *ptr; }
-    T *operator->() const { return ptr; }
-
-    size_t use_count() const { return referenceCount ? *referenceCount : 0; }
-
-    void reset(T *p = nullptr) {
-        clean();
-        ptr = p;
-        referenceCount = new size_t(1);
-    }
-
-    T getRefCount() const {
-        return referenceCount ? *referenceCount : 0;
-    }
-
-    bool null() const {
-        return ptr == nullptr;
-    }
-};
-
-template<typename T>
-class SharedPointer<T[]> {
-private:
-    T* ptr;
-    size_t *referenceCount;
-
-    void clean(){
-        if (referenceCount && --(*referenceCount) == 0) {
-            delete[] ptr;
-            delete referenceCount;
-        }
-    }
-
-public:
-    explicit SharedPointer(T *p = nullptr) : ptr(p), referenceCount(new size_t(1)) {}
-
-    SharedPointer(const SharedPointer &other)
-            : ptr(other.ptr), referenceCount(other.referenceCount) {
-        if (referenceCount) {
-            ++(*referenceCount);
-        }
-    }
-
-    SharedPointer &operator=(const SharedPointer &other) {
-        if (this != &other) {
-            clean();
-            ptr = other.ptr;
-            referenceCount = other.referenceCount;
-            if (referenceCount) {
-                ++(*referenceCount);
-            }
-        }
-        return *this;
-    }
-    ~SharedPointer() {
-        clean();
-    }
-
-    T &operator*() const { return *ptr; }
-    T *operator->() const { return ptr; }
-
-    size_t use_count() const { return referenceCount ? *referenceCount : 0; }
-
-    void reset(T *p = nullptr) {
-        clean();
-        ptr = p;
-        referenceCount = new size_t(1);
-    }
-
-    bool null() const {
-        return ptr == nullptr;
-    }
-
-    const T& operator[](size_t i) const{
-        return ptr[i];
-    }
-    T& operator[](size_t i) {
-        return ptr[i];
-    }
-
-};
-# 6 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 2
-
-
-
-
+# 9 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h"
 template<class T>
 class DynamicArray {
 private:
@@ -113505,9 +113426,8 @@ void DynamicArray<T>::Resize(int newSize) {
     length = newSize;
 
 }
-# 33 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 2
+# 32 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 2
 # 7 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 2
-
 
 
 
@@ -113678,8 +113598,8 @@ Sequence<T>* ArraySequence<T>::Concat(Sequence<T>* list) const {
     delete[] newArray;
     return newSequence;
 }
-# 40 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 2
-# 13 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
+# 39 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 2
+# 14 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.h" 1
 
 
@@ -114037,20 +113957,8 @@ Sequence<T>* ListSequence<T>::Concat(Sequence<T>* otherList) const {
     return result;
 }
 # 33 "C:/Users/makar/CLionProjects/laba2/DataStructures/ListSequence.h" 2
-# 14 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
-# 1 "C:/Users/makar/CLionProjects/laba2/ISorter.h" 1
-
-
-
-
-
-template <typename T>
-class ISorter {
-public:
-    virtual Sequence<T>* sort(Sequence<T>* seq, int (*cmp)(T, T)) = 0;
-    virtual ~ISorter() {}
-};
 # 15 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
+
 # 1 "C:/Users/makar/CLionProjects/laba2/HeapSorter.h" 1
 
 
@@ -114099,7 +114007,7 @@ private:
         }
     }
 };
-# 16 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
+# 17 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/MergeSorter.h" 1
 
 
@@ -114164,7 +114072,59 @@ private:
         delete RightSeq;
     }
 };
-# 17 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
+# 18 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
+
+# 1 "C:/Users/makar/CLionProjects/laba2/CountingSorter.h" 1
+
+
+
+
+
+template <typename T>
+class CountingSorter : public ISorter<T> {
+public:
+    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
+        countingSort(seq, Compare);
+        return seq;
+    }
+
+private:
+    void countingSort(Sequence<T>* seq, int (*Compare)(T, T)) {
+        int n = seq->GetLength();
+
+        T minElement = seq->Get(0);
+        T maxElement = seq->Get(0);
+
+        for (int i = 1; i < n; ++i) {
+            if (Compare(seq->Get(i), minElement) < 0) {
+                minElement = seq->Get(i);
+            }
+            if (Compare(seq->Get(i), maxElement) > 0) {
+                maxElement = seq->Get(i);
+            }
+        }
+
+        int range = maxElement - minElement + 1;
+
+        int* count = new int[range]();
+
+        for (int i = 0; i < n; ++i) {
+            count[seq->Get(i) - minElement]++;
+        }
+
+        int index = 0;
+        for (int i = 0; i < range; ++i) {
+            while (count[i] > 0) {
+                seq->Set(index, minElement + i);
+                index++;
+                count[i]--;
+            }
+        }
+
+        delete[] count;
+    }
+};
+# 20 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/smart_pointers/uniquePointer.h" 1
        
 
@@ -114284,7 +114244,7 @@ public:
         return ptr[i];
     }
 };
-# 18 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
+# 21 "C:/Users/makar/CLionProjects/laba2/interface.cpp" 2
 
 namespace {
 
@@ -114336,13 +114296,15 @@ void runInterface() {
         std::cout << "==== Sorting Algorithms ====\n";
         std::cout << "1. Heap Sort\n";
         std::cout << "2. Merge Sort\n";
-        std::cout << "3. Tests\n";
+        std::cout << "3. Bubble Sort\n";
+        std::cout << "4. Counting Sort\n";
+        std::cout << "5. Tests\n";
         std::cout << "0. Exit\n";
-        choice = getValidatedIntInRange("Select choice: ", 0, 3);
+        choice = getValidatedIntInRange("Select choice: ", 0, 5);
 
         if (choice == 0) {
             break;
-        } else if (choice == 3) {
+        } else if (choice == 5) {
             runTests();
             continue;
         }
@@ -114354,6 +114316,12 @@ void runInterface() {
                 break;
             case 2:
                 sorter = UniquePtr<ISorter<int>>(new MergeSorter<int>());
+                break;
+            case 3:
+                sorter = UniquePtr<ISorter<int>>(new BubbleSorter<int>());
+                break;
+            case 4:
+                sorter = UniquePtr<ISorter<int>>(new CountingSorter<int>());
                 break;
             default:
                 continue;
@@ -114409,7 +114377,7 @@ void runInterface() {
         }
 
         std::cout
-                << "Do you want to display the data? (Note: Displaying large amounts of data can slow down the program)\n";
+                << "Do you want to show sort?\n";
         std::cout << "1. Yes\n";
         std::cout << "2. No\n";
         int displayChoice = getValidatedIntInRange("Choice: ", 1, 2);

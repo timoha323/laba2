@@ -2,7 +2,6 @@
 #define DYNAMICARRAY_H
 
 #include <stdexcept>
-#include "../smart_pointers/sharedPointer.h"
 
 #define INDEX_OUT_OF_RANGE "Index out of range"
 #define NEGATIVE_SIZE "New size must be greater than or equal to zero."

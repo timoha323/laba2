@@ -4,10 +4,9 @@
 
 #include "Sequence.h"
 #include "DynamicArray.h"
-#include "../smart_pointers/sharedPointer.h"
 
 #define INDEX_OUT_OF_RANGE "Index out of range"
-#define EMPTY_ARRAY_SEQ "Array is empty"
+#define EMPTYARRAYSEQ "Array is empty"
 
 template<class T>
 class ArraySequence : public Sequence<T> {

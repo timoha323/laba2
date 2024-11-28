@@ -7,6 +7,7 @@
 #include <thread>
 #include <mutex>
 #include <future>
+#include "BubbleSorter.h"
 #include "test.h"
 #include "DataStructures/Sequence.h"
 #include "DataStructures/ArraySequence.h"
@@ -14,6 +15,8 @@
 #include "ISorter.h"
 #include "HeapSorter.h"
 #include "MergeSorter.h"
+#include "BubbleSorter.h"
+#include "CountingSorter.h"
 #include "smart_pointers/uniquePointer.h"
 
 namespace {
@@ -66,13 +69,15 @@ void runInterface() {
         std::cout << "==== Sorting Algorithms ====\n";
         std::cout << "1. Heap Sort\n";
         std::cout << "2. Merge Sort\n";
-        std::cout << "3. Tests\n";
+        std::cout << "3. Bubble Sort\n";
+        std::cout << "4. Counting Sort\n";
+        std::cout << "5. Tests\n";
         std::cout << "0. Exit\n";
-        choice = getValidatedIntInRange("Select choice: ", 0, 3);
+        choice = getValidatedIntInRange("Select choice: ", 0, 5);
 
         if (choice == 0) {
             break;
-        } else if (choice == 3) {
+        } else if (choice == 5) {
             runTests();
             continue;
         }
@@ -84,6 +89,12 @@ void runInterface() {
                 break;
             case 2:
                 sorter = UniquePtr<ISorter<int>>(new MergeSorter<int>());
+                break;
+            case 3:
+                sorter = UniquePtr<ISorter<int>>(new BubbleSorter<int>());
+                break;
+            case 4:
+                sorter = UniquePtr<ISorter<int>>(new CountingSorter<int>());
                 break;
             default:
                 continue;
@@ -139,7 +150,7 @@ void runInterface() {
         }
 
         std::cout
-                << "Do you want to display the data? (Note: Displaying large amounts of data can slow down the program)\n";
+                << "Do you want to show sort?\n";
         std::cout << "1. Yes\n";
         std::cout << "2. No\n";
         int displayChoice = getValidatedIntInRange("Choice: ", 1, 2);
