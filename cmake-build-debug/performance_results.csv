@@ -1,0 +1,55 @@
+Data Size,Data Generator,Sorter,Average Time (seconds)
+10000,Random,HeapSorter,0.004340
+10000,Random,MergeSorter,0.007670
+10000,Random,CountingSorter,0.002416
+10000,Reverse Sorted,HeapSorter,0.004239
+10000,Reverse Sorted,MergeSorter,0.006443
+10000,Reverse Sorted,CountingSorter,0.000271
+10000,Partially Sorted (1 sorted),HeapSorter,0.004979
+10000,Partially Sorted (1 sorted),MergeSorter,0.007688
+10000,Partially Sorted (1 sorted),CountingSorter,0.002488
+10000,Partially Sorted (2 sorted),HeapSorter,0.004891
+10000,Partially Sorted (2 sorted),MergeSorter,0.008237
+10000,Partially Sorted (2 sorted),CountingSorter,0.002486
+10000,Partially Sorted (3 sorted),HeapSorter,0.005074
+10000,Partially Sorted (3 sorted),MergeSorter,0.007191
+10000,Partially Sorted (3 sorted),CountingSorter,0.002507
+10000,Already Sorted,HeapSorter,0.005021
+10000,Already Sorted,MergeSorter,0.006375
+10000,Already Sorted,CountingSorter,0.000251
+50000,Random,HeapSorter,0.034889
+50000,Random,MergeSorter,0.043356
+50000,Random,CountingSorter,0.003944
+50000,Reverse Sorted,HeapSorter,0.026860
+50000,Reverse Sorted,MergeSorter,0.032680
+50000,Reverse Sorted,CountingSorter,0.001292
+50000,Partially Sorted (1 sorted),HeapSorter,0.031981
+50000,Partially Sorted (1 sorted),MergeSorter,0.044041
+50000,Partially Sorted (1 sorted),CountingSorter,0.004503
+50000,Partially Sorted (2 sorted),HeapSorter,0.030371
+50000,Partially Sorted (2 sorted),MergeSorter,0.044850
+50000,Partially Sorted (2 sorted),CountingSorter,0.003734
+50000,Partially Sorted (3 sorted),HeapSorter,0.029252
+50000,Partially Sorted (3 sorted),MergeSorter,0.042146
+50000,Partially Sorted (3 sorted),CountingSorter,0.004398
+50000,Already Sorted,HeapSorter,0.026957
+50000,Already Sorted,MergeSorter,0.035061
+50000,Already Sorted,CountingSorter,0.001355
+100000,Random,HeapSorter,0.065871
+100000,Random,MergeSorter,0.085162
+100000,Random,CountingSorter,0.006406
+100000,Reverse Sorted,HeapSorter,0.055517
+100000,Reverse Sorted,MergeSorter,0.067862
+100000,Reverse Sorted,CountingSorter,0.002259
+100000,Partially Sorted (1 sorted),HeapSorter,0.070165
+100000,Partially Sorted (1 sorted),MergeSorter,0.088463
+100000,Partially Sorted (1 sorted),CountingSorter,0.005785
+100000,Partially Sorted (2 sorted),HeapSorter,0.067970
+100000,Partially Sorted (2 sorted),MergeSorter,0.082552
+100000,Partially Sorted (2 sorted),CountingSorter,0.008054
+100000,Partially Sorted (3 sorted),HeapSorter,0.070515
+100000,Partially Sorted (3 sorted),MergeSorter,0.085852
+100000,Partially Sorted (3 sorted),CountingSorter,0.006247
+100000,Already Sorted,HeapSorter,0.058620
+100000,Already Sorted,MergeSorter,0.067241
+100000,Already Sorted,CountingSorter,0.002207

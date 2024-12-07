@@ -32799,4935 +32799,14 @@ namespace std
 
 }
 # 6 "C:/Users/makar/CLionProjects/laba2/test.h" 2
-# 1 "C:/mingw64/include/c++/14.2.0/vector" 1 3
-# 58 "C:/mingw64/include/c++/14.2.0/vector" 3
-       
-# 59 "C:/mingw64/include/c++/14.2.0/vector" 3
 
 
-
-
-
-
-# 1 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 1 3
-# 70 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-namespace std
-{
-
-# 81 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template<typename _ValueType, typename _Tp>
-    constexpr bool
-    __check_constructible()
-    {
-
-
-
-
-
-      static_assert(is_constructible<_ValueType, _Tp>::value,
-   "result type must be constructible from input type");
-
-      return true;
-    }
-# 110 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template<typename _InputIterator, typename _ForwardIterator>
-    constexpr
-    _ForwardIterator
-    __do_uninit_copy(_InputIterator __first, _InputIterator __last,
-       _ForwardIterator __result)
-    {
-      _ForwardIterator __cur = __result;
-      try
- {
-   for (; __first != __last; ++__first, (void)++__cur)
-     std::_Construct(std::__addressof(*__cur), *__first);
-   return __cur;
- }
-      catch(...)
- {
-   std::_Destroy(__result, __cur);
-   throw;
- }
-    }
-
-  template<bool _TrivialValueTypes>
-    struct __uninitialized_copy
-    {
-      template<typename _InputIterator, typename _ForwardIterator>
-        static _ForwardIterator
-        __uninit_copy(_InputIterator __first, _InputIterator __last,
-        _ForwardIterator __result)
- { return std::__do_uninit_copy(__first, __last, __result); }
-    };
-
-  template<>
-    struct __uninitialized_copy<true>
-    {
-      template<typename _InputIterator, typename _ForwardIterator>
-        static _ForwardIterator
-        __uninit_copy(_InputIterator __first, _InputIterator __last,
-        _ForwardIterator __result)
-        { return std::copy(__first, __last, __result); }
-    };
-# 161 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template<typename _InputIterator, typename _ForwardIterator>
-    inline _ForwardIterator
-    uninitialized_copy(_InputIterator __first, _InputIterator __last,
-         _ForwardIterator __result)
-    {
-      typedef typename iterator_traits<_InputIterator>::value_type
- _ValueType1;
-      typedef typename iterator_traits<_ForwardIterator>::value_type
- _ValueType2;
-
-
-
-
-      const bool __can_memmove = __is_trivial(_ValueType1);
-
-
-
-
-      using _From = decltype(*__first);
-
-      const bool __assignable
- = __is_trivial(_ValueType2) && __is_assignable(_ValueType2&, _From) && std::__check_constructible<_ValueType2, _From>();
-
-      return std::__uninitialized_copy<__can_memmove && __assignable>::
- __uninit_copy(__first, __last, __result);
-    }
-
-
-
-  template<typename _ForwardIterator, typename _Tp>
-    constexpr void
-    __do_uninit_fill(_ForwardIterator __first, _ForwardIterator __last,
-       const _Tp& __x)
-    {
-      _ForwardIterator __cur = __first;
-      try
- {
-   for (; __cur != __last; ++__cur)
-     std::_Construct(std::__addressof(*__cur), __x);
- }
-      catch(...)
- {
-   std::_Destroy(__first, __cur);
-   throw;
- }
-    }
-
-  template<bool _TrivialValueType>
-    struct __uninitialized_fill
-    {
-      template<typename _ForwardIterator, typename _Tp>
-        static void
-        __uninit_fill(_ForwardIterator __first, _ForwardIterator __last,
-        const _Tp& __x)
- { std::__do_uninit_fill(__first, __last, __x); }
-    };
-
-  template<>
-    struct __uninitialized_fill<true>
-    {
-      template<typename _ForwardIterator, typename _Tp>
-        static void
-        __uninit_fill(_ForwardIterator __first, _ForwardIterator __last,
-        const _Tp& __x)
-        { std::fill(__first, __last, __x); }
-    };
-# 239 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template<typename _ForwardIterator, typename _Tp>
-    inline void
-    uninitialized_fill(_ForwardIterator __first, _ForwardIterator __last,
-         const _Tp& __x)
-    {
-      typedef typename iterator_traits<_ForwardIterator>::value_type
- _ValueType;
-
-
-
-      const bool __can_fill
- = __is_trivial(_ValueType) && __is_assignable(_ValueType&, const _Tp&) && std::__check_constructible<_ValueType, const _Tp&>();
-
-      std::__uninitialized_fill<__can_fill>::
- __uninit_fill(__first, __last, __x);
-    }
-
-
-
-  template<typename _ForwardIterator, typename _Size, typename _Tp>
-    constexpr
-    _ForwardIterator
-    __do_uninit_fill_n(_ForwardIterator __first, _Size __n, const _Tp& __x)
-    {
-      _ForwardIterator __cur = __first;
-      try
- {
-   for (; __n > 0; --__n, (void) ++__cur)
-     std::_Construct(std::__addressof(*__cur), __x);
-   return __cur;
- }
-      catch(...)
- {
-   std::_Destroy(__first, __cur);
-   throw;
- }
-    }
-
-  template<bool _TrivialValueType>
-    struct __uninitialized_fill_n
-    {
-      template<typename _ForwardIterator, typename _Size, typename _Tp>
- static _ForwardIterator
-        __uninit_fill_n(_ForwardIterator __first, _Size __n,
-   const _Tp& __x)
- { return std::__do_uninit_fill_n(__first, __n, __x); }
-    };
-
-  template<>
-    struct __uninitialized_fill_n<true>
-    {
-      template<typename _ForwardIterator, typename _Size, typename _Tp>
- static _ForwardIterator
-        __uninit_fill_n(_ForwardIterator __first, _Size __n,
-   const _Tp& __x)
-        { return std::fill_n(__first, __n, __x); }
-    };
-# 310 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template<typename _ForwardIterator, typename _Size, typename _Tp>
-    inline _ForwardIterator
-    uninitialized_fill_n(_ForwardIterator __first, _Size __n, const _Tp& __x)
-    {
-      typedef typename iterator_traits<_ForwardIterator>::value_type
- _ValueType;
-
-
-
-      const bool __can_fill
- = __is_trivial(_ValueType) && __is_assignable(_ValueType&, const _Tp&) && std::__check_constructible<_ValueType, const _Tp&>()
-
-
-
- && __is_integer<_Size>::__value;
-
-      return __uninitialized_fill_n<__can_fill>::
- __uninit_fill_n(__first, __n, __x);
-    }
-# 340 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template<typename _InputIterator, typename _ForwardIterator,
-    typename _Allocator>
-    constexpr
-    _ForwardIterator
-    __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
-      _ForwardIterator __result, _Allocator& __alloc)
-    {
-      _ForwardIterator __cur = __result;
-      try
- {
-   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
-   for (; __first != __last; ++__first, (void)++__cur)
-     __traits::construct(__alloc, std::__addressof(*__cur), *__first);
-   return __cur;
- }
-      catch(...)
- {
-   std::_Destroy(__result, __cur, __alloc);
-   throw;
- }
-    }
-
-
-  template<typename _InputIterator, typename _ForwardIterator, typename _Tp>
-    constexpr
-    inline _ForwardIterator
-    __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
-      _ForwardIterator __result, allocator<_Tp>&)
-    {
-
-      if (std::is_constant_evaluated())
- return std::__do_uninit_copy(__first, __last, __result);
-
-      return std::uninitialized_copy(__first, __last, __result);
-    }
-
-
-  template<typename _InputIterator, typename _ForwardIterator,
-    typename _Allocator>
-    constexpr
-    inline _ForwardIterator
-    __uninitialized_move_a(_InputIterator __first, _InputIterator __last,
-      _ForwardIterator __result, _Allocator& __alloc)
-    {
-      return std::__uninitialized_copy_a(std::make_move_iterator(__first),
-      std::make_move_iterator(__last),
-      __result, __alloc);
-    }
-
-  template<typename _InputIterator, typename _ForwardIterator,
-    typename _Allocator>
-    constexpr
-    inline _ForwardIterator
-    __uninitialized_move_if_noexcept_a(_InputIterator __first,
-           _InputIterator __last,
-           _ForwardIterator __result,
-           _Allocator& __alloc)
-    {
-      return std::__uninitialized_copy_a
- (std::__make_move_if_noexcept_iterator(__first),
-  std::__make_move_if_noexcept_iterator(__last), __result, __alloc);
-    }
-
-  template<typename _ForwardIterator, typename _Tp, typename _Allocator>
-    constexpr
-    void
-    __uninitialized_fill_a(_ForwardIterator __first, _ForwardIterator __last,
-      const _Tp& __x, _Allocator& __alloc)
-    {
-      _ForwardIterator __cur = __first;
-      try
- {
-   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
-   for (; __cur != __last; ++__cur)
-     __traits::construct(__alloc, std::__addressof(*__cur), __x);
- }
-      catch(...)
- {
-   std::_Destroy(__first, __cur, __alloc);
-   throw;
- }
-    }
-
-
-  template<typename _ForwardIterator, typename _Tp, typename _Tp2>
-    constexpr
-    inline void
-    __uninitialized_fill_a(_ForwardIterator __first, _ForwardIterator __last,
-      const _Tp& __x, allocator<_Tp2>&)
-    {
-
-      if (std::is_constant_evaluated())
- return std::__do_uninit_fill(__first, __last, __x);
-
-      std::uninitialized_fill(__first, __last, __x);
-    }
-
-
-  template<typename _ForwardIterator, typename _Size, typename _Tp,
-    typename _Allocator>
-     constexpr
-    _ForwardIterator
-    __uninitialized_fill_n_a(_ForwardIterator __first, _Size __n,
-        const _Tp& __x, _Allocator& __alloc)
-    {
-      _ForwardIterator __cur = __first;
-      try
- {
-   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
-   for (; __n > 0; --__n, (void) ++__cur)
-     __traits::construct(__alloc, std::__addressof(*__cur), __x);
-   return __cur;
- }
-      catch(...)
- {
-   std::_Destroy(__first, __cur, __alloc);
-   throw;
- }
-    }
-
-
-  template<typename _ForwardIterator, typename _Size, typename _Tp,
-    typename _Tp2>
-    constexpr
-    inline _ForwardIterator
-    __uninitialized_fill_n_a(_ForwardIterator __first, _Size __n,
-        const _Tp& __x, allocator<_Tp2>&)
-    {
-
-      if (std::is_constant_evaluated())
- return std::__do_uninit_fill_n(__first, __n, __x);
-
-      return std::uninitialized_fill_n(__first, __n, __x);
-    }
-# 485 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template<typename _InputIterator1, typename _InputIterator2,
-    typename _ForwardIterator, typename _Allocator>
-    inline _ForwardIterator
-    __uninitialized_copy_move(_InputIterator1 __first1,
-         _InputIterator1 __last1,
-         _InputIterator2 __first2,
-         _InputIterator2 __last2,
-         _ForwardIterator __result,
-         _Allocator& __alloc)
-    {
-      _ForwardIterator __mid = std::__uninitialized_copy_a(__first1, __last1,
-          __result,
-          __alloc);
-      try
- {
-   return std::__uninitialized_move_a(__first2, __last2, __mid, __alloc);
- }
-      catch(...)
- {
-   std::_Destroy(__result, __mid, __alloc);
-   throw;
- }
-    }
-
-
-
-
-
-  template<typename _InputIterator1, typename _InputIterator2,
-    typename _ForwardIterator, typename _Allocator>
-    inline _ForwardIterator
-    __uninitialized_move_copy(_InputIterator1 __first1,
-         _InputIterator1 __last1,
-         _InputIterator2 __first2,
-         _InputIterator2 __last2,
-         _ForwardIterator __result,
-         _Allocator& __alloc)
-    {
-      _ForwardIterator __mid = std::__uninitialized_move_a(__first1, __last1,
-          __result,
-          __alloc);
-      try
- {
-   return std::__uninitialized_copy_a(__first2, __last2, __mid, __alloc);
- }
-      catch(...)
- {
-   std::_Destroy(__result, __mid, __alloc);
-   throw;
- }
-    }
-
-
-
-
-  template<typename _ForwardIterator, typename _Tp, typename _InputIterator,
-    typename _Allocator>
-    inline _ForwardIterator
-    __uninitialized_fill_move(_ForwardIterator __result, _ForwardIterator __mid,
-         const _Tp& __x, _InputIterator __first,
-         _InputIterator __last, _Allocator& __alloc)
-    {
-      std::__uninitialized_fill_a(__result, __mid, __x, __alloc);
-      try
- {
-   return std::__uninitialized_move_a(__first, __last, __mid, __alloc);
- }
-      catch(...)
- {
-   std::_Destroy(__result, __mid, __alloc);
-   throw;
- }
-    }
-
-
-
-
-  template<typename _InputIterator, typename _ForwardIterator, typename _Tp,
-    typename _Allocator>
-    inline void
-    __uninitialized_move_fill(_InputIterator __first1, _InputIterator __last1,
-         _ForwardIterator __first2,
-         _ForwardIterator __last2, const _Tp& __x,
-         _Allocator& __alloc)
-    {
-      _ForwardIterator __mid2 = std::__uninitialized_move_a(__first1, __last1,
-           __first2,
-           __alloc);
-      try
- {
-   std::__uninitialized_fill_a(__mid2, __last2, __x, __alloc);
- }
-      catch(...)
- {
-   std::_Destroy(__first2, __mid2, __alloc);
-   throw;
- }
-    }
-# 592 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template<bool _TrivialValueType>
-    struct __uninitialized_default_1
-    {
-      template<typename _ForwardIterator>
-        static void
-        __uninit_default(_ForwardIterator __first, _ForwardIterator __last)
-        {
-   _ForwardIterator __cur = __first;
-   try
-     {
-       for (; __cur != __last; ++__cur)
-  std::_Construct(std::__addressof(*__cur));
-     }
-   catch(...)
-     {
-       std::_Destroy(__first, __cur);
-       throw;
-     }
- }
-    };
-
-  template<>
-    struct __uninitialized_default_1<true>
-    {
-      template<typename _ForwardIterator>
-        static void
-        __uninit_default(_ForwardIterator __first, _ForwardIterator __last)
-        {
-   if (__first == __last)
-     return;
-
-   typename iterator_traits<_ForwardIterator>::value_type* __val
-     = std::__addressof(*__first);
-   std::_Construct(__val);
-   if (++__first != __last)
-     std::fill(__first, __last, *__val);
- }
-    };
-
-  template<bool _TrivialValueType>
-    struct __uninitialized_default_n_1
-    {
-      template<typename _ForwardIterator, typename _Size>
- constexpr
-        static _ForwardIterator
-        __uninit_default_n(_ForwardIterator __first, _Size __n)
-        {
-   _ForwardIterator __cur = __first;
-   try
-     {
-       for (; __n > 0; --__n, (void) ++__cur)
-  std::_Construct(std::__addressof(*__cur));
-       return __cur;
-     }
-   catch(...)
-     {
-       std::_Destroy(__first, __cur);
-       throw;
-     }
- }
-    };
-
-  template<>
-    struct __uninitialized_default_n_1<true>
-    {
-      template<typename _ForwardIterator, typename _Size>
- constexpr
-        static _ForwardIterator
-        __uninit_default_n(_ForwardIterator __first, _Size __n)
-        {
-   if (__n > 0)
-     {
-       typename iterator_traits<_ForwardIterator>::value_type* __val
-  = std::__addressof(*__first);
-       std::_Construct(__val);
-       ++__first;
-       __first = std::fill_n(__first, __n - 1, *__val);
-     }
-   return __first;
- }
-    };
-
-
-
-  template<typename _ForwardIterator>
-    inline void
-    __uninitialized_default(_ForwardIterator __first,
-       _ForwardIterator __last)
-    {
-      typedef typename iterator_traits<_ForwardIterator>::value_type
- _ValueType;
-
-      const bool __assignable = is_copy_assignable<_ValueType>::value;
-
-      std::__uninitialized_default_1<__is_trivial(_ValueType)
-         && __assignable>::
- __uninit_default(__first, __last);
-    }
-
-
-
-  template<typename _ForwardIterator, typename _Size>
-    constexpr
-    inline _ForwardIterator
-    __uninitialized_default_n(_ForwardIterator __first, _Size __n)
-    {
-
-      if (std::is_constant_evaluated())
- return __uninitialized_default_n_1<false>::
-   __uninit_default_n(__first, __n);
-
-
-      typedef typename iterator_traits<_ForwardIterator>::value_type
- _ValueType;
-
-      constexpr bool __can_fill
- = __and_<is_integral<_Size>, is_copy_assignable<_ValueType>>::value;
-
-      return __uninitialized_default_n_1<__is_trivial(_ValueType)
-      && __can_fill>::
- __uninit_default_n(__first, __n);
-    }
-
-
-
-
-
-  template<typename _ForwardIterator, typename _Allocator>
-    void
-    __uninitialized_default_a(_ForwardIterator __first,
-         _ForwardIterator __last,
-         _Allocator& __alloc)
-    {
-      _ForwardIterator __cur = __first;
-      try
- {
-   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
-   for (; __cur != __last; ++__cur)
-     __traits::construct(__alloc, std::__addressof(*__cur));
- }
-      catch(...)
- {
-   std::_Destroy(__first, __cur, __alloc);
-   throw;
- }
-    }
-
-
-  template<typename _ForwardIterator, typename _Tp>
-    inline void
-    __uninitialized_default_a(_ForwardIterator __first,
-         _ForwardIterator __last,
-         allocator<_Tp>&)
-    { std::__uninitialized_default(__first, __last); }
-
-
-
-
-
-  template<typename _ForwardIterator, typename _Size, typename _Allocator>
-    constexpr _ForwardIterator
-    __uninitialized_default_n_a(_ForwardIterator __first, _Size __n,
-    _Allocator& __alloc)
-    {
-      _ForwardIterator __cur = __first;
-      try
- {
-   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
-   for (; __n > 0; --__n, (void) ++__cur)
-     __traits::construct(__alloc, std::__addressof(*__cur));
-   return __cur;
- }
-      catch(...)
- {
-   std::_Destroy(__first, __cur, __alloc);
-   throw;
- }
-    }
-
-
-
-
-  template<typename _ForwardIterator, typename _Size, typename _Tp>
-    constexpr
-    inline _ForwardIterator
-    __uninitialized_default_n_a(_ForwardIterator __first, _Size __n,
-    allocator<_Tp>&)
-    { return std::__uninitialized_default_n(__first, __n); }
-
-
-  template<bool _TrivialValueType>
-    struct __uninitialized_default_novalue_1
-    {
-      template<typename _ForwardIterator>
- static void
- __uninit_default_novalue(_ForwardIterator __first,
-     _ForwardIterator __last)
- {
-   _ForwardIterator __cur = __first;
-   try
-     {
-       for (; __cur != __last; ++__cur)
-  std::_Construct_novalue(std::__addressof(*__cur));
-     }
-   catch(...)
-     {
-       std::_Destroy(__first, __cur);
-       throw;
-     }
- }
-    };
-
-  template<>
-    struct __uninitialized_default_novalue_1<true>
-    {
-      template<typename _ForwardIterator>
-        static void
-        __uninit_default_novalue(_ForwardIterator, _ForwardIterator)
- {
- }
-    };
-
-  template<bool _TrivialValueType>
-    struct __uninitialized_default_novalue_n_1
-    {
-      template<typename _ForwardIterator, typename _Size>
- static _ForwardIterator
- __uninit_default_novalue_n(_ForwardIterator __first, _Size __n)
- {
-   _ForwardIterator __cur = __first;
-   try
-     {
-       for (; __n > 0; --__n, (void) ++__cur)
-  std::_Construct_novalue(std::__addressof(*__cur));
-       return __cur;
-     }
-   catch(...)
-     {
-       std::_Destroy(__first, __cur);
-       throw;
-     }
- }
-    };
-
-  template<>
-    struct __uninitialized_default_novalue_n_1<true>
-    {
-      template<typename _ForwardIterator, typename _Size>
- static _ForwardIterator
- __uninit_default_novalue_n(_ForwardIterator __first, _Size __n)
- { return std::next(__first, __n); }
-    };
-
-
-
-  template<typename _ForwardIterator>
-    inline void
-    __uninitialized_default_novalue(_ForwardIterator __first,
-        _ForwardIterator __last)
-    {
-      typedef typename iterator_traits<_ForwardIterator>::value_type
- _ValueType;
-
-      std::__uninitialized_default_novalue_1<
- is_trivially_default_constructible<_ValueType>::value>::
- __uninit_default_novalue(__first, __last);
-    }
-
-
-
-  template<typename _ForwardIterator, typename _Size>
-    inline _ForwardIterator
-    __uninitialized_default_novalue_n(_ForwardIterator __first, _Size __n)
-    {
-      typedef typename iterator_traits<_ForwardIterator>::value_type
- _ValueType;
-
-      return __uninitialized_default_novalue_n_1<
- is_trivially_default_constructible<_ValueType>::value>::
- __uninit_default_novalue_n(__first, __n);
-    }
-
-  template<typename _InputIterator, typename _Size,
-    typename _ForwardIterator>
-    _ForwardIterator
-    __uninitialized_copy_n(_InputIterator __first, _Size __n,
-      _ForwardIterator __result, input_iterator_tag)
-    {
-      _ForwardIterator __cur = __result;
-      try
- {
-   for (; __n > 0; --__n, (void) ++__first, ++__cur)
-     std::_Construct(std::__addressof(*__cur), *__first);
-   return __cur;
- }
-      catch(...)
- {
-   std::_Destroy(__result, __cur);
-   throw;
- }
-    }
-
-  template<typename _RandomAccessIterator, typename _Size,
-    typename _ForwardIterator>
-    inline _ForwardIterator
-    __uninitialized_copy_n(_RandomAccessIterator __first, _Size __n,
-      _ForwardIterator __result,
-      random_access_iterator_tag)
-    { return std::uninitialized_copy(__first, __first + __n, __result); }
-
-  template<typename _InputIterator, typename _Size,
-    typename _ForwardIterator>
-    pair<_InputIterator, _ForwardIterator>
-    __uninitialized_copy_n_pair(_InputIterator __first, _Size __n,
-      _ForwardIterator __result, input_iterator_tag)
-    {
-      _ForwardIterator __cur = __result;
-      try
- {
-   for (; __n > 0; --__n, (void) ++__first, ++__cur)
-     std::_Construct(std::__addressof(*__cur), *__first);
-   return {__first, __cur};
- }
-      catch(...)
- {
-   std::_Destroy(__result, __cur);
-   throw;
- }
-    }
-
-  template<typename _RandomAccessIterator, typename _Size,
-    typename _ForwardIterator>
-    inline pair<_RandomAccessIterator, _ForwardIterator>
-    __uninitialized_copy_n_pair(_RandomAccessIterator __first, _Size __n,
-      _ForwardIterator __result,
-      random_access_iterator_tag)
-    {
-      auto __second_res = uninitialized_copy(__first, __first + __n, __result);
-      auto __first_res = std::next(__first, __n);
-      return {__first_res, __second_res};
-    }
-# 946 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template<typename _InputIterator, typename _Size, typename _ForwardIterator>
-    inline _ForwardIterator
-    uninitialized_copy_n(_InputIterator __first, _Size __n,
-    _ForwardIterator __result)
-    { return std::__uninitialized_copy_n(__first, __n, __result,
-      std::__iterator_category(__first)); }
-
-
-  template<typename _InputIterator, typename _Size, typename _ForwardIterator>
-    inline pair<_InputIterator, _ForwardIterator>
-    __uninitialized_copy_n_pair(_InputIterator __first, _Size __n,
-         _ForwardIterator __result)
-    {
-      return
- std::__uninitialized_copy_n_pair(__first, __n, __result,
-      std::__iterator_category(__first));
-    }
-# 973 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template <typename _ForwardIterator>
-    inline void
-    uninitialized_default_construct(_ForwardIterator __first,
-        _ForwardIterator __last)
-    {
-      __uninitialized_default_novalue(__first, __last);
-    }
-# 988 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template <typename _ForwardIterator, typename _Size>
-    inline _ForwardIterator
-    uninitialized_default_construct_n(_ForwardIterator __first, _Size __count)
-    {
-      return __uninitialized_default_novalue_n(__first, __count);
-    }
-
-
-
-
-
-
-
-  template <typename _ForwardIterator>
-    inline void
-    uninitialized_value_construct(_ForwardIterator __first,
-      _ForwardIterator __last)
-    {
-      return __uninitialized_default(__first, __last);
-    }
-# 1016 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template <typename _ForwardIterator, typename _Size>
-    inline _ForwardIterator
-    uninitialized_value_construct_n(_ForwardIterator __first, _Size __count)
-    {
-      return __uninitialized_default_n(__first, __count);
-    }
-# 1031 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template <typename _InputIterator, typename _ForwardIterator>
-    inline _ForwardIterator
-    uninitialized_move(_InputIterator __first, _InputIterator __last,
-         _ForwardIterator __result)
-    {
-      return std::uninitialized_copy
- (std::make_move_iterator(__first),
-  std::make_move_iterator(__last), __result);
-    }
-# 1049 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-  template <typename _InputIterator, typename _Size, typename _ForwardIterator>
-    inline pair<_InputIterator, _ForwardIterator>
-    uninitialized_move_n(_InputIterator __first, _Size __count,
-    _ForwardIterator __result)
-    {
-      auto __res = std::__uninitialized_copy_n_pair
- (std::make_move_iterator(__first),
-  __count, __result);
-      return {__res.first.base(), __res.second};
-    }
-
-
-
-
-
-  template<typename _Tp, typename _Up, typename _Allocator>
-    constexpr
-    inline void
-    __relocate_object_a(_Tp* __restrict __dest, _Up* __restrict __orig,
-   _Allocator& __alloc)
-    noexcept(noexcept(std::allocator_traits<_Allocator>::construct(__alloc,
-    __dest, std::move(*__orig)))
-      && noexcept(std::allocator_traits<_Allocator>::destroy(
-       __alloc, std::__addressof(*__orig))))
-    {
-      typedef std::allocator_traits<_Allocator> __traits;
-      __traits::construct(__alloc, __dest, std::move(*__orig));
-      __traits::destroy(__alloc, std::__addressof(*__orig));
-    }
-
-
-
-  template<typename _Tp, typename = void>
-    struct __is_bitwise_relocatable
-    : is_trivial<_Tp> { };
-
-  template <typename _InputIterator, typename _ForwardIterator,
-     typename _Allocator>
-    constexpr
-    inline _ForwardIterator
-    __relocate_a_1(_InputIterator __first, _InputIterator __last,
-     _ForwardIterator __result, _Allocator& __alloc)
-    noexcept(noexcept(std::__relocate_object_a(std::addressof(*__result),
-            std::addressof(*__first),
-            __alloc)))
-    {
-      typedef typename iterator_traits<_InputIterator>::value_type
- _ValueType;
-      typedef typename iterator_traits<_ForwardIterator>::value_type
- _ValueType2;
-      static_assert(std::is_same<_ValueType, _ValueType2>::value,
-   "relocation is only possible for values of the same type");
-      _ForwardIterator __cur = __result;
-      for (; __first != __last; ++__first, (void)++__cur)
- std::__relocate_object_a(std::__addressof(*__cur),
-     std::__addressof(*__first), __alloc);
-      return __cur;
-    }
-
-
-  template <typename _Tp, typename _Up>
-    constexpr
-    inline __enable_if_t<std::__is_bitwise_relocatable<_Tp>::value, _Tp*>
-    __relocate_a_1(_Tp* __first, _Tp* __last,
-     _Tp* __result,
-     [[__maybe_unused__]] allocator<_Up>& __alloc) noexcept
-    {
-      ptrdiff_t __count = __last - __first;
-      if (__count > 0)
- {
-
-   if (std::is_constant_evaluated())
-     {
-
-
-       __gnu_cxx::__normal_iterator<_Tp*, void> __out(__result);
-       __out = std::__relocate_a_1(__first, __last, __out, __alloc);
-       return __out.base();
-     }
-
-   __builtin_memcpy(__result, __first, __count * sizeof(_Tp));
- }
-      return __result + __count;
-    }
-
-
-  template <typename _InputIterator, typename _ForwardIterator,
-     typename _Allocator>
-    constexpr
-    inline _ForwardIterator
-    __relocate_a(_InputIterator __first, _InputIterator __last,
-   _ForwardIterator __result, _Allocator& __alloc)
-    noexcept(noexcept(__relocate_a_1(std::__niter_base(__first),
-         std::__niter_base(__last),
-         std::__niter_base(__result), __alloc)))
-    {
-      return std::__relocate_a_1(std::__niter_base(__first),
-     std::__niter_base(__last),
-     std::__niter_base(__result), __alloc);
-    }
-
-
-
-
-
-
-
-}
-# 66 "C:/mingw64/include/c++/14.2.0/vector" 2 3
-# 1 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 1 3
-# 77 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-namespace std
-{
-
-
-
-
-  template<typename _Tp, typename _Alloc>
-    struct _Vector_base
-    {
-      typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
- rebind<_Tp>::other _Tp_alloc_type;
-      typedef typename __gnu_cxx::__alloc_traits<_Tp_alloc_type>::pointer
-        pointer;
-
-      struct _Vector_impl_data
-      {
- pointer _M_start;
- pointer _M_finish;
- pointer _M_end_of_storage;
-
- constexpr
- _Vector_impl_data() noexcept
- : _M_start(), _M_finish(), _M_end_of_storage()
- { }
-
-
- constexpr
- _Vector_impl_data(_Vector_impl_data&& __x) noexcept
- : _M_start(__x._M_start), _M_finish(__x._M_finish),
-   _M_end_of_storage(__x._M_end_of_storage)
- { __x._M_start = __x._M_finish = __x._M_end_of_storage = pointer(); }
-
-
- constexpr
- void
- _M_copy_data(_Vector_impl_data const& __x) noexcept
- {
-   _M_start = __x._M_start;
-   _M_finish = __x._M_finish;
-   _M_end_of_storage = __x._M_end_of_storage;
- }
-
- constexpr
- void
- _M_swap_data(_Vector_impl_data& __x) noexcept
- {
-
-
-   _Vector_impl_data __tmp;
-   __tmp._M_copy_data(*this);
-   _M_copy_data(__x);
-   __x._M_copy_data(__tmp);
- }
-      };
-
-      struct _Vector_impl
- : public _Tp_alloc_type, public _Vector_impl_data
-      {
- constexpr
- _Vector_impl() noexcept(is_nothrow_default_constructible<_Tp_alloc_type>::value)
-
-
- requires is_default_constructible_v<_Tp_alloc_type>
-
- : _Tp_alloc_type()
- { }
-
- constexpr
- _Vector_impl(_Tp_alloc_type const& __a) noexcept
- : _Tp_alloc_type(__a)
- { }
-
-
-
-
- constexpr
- _Vector_impl(_Vector_impl&& __x) noexcept
- : _Tp_alloc_type(std::move(__x)), _Vector_impl_data(std::move(__x))
- { }
-
- constexpr
- _Vector_impl(_Tp_alloc_type&& __a) noexcept
- : _Tp_alloc_type(std::move(__a))
- { }
-
- constexpr
- _Vector_impl(_Tp_alloc_type&& __a, _Vector_impl&& __rv) noexcept
- : _Tp_alloc_type(std::move(__a)), _Vector_impl_data(std::move(__rv))
- { }
-# 293 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      };
-
-    public:
-      typedef _Alloc allocator_type;
-
-      constexpr
-      _Tp_alloc_type&
-      _M_get_Tp_allocator() noexcept
-      { return this->_M_impl; }
-
-      constexpr
-      const _Tp_alloc_type&
-      _M_get_Tp_allocator() const noexcept
-      { return this->_M_impl; }
-
-      constexpr
-      allocator_type
-      get_allocator() const noexcept
-      { return allocator_type(_M_get_Tp_allocator()); }
-
-
-      _Vector_base() = default;
-
-
-
-
-      constexpr
-      _Vector_base(const allocator_type& __a) noexcept
-      : _M_impl(__a) { }
-
-
-
-      constexpr
-      _Vector_base(size_t __n)
-      : _M_impl()
-      { _M_create_storage(__n); }
-
-
-      constexpr
-      _Vector_base(size_t __n, const allocator_type& __a)
-      : _M_impl(__a)
-      { _M_create_storage(__n); }
-
-
-      _Vector_base(_Vector_base&&) = default;
-
-
-
-      constexpr
-      _Vector_base(_Tp_alloc_type&& __a) noexcept
-      : _M_impl(std::move(__a)) { }
-
-      constexpr
-      _Vector_base(_Vector_base&& __x, const allocator_type& __a)
-      : _M_impl(__a)
-      {
- if (__x.get_allocator() == __a)
-   this->_M_impl._M_swap_data(__x._M_impl);
- else
-   {
-     size_t __n = __x._M_impl._M_finish - __x._M_impl._M_start;
-     _M_create_storage(__n);
-   }
-      }
-
-
-      constexpr
-      _Vector_base(const allocator_type& __a, _Vector_base&& __x)
-      : _M_impl(_Tp_alloc_type(__a), std::move(__x._M_impl))
-      { }
-
-
-      constexpr
-      ~_Vector_base() noexcept
-      {
- _M_deallocate(_M_impl._M_start,
-        _M_impl._M_end_of_storage - _M_impl._M_start);
-      }
-
-    public:
-      _Vector_impl _M_impl;
-
-      constexpr
-      pointer
-      _M_allocate(size_t __n)
-      {
- typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
- return __n != 0 ? _Tr::allocate(_M_impl, __n) : pointer();
-      }
-
-      constexpr
-      void
-      _M_deallocate(pointer __p, size_t __n)
-      {
- typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
- if (__p)
-   _Tr::deallocate(_M_impl, __p, __n);
-      }
-
-    protected:
-
-      constexpr
-      void
-      _M_create_storage(size_t __n)
-      {
- this->_M_impl._M_start = this->_M_allocate(__n);
- this->_M_impl._M_finish = this->_M_impl._M_start;
- this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __n;
-      }
-    };
-# 427 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-  template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
-    class vector : protected _Vector_base<_Tp, _Alloc>
-    {
-# 440 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      static_assert(is_same<typename remove_cv<_Tp>::type, _Tp>::value,
-   "std::vector must have a non-const, non-volatile value_type");
-
-      static_assert(is_same<typename _Alloc::value_type, _Tp>::value,
-   "std::vector must have the same value_type as its allocator");
-
-
-
-      typedef _Vector_base<_Tp, _Alloc> _Base;
-      typedef typename _Base::_Tp_alloc_type _Tp_alloc_type;
-      typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Alloc_traits;
-
-    public:
-      typedef _Tp value_type;
-      typedef typename _Base::pointer pointer;
-      typedef typename _Alloc_traits::const_pointer const_pointer;
-      typedef typename _Alloc_traits::reference reference;
-      typedef typename _Alloc_traits::const_reference const_reference;
-      typedef __gnu_cxx::__normal_iterator<pointer, vector> iterator;
-      typedef __gnu_cxx::__normal_iterator<const_pointer, vector>
-      const_iterator;
-      typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
-      typedef std::reverse_iterator<iterator> reverse_iterator;
-      typedef size_t size_type;
-      typedef ptrdiff_t difference_type;
-      typedef _Alloc allocator_type;
-
-    private:
-
-      static constexpr bool
-      _S_nothrow_relocate(true_type)
-      {
- return noexcept(std::__relocate_a(std::declval<pointer>(),
-       std::declval<pointer>(),
-       std::declval<pointer>(),
-       std::declval<_Tp_alloc_type&>()));
-      }
-
-      static constexpr bool
-      _S_nothrow_relocate(false_type)
-      { return false; }
-
-      static constexpr bool
-      _S_use_relocate()
-      {
-
-
-
- return _S_nothrow_relocate(__is_move_insertable<_Tp_alloc_type>{});
-      }
-
-      static pointer
-      _S_do_relocate(pointer __first, pointer __last, pointer __result,
-       _Tp_alloc_type& __alloc, true_type) noexcept
-      {
- return std::__relocate_a(__first, __last, __result, __alloc);
-      }
-
-      static pointer
-      _S_do_relocate(pointer, pointer, pointer __result,
-       _Tp_alloc_type&, false_type) noexcept
-      { return __result; }
-
-      static constexpr pointer
-      _S_relocate(pointer __first, pointer __last, pointer __result,
-    _Tp_alloc_type& __alloc) noexcept
-      {
-
-
- return std::__relocate_a(__first, __last, __result, __alloc);
-
-
-
-
-      }
-
-
-    protected:
-      using _Base::_M_allocate;
-      using _Base::_M_deallocate;
-      using _Base::_M_impl;
-      using _Base::_M_get_Tp_allocator;
-
-    public:
-
-
-
-
-
-
-
-      vector() = default;
-# 540 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      explicit
-      constexpr
-      vector(const allocator_type& __a) noexcept
-      : _Base(__a) { }
-# 554 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      explicit
-      constexpr
-      vector(size_type __n, const allocator_type& __a = allocator_type())
-      : _Base(_S_check_init_len(__n, __a), __a)
-      { _M_default_initialize(__n); }
-# 568 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      vector(size_type __n, const value_type& __value,
-      const allocator_type& __a = allocator_type())
-      : _Base(_S_check_init_len(__n, __a), __a)
-      { _M_fill_initialize(__n, __value); }
-# 600 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      vector(const vector& __x)
-      : _Base(__x.size(),
- _Alloc_traits::_S_select_on_copy(__x._M_get_Tp_allocator()))
-      {
- this->_M_impl._M_finish =
-   std::__uninitialized_copy_a(__x.begin(), __x.end(),
-          this->_M_impl._M_start,
-          _M_get_Tp_allocator());
-      }
-# 620 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      vector(vector&&) noexcept = default;
-
-
-      constexpr
-      vector(const vector& __x, const __type_identity_t<allocator_type>& __a)
-      : _Base(__x.size(), __a)
-      {
- this->_M_impl._M_finish =
-   std::__uninitialized_copy_a(__x.begin(), __x.end(),
-          this->_M_impl._M_start,
-          _M_get_Tp_allocator());
-      }
-
-    private:
-      constexpr
-      vector(vector&& __rv, const allocator_type& __m, true_type) noexcept
-      : _Base(__m, std::move(__rv))
-      { }
-
-      constexpr
-      vector(vector&& __rv, const allocator_type& __m, false_type)
-      : _Base(__m)
-      {
- if (__rv.get_allocator() == __m)
-   this->_M_impl._M_swap_data(__rv._M_impl);
- else if (!__rv.empty())
-   {
-     this->_M_create_storage(__rv.size());
-     this->_M_impl._M_finish =
-       std::__uninitialized_move_a(__rv.begin(), __rv.end(),
-       this->_M_impl._M_start,
-       _M_get_Tp_allocator());
-     __rv.clear();
-   }
-      }
-
-    public:
-
-      constexpr
-      vector(vector&& __rv, const __type_identity_t<allocator_type>& __m)
-      noexcept( noexcept(
- vector(std::declval<vector&&>(), std::declval<const allocator_type&>(),
-        std::declval<typename _Alloc_traits::is_always_equal>())) )
-      : vector(std::move(__rv), __m, typename _Alloc_traits::is_always_equal{})
-      { }
-# 677 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      vector(initializer_list<value_type> __l,
-      const allocator_type& __a = allocator_type())
-      : _Base(__a)
-      {
- _M_range_initialize(__l.begin(), __l.end(),
-       random_access_iterator_tag());
-      }
-# 704 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      template<typename _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
- vector(_InputIterator __first, _InputIterator __last,
-        const allocator_type& __a = allocator_type())
- : _Base(__a)
- {
-   _M_range_initialize(__first, __last,
-         std::__iterator_category(__first));
- }
-# 732 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      ~vector() noexcept
-      {
- std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
-        _M_get_Tp_allocator());
- ;
-      }
-# 749 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      vector&
-      operator=(const vector& __x);
-# 764 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      vector&
-      operator=(vector&& __x) noexcept(_Alloc_traits::_S_nothrow_move())
-      {
- constexpr bool __move_storage =
-   _Alloc_traits::_S_propagate_on_move_assign()
-   || _Alloc_traits::_S_always_equal();
- _M_move_assign(std::move(__x), __bool_constant<__move_storage>());
- return *this;
-      }
-# 786 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      vector&
-      operator=(initializer_list<value_type> __l)
-      {
- this->_M_assign_aux(__l.begin(), __l.end(),
-       random_access_iterator_tag());
- return *this;
-      }
-# 806 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      void
-      assign(size_type __n, const value_type& __val)
-      { _M_fill_assign(__n, __val); }
-# 824 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      template<typename _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
- void
- assign(_InputIterator __first, _InputIterator __last)
- { _M_assign_aux(__first, __last, std::__iterator_category(__first)); }
-# 853 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      void
-      assign(initializer_list<value_type> __l)
-      {
- this->_M_assign_aux(__l.begin(), __l.end(),
-       random_access_iterator_tag());
-      }
-
-
-
-      using _Base::get_allocator;
-
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      iterator
-      begin() noexcept
-      { return iterator(this->_M_impl._M_start); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_iterator
-      begin() const noexcept
-      { return const_iterator(this->_M_impl._M_start); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      iterator
-      end() noexcept
-      { return iterator(this->_M_impl._M_finish); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_iterator
-      end() const noexcept
-      { return const_iterator(this->_M_impl._M_finish); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      reverse_iterator
-      rbegin() noexcept
-      { return reverse_iterator(end()); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_reverse_iterator
-      rbegin() const noexcept
-      { return const_reverse_iterator(end()); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      reverse_iterator
-      rend() noexcept
-      { return reverse_iterator(begin()); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_reverse_iterator
-      rend() const noexcept
-      { return const_reverse_iterator(begin()); }
-
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_iterator
-      cbegin() const noexcept
-      { return const_iterator(this->_M_impl._M_start); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_iterator
-      cend() const noexcept
-      { return const_iterator(this->_M_impl._M_finish); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_reverse_iterator
-      crbegin() const noexcept
-      { return const_reverse_iterator(end()); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_reverse_iterator
-      crend() const noexcept
-      { return const_reverse_iterator(begin()); }
-
-
-
-
-      [[__nodiscard__]] constexpr
-      size_type
-      size() const noexcept
-      { return size_type(this->_M_impl._M_finish - this->_M_impl._M_start); }
-
-
-      [[__nodiscard__]] constexpr
-      size_type
-      max_size() const noexcept
-      { return _S_max_size(_M_get_Tp_allocator()); }
-# 1011 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      void
-      resize(size_type __new_size)
-      {
- if (__new_size > size())
-   _M_default_append(__new_size - size());
- else if (__new_size < size())
-   _M_erase_at_end(this->_M_impl._M_start + __new_size);
-      }
-# 1032 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      void
-      resize(size_type __new_size, const value_type& __x)
-      {
- if (__new_size > size())
-   _M_fill_insert(end(), __new_size - size(), __x);
- else if (__new_size < size())
-   _M_erase_at_end(this->_M_impl._M_start + __new_size);
-      }
-# 1066 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      void
-      shrink_to_fit()
-      { _M_shrink_to_fit(); }
-
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      size_type
-      capacity() const noexcept
-      {
- return size_type(this->_M_impl._M_end_of_storage
-      - this->_M_impl._M_start);
-      }
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      bool
-      empty() const noexcept
-      { return begin() == end(); }
-# 1110 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      void
-      reserve(size_type __n);
-# 1126 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      [[__nodiscard__]] constexpr
-      reference
-      operator[](size_type __n) noexcept
-      {
- ;
- return *(this->_M_impl._M_start + __n);
-      }
-# 1145 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      [[__nodiscard__]] constexpr
-      const_reference
-      operator[](size_type __n) const noexcept
-      {
- ;
- return *(this->_M_impl._M_start + __n);
-      }
-
-    protected:
-
-      constexpr
-      void
-      _M_range_check(size_type __n) const
-      {
- if (__n >= this->size())
-   __throw_out_of_range_fmt(("vector::_M_range_check: __n " "(which is %zu) >= this->size() " "(which is %zu)")
-
-                            ,
-       __n, this->size());
-      }
-
-    public:
-# 1178 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      [[__nodiscard__]] constexpr
-      reference
-      at(size_type __n)
-      {
- _M_range_check(__n);
- return (*this)[__n];
-      }
-# 1197 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      [[__nodiscard__]] constexpr
-      const_reference
-      at(size_type __n) const
-      {
- _M_range_check(__n);
- return (*this)[__n];
-      }
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      reference
-      front() noexcept
-      {
- ;
- return *begin();
-      }
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_reference
-      front() const noexcept
-      {
- ;
- return *begin();
-      }
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      reference
-      back() noexcept
-      {
- ;
- return *(end() - 1);
-      }
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      const_reference
-      back() const noexcept
-      {
- ;
- return *(end() - 1);
-      }
-# 1260 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      [[__nodiscard__]] constexpr
-      _Tp*
-      data() noexcept
-      { return _M_data_ptr(this->_M_impl._M_start); }
-
-      [[__nodiscard__]] constexpr
-      const _Tp*
-      data() const noexcept
-      { return _M_data_ptr(this->_M_impl._M_start); }
-# 1281 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      void
-      push_back(const value_type& __x)
-      {
- if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
-   {
-     ;
-     _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
-         __x);
-     ++this->_M_impl._M_finish;
-     ;
-   }
- else
-   _M_realloc_append(__x);
-      }
-
-
-      constexpr
-      void
-      push_back(value_type&& __x)
-      { emplace_back(std::move(__x)); }
-
-      template<typename... _Args>
-
- constexpr
- reference
-
-
-
- emplace_back(_Args&&... __args);
-# 1322 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      void
-      pop_back() noexcept
-      {
- ;
- --this->_M_impl._M_finish;
- _Alloc_traits::destroy(this->_M_impl, this->_M_impl._M_finish);
- ;
-      }
-# 1345 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      template<typename... _Args>
- constexpr
- iterator
- emplace(const_iterator __position, _Args&&... __args)
- { return _M_emplace_aux(__position, std::forward<_Args>(__args)...); }
-# 1362 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      iterator
-      insert(const_iterator __position, const value_type& __x);
-# 1393 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      iterator
-      insert(const_iterator __position, value_type&& __x)
-      { return _M_insert_rval(__position, std::move(__x)); }
-# 1411 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      iterator
-      insert(const_iterator __position, initializer_list<value_type> __l)
-      {
- auto __offset = __position - cbegin();
- _M_range_insert(begin() + __offset, __l.begin(), __l.end(),
-   std::random_access_iterator_tag());
- return begin() + __offset;
-      }
-# 1437 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      iterator
-      insert(const_iterator __position, size_type __n, const value_type& __x)
-      {
- difference_type __offset = __position - cbegin();
- _M_fill_insert(begin() + __offset, __n, __x);
- return begin() + __offset;
-      }
-# 1480 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      template<typename _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
- iterator
- insert(const_iterator __position, _InputIterator __first,
-        _InputIterator __last)
- {
-   difference_type __offset = __position - cbegin();
-   _M_range_insert(begin() + __offset, __first, __last,
-     std::__iterator_category(__first));
-   return begin() + __offset;
- }
-# 1533 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      iterator
-
-      erase(const_iterator __position)
-      { return _M_erase(begin() + (__position - cbegin())); }
-# 1561 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      iterator
-
-      erase(const_iterator __first, const_iterator __last)
-      {
- const auto __beg = begin();
- const auto __cbeg = cbegin();
- return _M_erase(__beg + (__first - __cbeg), __beg + (__last - __cbeg));
-      }
-# 1586 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      constexpr
-      void
-      swap(vector& __x) noexcept
-      {
-
- do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(_Alloc_traits::propagate_on_container_swap::value || _M_get_Tp_allocator() == __x._M_get_Tp_allocator()), false)) std::__glibcxx_assert_fail(); } while (false)
-                                                          ;
-
- this->_M_impl._M_swap_data(__x._M_impl);
- _Alloc_traits::_S_on_swap(_M_get_Tp_allocator(),
-      __x._M_get_Tp_allocator());
-      }
-
-
-
-
-
-
-
-      constexpr
-      void
-      clear() noexcept
-      { _M_erase_at_end(this->_M_impl._M_start); }
-
-    protected:
-
-
-
-
-      template<typename _ForwardIterator>
- constexpr
- pointer
- _M_allocate_and_copy(size_type __n,
-        _ForwardIterator __first, _ForwardIterator __last)
- {
-   pointer __result = this->_M_allocate(__n);
-   try
-     {
-       std::__uninitialized_copy_a(__first, __last, __result,
-       _M_get_Tp_allocator());
-       return __result;
-     }
-   catch(...)
-     {
-       _M_deallocate(__result, __n);
-       throw;
-     }
- }
-# 1666 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      template<typename _InputIterator>
- constexpr
- void
- _M_range_initialize(_InputIterator __first, _InputIterator __last,
-       std::input_iterator_tag)
- {
-   try {
-     for (; __first != __last; ++__first)
-
-       emplace_back(*__first);
-
-
-
-   } catch(...) {
-     clear();
-     throw;
-   }
- }
-
-
-      template<typename _ForwardIterator>
- constexpr
- void
- _M_range_initialize(_ForwardIterator __first, _ForwardIterator __last,
-       std::forward_iterator_tag)
- {
-   const size_type __n = std::distance(__first, __last);
-   this->_M_impl._M_start
-     = this->_M_allocate(_S_check_init_len(__n, _M_get_Tp_allocator()));
-   this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __n;
-   this->_M_impl._M_finish =
-     std::__uninitialized_copy_a(__first, __last,
-     this->_M_impl._M_start,
-     _M_get_Tp_allocator());
- }
-
-
-
-      constexpr
-      void
-      _M_fill_initialize(size_type __n, const value_type& __value)
-      {
- this->_M_impl._M_finish =
-   std::__uninitialized_fill_n_a(this->_M_impl._M_start, __n, __value,
-     _M_get_Tp_allocator());
-      }
-
-
-
-      constexpr
-      void
-      _M_default_initialize(size_type __n)
-      {
- this->_M_impl._M_finish =
-   std::__uninitialized_default_n_a(this->_M_impl._M_start, __n,
-        _M_get_Tp_allocator());
-      }
-# 1732 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      template<typename _Integer>
- constexpr
- void
- _M_assign_dispatch(_Integer __n, _Integer __val, __true_type)
- { _M_fill_assign(__n, __val); }
-
-
-      template<typename _InputIterator>
- constexpr
- void
- _M_assign_dispatch(_InputIterator __first, _InputIterator __last,
-      __false_type)
- { _M_assign_aux(__first, __last, std::__iterator_category(__first)); }
-
-
-      template<typename _InputIterator>
- constexpr
- void
- _M_assign_aux(_InputIterator __first, _InputIterator __last,
-        std::input_iterator_tag);
-
-
-      template<typename _ForwardIterator>
- constexpr
- void
- _M_assign_aux(_ForwardIterator __first, _ForwardIterator __last,
-        std::forward_iterator_tag);
-
-
-
-      constexpr
-      void
-      _M_fill_assign(size_type __n, const value_type& __val);
-
-
-
-
-
-
-
-      template<typename _Integer>
- constexpr
- void
- _M_insert_dispatch(iterator __pos, _Integer __n, _Integer __val,
-      __true_type)
- { _M_fill_insert(__pos, __n, __val); }
-
-
-      template<typename _InputIterator>
- constexpr
- void
- _M_insert_dispatch(iterator __pos, _InputIterator __first,
-      _InputIterator __last, __false_type)
- {
-   _M_range_insert(__pos, __first, __last,
-     std::__iterator_category(__first));
- }
-
-
-      template<typename _InputIterator>
- constexpr
- void
- _M_range_insert(iterator __pos, _InputIterator __first,
-   _InputIterator __last, std::input_iterator_tag);
-
-
-      template<typename _ForwardIterator>
- constexpr
- void
- _M_range_insert(iterator __pos, _ForwardIterator __first,
-   _ForwardIterator __last, std::forward_iterator_tag);
-
-
-
-      constexpr
-      void
-      _M_fill_insert(iterator __pos, size_type __n, const value_type& __x);
-
-
-
-      constexpr
-      void
-      _M_default_append(size_type __n);
-
-      constexpr
-      bool
-      _M_shrink_to_fit();
-# 1834 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-      struct _Temporary_value
-      {
- template<typename... _Args>
-   constexpr explicit
-   _Temporary_value(vector* __vec, _Args&&... __args) : _M_this(__vec)
-   {
-     _Alloc_traits::construct(_M_this->_M_impl, _M_ptr(),
-         std::forward<_Args>(__args)...);
-   }
-
- constexpr
- ~_Temporary_value()
- { _Alloc_traits::destroy(_M_this->_M_impl, _M_ptr()); }
-
- constexpr value_type&
- _M_val() noexcept { return _M_storage._M_val; }
-
-      private:
- constexpr _Tp*
- _M_ptr() noexcept { return std::__addressof(_M_storage._M_val); }
-
- union _Storage
- {
-   constexpr _Storage() : _M_byte() { }
-   constexpr ~_Storage() { }
-   _Storage& operator=(const _Storage&) = delete;
-   unsigned char _M_byte;
-   _Tp _M_val;
- };
-
- vector* _M_this;
- _Storage _M_storage;
-      };
-
-
-
-      template<typename _Arg>
- constexpr
- void
- _M_insert_aux(iterator __position, _Arg&& __arg);
-
-      template<typename... _Args>
- constexpr
- void
- _M_realloc_insert(iterator __position, _Args&&... __args);
-
-      template<typename... _Args>
- constexpr
- void
- _M_realloc_append(_Args&&... __args);
-
-
-      constexpr
-      iterator
-      _M_insert_rval(const_iterator __position, value_type&& __v);
-
-
-      template<typename... _Args>
- constexpr
- iterator
- _M_emplace_aux(const_iterator __position, _Args&&... __args);
-
-
-      constexpr
-      iterator
-      _M_emplace_aux(const_iterator __position, value_type&& __v)
-      { return _M_insert_rval(__position, std::move(__v)); }
-
-
-
-      constexpr
-      size_type
-      _M_check_len(size_type __n, const char* __s) const
-      {
- if (max_size() - size() < __n)
-   __throw_length_error((__s));
-
- const size_type __len = size() + (std::max)(size(), __n);
- return (__len < size() || __len > max_size()) ? max_size() : __len;
-      }
-
-
-      static constexpr size_type
-      _S_check_init_len(size_type __n, const allocator_type& __a)
-      {
- if (__n > _S_max_size(_Tp_alloc_type(__a)))
-   __throw_length_error(
-       ("cannot create std::vector larger than max_size()"));
- return __n;
-      }
-
-      static constexpr size_type
-      _S_max_size(const _Tp_alloc_type& __a) noexcept
-      {
-
-
-
- const size_t __diffmax
-   = __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(_Tp);
- const size_t __allocmax = _Alloc_traits::max_size(__a);
- return (std::min)(__diffmax, __allocmax);
-      }
-
-
-
-
-
-      constexpr
-      void
-      _M_erase_at_end(pointer __pos) noexcept
-      {
- if (size_type __n = this->_M_impl._M_finish - __pos)
-   {
-     std::_Destroy(__pos, this->_M_impl._M_finish,
-     _M_get_Tp_allocator());
-     this->_M_impl._M_finish = __pos;
-     ;
-   }
-      }
-
-      constexpr
-      iterator
-      _M_erase(iterator __position);
-
-      constexpr
-      iterator
-      _M_erase(iterator __first, iterator __last);
-
-
-    private:
-
-
-
-      constexpr
-      void
-      _M_move_assign(vector&& __x, true_type) noexcept
-      {
- vector __tmp(get_allocator());
- this->_M_impl._M_swap_data(__x._M_impl);
- __tmp._M_impl._M_swap_data(__x._M_impl);
- std::__alloc_on_move(_M_get_Tp_allocator(), __x._M_get_Tp_allocator());
-      }
-
-
-
-      constexpr
-      void
-      _M_move_assign(vector&& __x, false_type)
-      {
- if (__x._M_get_Tp_allocator() == this->_M_get_Tp_allocator())
-   _M_move_assign(std::move(__x), true_type());
- else
-   {
-
-
-     this->_M_assign_aux(std::make_move_iterator(__x.begin()),
-           std::make_move_iterator(__x.end()),
-    std::random_access_iterator_tag());
-     __x.clear();
-   }
-      }
-
-
-      template<typename _Up>
- constexpr
- _Up*
- _M_data_ptr(_Up* __ptr) const noexcept
- { return __ptr; }
-
-
-      template<typename _Ptr>
- constexpr
- typename std::pointer_traits<_Ptr>::element_type*
- _M_data_ptr(_Ptr __ptr) const
- { return empty() ? nullptr : std::__to_address(__ptr); }
-# 2025 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-    };
-
-
-  template<typename _InputIterator, typename _ValT
-      = typename iterator_traits<_InputIterator>::value_type,
-    typename _Allocator = allocator<_ValT>,
-    typename = _RequireInputIter<_InputIterator>,
-    typename = _RequireAllocator<_Allocator>>
-    vector(_InputIterator, _InputIterator, _Allocator = _Allocator())
-      -> vector<_ValT, _Allocator>;
-# 2047 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-  template<typename _Tp, typename _Alloc>
-    [[__nodiscard__]] constexpr
-    inline bool
-    operator==(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
-    { return (__x.size() == __y.size()
-       && std::equal(__x.begin(), __x.end(), __y.begin())); }
-# 2066 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-  template<typename _Tp, typename _Alloc>
-    [[nodiscard]] constexpr
-    inline __detail::__synth3way_t<_Tp>
-    operator<=>(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
-    {
-      return std::lexicographical_compare_three_way(__x.begin(), __x.end(),
-          __y.begin(), __y.end(),
-          __detail::__synth3way);
-    }
-# 2119 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    inline void
-    swap(vector<_Tp, _Alloc>& __x, vector<_Tp, _Alloc>& __y)
-    noexcept(noexcept(__x.swap(__y)))
-    { __x.swap(__y); }
-
-
-
-
-  namespace __detail::__variant
-  {
-    template<typename> struct _Never_valueless_alt;
-
-
-
-    template<typename _Tp, typename _Alloc>
-      struct _Never_valueless_alt<std::vector<_Tp, _Alloc>>
-      : std::is_nothrow_move_assignable<std::vector<_Tp, _Alloc>>
-      { };
-  }
-
-
-
-}
-# 67 "C:/mingw64/include/c++/14.2.0/vector" 2 3
-# 1 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 1 3
-# 68 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
-namespace std
-{
-
-
-  typedef unsigned long _Bit_type;
-  enum { _S_word_bit = int(8 * sizeof(_Bit_type)) };
-
-  __attribute__((__nonnull__))
-  constexpr
-  void
-  __fill_bvector_n(_Bit_type*, size_t, bool) noexcept;
-
-
-
-  struct _Bit_reference
-  {
-    _Bit_type * _M_p;
-    _Bit_type _M_mask;
-
-    constexpr
-    _Bit_reference(_Bit_type * __x, _Bit_type __y)
-    : _M_p(__x), _M_mask(__y) { }
-
-    constexpr
-    _Bit_reference() noexcept : _M_p(0), _M_mask(0) { }
-
-
-    _Bit_reference(const _Bit_reference&) = default;
-
-
-    [[__nodiscard__]] constexpr
-    operator bool() const noexcept
-    { return !!(*_M_p & _M_mask); }
-
-    constexpr
-    _Bit_reference&
-    operator=(bool __x) noexcept
-    {
-      if (__x)
- *_M_p |= _M_mask;
-      else
- *_M_p &= ~_M_mask;
-      return *this;
-    }
-
-
-    constexpr const _Bit_reference&
-    operator=(bool __x) const noexcept
-    {
-      if (__x)
- *_M_p |= _M_mask;
-      else
- *_M_p &= ~_M_mask;
-      return *this;
-    }
-
-
-    constexpr
-    _Bit_reference&
-    operator=(const _Bit_reference& __x) noexcept
-    { return *this = bool(__x); }
-
-    [[__nodiscard__]] constexpr
-    bool
-    operator==(const _Bit_reference& __x) const
-    { return bool(*this) == bool(__x); }
-
-    [[__nodiscard__]] constexpr
-    bool
-    operator<(const _Bit_reference& __x) const
-    { return !bool(*this) && bool(__x); }
-
-    constexpr
-    void
-    flip() noexcept
-    { *_M_p ^= _M_mask; }
-
-
-    constexpr
-    friend void
-    swap(_Bit_reference __x, _Bit_reference __y) noexcept
-    {
-      bool __tmp = __x;
-      __x = __y;
-      __y = __tmp;
-    }
-
-    constexpr
-    friend void
-    swap(_Bit_reference __x, bool& __y) noexcept
-    {
-      bool __tmp = __x;
-      __x = __y;
-      __y = __tmp;
-    }
-
-    constexpr
-    friend void
-    swap(bool& __x, _Bit_reference __y) noexcept
-    {
-      bool __tmp = __x;
-      __x = __y;
-      __y = __tmp;
-    }
-
-  };
-
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  struct _Bit_iterator_base
-  : public std::iterator<std::random_access_iterator_tag, bool>
-  {
-    _Bit_type * _M_p;
-    unsigned int _M_offset;
-
-    constexpr inline __attribute__((__always_inline__))
-    void
-    _M_assume_normalized() const
-    {
-
-      unsigned int __ofst = _M_offset;
-      __attribute__ ((__assume__ (__ofst < unsigned(_S_word_bit))));
-
-    }
-
-    constexpr
-    _Bit_iterator_base(_Bit_type * __x, unsigned int __y)
-    : _M_p(__x), _M_offset(__y) { }
-
-    constexpr
-    void
-    _M_bump_up()
-    {
-      _M_assume_normalized();
-      if (_M_offset++ == int(_S_word_bit) - 1)
- {
-   _M_offset = 0;
-   ++_M_p;
- }
-    }
-
-    constexpr
-    void
-    _M_bump_down()
-    {
-      _M_assume_normalized();
-      if (_M_offset-- == 0)
- {
-   _M_offset = int(_S_word_bit) - 1;
-   --_M_p;
- }
-    }
-
-    constexpr
-    void
-    _M_incr(ptrdiff_t __i)
-    {
-      _M_assume_normalized();
-      difference_type __n = __i + _M_offset;
-      _M_p += __n / int(_S_word_bit);
-      __n = __n % int(_S_word_bit);
-      if (__n < 0)
- {
-   __n += int(_S_word_bit);
-   --_M_p;
- }
-      _M_offset = static_cast<unsigned int>(__n);
-    }
-
-    [[__nodiscard__]]
-    friend constexpr bool
-    operator==(const _Bit_iterator_base& __x, const _Bit_iterator_base& __y)
-    {
-      __x._M_assume_normalized();
-      __y._M_assume_normalized();
-      return __x._M_p == __y._M_p && __x._M_offset == __y._M_offset;
-    }
-
-
-    [[nodiscard]]
-    friend constexpr strong_ordering
-    operator<=>(const _Bit_iterator_base& __x, const _Bit_iterator_base& __y)
-    noexcept
-    {
-      __x._M_assume_normalized();
-      __y._M_assume_normalized();
-      if (const auto __cmp = __x._M_p <=> __y._M_p; __cmp != 0)
- return __cmp;
-      return __x._M_offset <=> __y._M_offset;
-    }
-# 291 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
-    friend constexpr ptrdiff_t
-    operator-(const _Bit_iterator_base& __x, const _Bit_iterator_base& __y)
-    {
-      __x._M_assume_normalized();
-      __y._M_assume_normalized();
-      return (int(_S_word_bit) * (__x._M_p - __y._M_p)
-       + __x._M_offset - __y._M_offset);
-    }
-  };
-#pragma GCC diagnostic pop
-
-  struct _Bit_iterator : public _Bit_iterator_base
-  {
-    typedef _Bit_reference reference;
-
-    typedef void pointer;
-
-
-
-    typedef _Bit_iterator iterator;
-
-    constexpr
-    _Bit_iterator() : _Bit_iterator_base(0, 0) { }
-
-    constexpr
-    _Bit_iterator(_Bit_type * __x, unsigned int __y)
-    : _Bit_iterator_base(__x, __y) { }
-
-    constexpr
-    iterator
-    _M_const_cast() const
-    { return *this; }
-
-    [[__nodiscard__]] constexpr
-    reference
-    operator*() const
-    {
-      _M_assume_normalized();
-      return reference(_M_p, 1UL << _M_offset);
-    }
-
-    constexpr
-    iterator&
-    operator++()
-    {
-      _M_bump_up();
-      return *this;
-    }
-
-    constexpr
-    iterator
-    operator++(int)
-    {
-      iterator __tmp = *this;
-      _M_bump_up();
-      return __tmp;
-    }
-
-    constexpr
-    iterator&
-    operator--()
-    {
-      _M_bump_down();
-      return *this;
-    }
-
-    constexpr
-    iterator
-    operator--(int)
-    {
-      iterator __tmp = *this;
-      _M_bump_down();
-      return __tmp;
-    }
-
-    constexpr
-    iterator&
-    operator+=(difference_type __i)
-    {
-      _M_incr(__i);
-      return *this;
-    }
-
-    constexpr
-    iterator&
-    operator-=(difference_type __i)
-    {
-      *this += -__i;
-      return *this;
-    }
-
-    [[__nodiscard__]] constexpr
-    reference
-    operator[](difference_type __i) const
-    { return *(*this + __i); }
-
-    [[__nodiscard__]]
-    friend constexpr iterator
-    operator+(const iterator& __x, difference_type __n)
-    {
-      iterator __tmp = __x;
-      __tmp += __n;
-      return __tmp;
-    }
-
-    [[__nodiscard__]]
-    friend constexpr iterator
-    operator+(difference_type __n, const iterator& __x)
-    { return __x + __n; }
-
-    [[__nodiscard__]]
-    friend constexpr iterator
-    operator-(const iterator& __x, difference_type __n)
-    {
-      iterator __tmp = __x;
-      __tmp -= __n;
-      return __tmp;
-    }
-  };
-
-  struct _Bit_const_iterator : public _Bit_iterator_base
-  {
-    typedef bool reference;
-    typedef bool const_reference;
-
-    typedef void pointer;
-
-
-
-    typedef _Bit_const_iterator const_iterator;
-
-    constexpr
-    _Bit_const_iterator() : _Bit_iterator_base(0, 0) { }
-
-    constexpr
-    _Bit_const_iterator(_Bit_type * __x, unsigned int __y)
-    : _Bit_iterator_base(__x, __y) { }
-
-    constexpr
-    _Bit_const_iterator(const _Bit_iterator& __x)
-    : _Bit_iterator_base(__x._M_p, __x._M_offset) { }
-
-    constexpr
-    _Bit_iterator
-    _M_const_cast() const
-    { return _Bit_iterator(_M_p, _M_offset); }
-
-    [[__nodiscard__]] constexpr
-    const_reference
-    operator*() const
-    {
-      _M_assume_normalized();
-      return _Bit_reference(_M_p, 1UL << _M_offset);
-    }
-
-    constexpr
-    const_iterator&
-    operator++()
-    {
-      _M_bump_up();
-      return *this;
-    }
-
-    constexpr
-    const_iterator
-    operator++(int)
-    {
-      const_iterator __tmp = *this;
-      _M_bump_up();
-      return __tmp;
-    }
-
-    constexpr
-    const_iterator&
-    operator--()
-    {
-      _M_bump_down();
-      return *this;
-    }
-
-    constexpr
-    const_iterator
-    operator--(int)
-    {
-      const_iterator __tmp = *this;
-      _M_bump_down();
-      return __tmp;
-    }
-
-    constexpr
-    const_iterator&
-    operator+=(difference_type __i)
-    {
-      _M_incr(__i);
-      return *this;
-    }
-
-    constexpr
-    const_iterator&
-    operator-=(difference_type __i)
-    {
-      *this += -__i;
-      return *this;
-    }
-
-    [[__nodiscard__]] constexpr
-    const_reference
-    operator[](difference_type __i) const
-    { return *(*this + __i); }
-
-    [[__nodiscard__]]
-    friend constexpr const_iterator
-    operator+(const const_iterator& __x, difference_type __n)
-    {
-      const_iterator __tmp = __x;
-      __tmp += __n;
-      return __tmp;
-    }
-
-    [[__nodiscard__]]
-    friend constexpr const_iterator
-    operator-(const const_iterator& __x, difference_type __n)
-    {
-      const_iterator __tmp = __x;
-      __tmp -= __n;
-      return __tmp;
-    }
-
-    [[__nodiscard__]]
-    friend constexpr const_iterator
-    operator+(difference_type __n, const const_iterator& __x)
-    { return __x + __n; }
-  };
-
-  template<typename _Alloc>
-    struct _Bvector_base
-    {
-      typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
-        rebind<_Bit_type>::other _Bit_alloc_type;
-      typedef typename __gnu_cxx::__alloc_traits<_Bit_alloc_type>
- _Bit_alloc_traits;
-      typedef typename _Bit_alloc_traits::pointer _Bit_pointer;
-
-      struct _Bvector_impl_data
-      {
-
- _Bit_iterator _M_start;
-# 547 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
- _Bit_iterator _M_finish;
- _Bit_pointer _M_end_of_storage;
-
- constexpr
- _Bvector_impl_data() noexcept
- : _M_start(), _M_finish(), _M_end_of_storage()
- { }
-
-
- _Bvector_impl_data(const _Bvector_impl_data&) = default;
-
- _Bvector_impl_data&
- operator=(const _Bvector_impl_data&) = default;
-
- constexpr
- _Bvector_impl_data(_Bvector_impl_data&& __x) noexcept
- : _Bvector_impl_data(__x)
- { __x._M_reset(); }
-
- constexpr
- void
- _M_move_data(_Bvector_impl_data&& __x) noexcept
- {
-   *this = __x;
-   __x._M_reset();
- }
-
-
- constexpr
- void
- _M_reset() noexcept
- { *this = _Bvector_impl_data(); }
-
- constexpr
- void
- _M_swap_data(_Bvector_impl_data& __x) noexcept
- {
-
-
-   std::swap(*this, __x);
- }
-      };
-
-      struct _Bvector_impl
- : public _Bit_alloc_type, public _Bvector_impl_data
-      {
- constexpr
- _Bvector_impl() noexcept(is_nothrow_default_constructible<_Bit_alloc_type>::value)
-
-
- requires is_default_constructible_v<_Bit_alloc_type>
-
- : _Bit_alloc_type()
- { }
-
- constexpr
- _Bvector_impl(const _Bit_alloc_type& __a) noexcept
- : _Bit_alloc_type(__a)
- { }
-
-
-
-
- constexpr
- _Bvector_impl(_Bvector_impl&& __x) noexcept
- : _Bit_alloc_type(std::move(__x)), _Bvector_impl_data(std::move(__x))
- { }
-
- constexpr
- _Bvector_impl(_Bit_alloc_type&& __a, _Bvector_impl&& __x) noexcept
- : _Bit_alloc_type(std::move(__a)), _Bvector_impl_data(std::move(__x))
- { }
-
-
- constexpr
- _Bit_type*
- _M_end_addr() const noexcept
- {
-   if (this->_M_end_of_storage)
-     return std::__addressof(this->_M_end_of_storage[-1]) + 1;
-   return 0;
- }
-      };
-
-    public:
-      typedef _Alloc allocator_type;
-
-      constexpr
-      _Bit_alloc_type&
-      _M_get_Bit_allocator() noexcept
-      { return this->_M_impl; }
-
-      constexpr
-      const _Bit_alloc_type&
-      _M_get_Bit_allocator() const noexcept
-      { return this->_M_impl; }
-
-      constexpr
-      allocator_type
-      get_allocator() const noexcept
-      { return allocator_type(_M_get_Bit_allocator()); }
-
-
-      _Bvector_base() = default;
-
-
-
-
-      constexpr
-      _Bvector_base(const allocator_type& __a)
-      : _M_impl(__a) { }
-
-
-      _Bvector_base(_Bvector_base&&) = default;
-
-      constexpr
-      _Bvector_base(_Bvector_base&& __x, const allocator_type& __a) noexcept
-      : _M_impl(_Bit_alloc_type(__a), std::move(__x._M_impl))
-      { }
-
-
-      constexpr
-      ~_Bvector_base()
-      { this->_M_deallocate(); }
-
-    protected:
-      _Bvector_impl _M_impl;
-
-      constexpr
-      _Bit_pointer
-      _M_allocate(size_t __n)
-      {
- _Bit_pointer __p = _Bit_alloc_traits::allocate(_M_impl, _S_nword(__n));
-
- if (std::is_constant_evaluated())
-   {
-     __n = _S_nword(__n);
-     for (size_t __i = 0; __i < __n; ++__i)
-       std::construct_at(std::to_address(__p) + __i);
-   }
-
- return __p;
-      }
-
-      constexpr
-      void
-      _M_deallocate()
-      {
- if (_M_impl._M_start._M_p)
-   {
-     const size_t __n = _M_impl._M_end_addr() - _M_impl._M_start._M_p;
-     _Bit_alloc_traits::deallocate(_M_impl,
-       _M_impl._M_end_of_storage - __n,
-       __n);
-     _M_impl._M_reset();
-   }
-      }
-
-
-      constexpr
-      void
-      _M_move_data(_Bvector_base&& __x) noexcept
-      { _M_impl._M_move_data(std::move(__x._M_impl)); }
-
-
-      constexpr
-      static size_t
-      _S_nword(size_t __n)
-      { return (__n + int(_S_word_bit) - 1) / int(_S_word_bit); }
-    };
-# 739 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
-  template<typename _Alloc>
-    class vector<bool, _Alloc> : protected _Bvector_base<_Alloc>
-    {
-      typedef _Bvector_base<_Alloc> _Base;
-      typedef typename _Base::_Bit_pointer _Bit_pointer;
-      typedef typename _Base::_Bit_alloc_traits _Bit_alloc_traits;
-
-
-      friend struct std::hash<vector>;
-
-
-    public:
-      typedef bool value_type;
-      typedef size_t size_type;
-      typedef ptrdiff_t difference_type;
-      typedef _Bit_reference reference;
-      typedef bool const_reference;
-      typedef _Bit_reference* pointer;
-      typedef const bool* const_pointer;
-      typedef _Bit_iterator iterator;
-      typedef _Bit_const_iterator const_iterator;
-      typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
-      typedef std::reverse_iterator<iterator> reverse_iterator;
-      typedef _Alloc allocator_type;
-
-      constexpr
-      allocator_type
-      get_allocator() const
-      { return _Base::get_allocator(); }
-
-    protected:
-      using _Base::_M_allocate;
-      using _Base::_M_deallocate;
-      using _Base::_S_nword;
-      using _Base::_M_get_Bit_allocator;
-
-    public:
-
-      vector() = default;
-
-
-
-
-      constexpr
-      explicit
-      vector(const allocator_type& __a)
-      : _Base(__a) { }
-
-
-      constexpr
-      explicit
-      vector(size_type __n, const allocator_type& __a = allocator_type())
-      : vector(__n, false, __a)
-      { }
-
-      constexpr
-      vector(size_type __n, const bool& __value,
-      const allocator_type& __a = allocator_type())
-
-
-
-
-
-      : _Base(__a)
-      {
- _M_initialize(__n);
- _M_initialize_value(__value);
-      }
-
-      constexpr
-      vector(const vector& __x)
-      : _Base(_Bit_alloc_traits::_S_select_on_copy(__x._M_get_Bit_allocator()))
-      {
- const_iterator __xbegin = __x.begin(), __xend = __x.end();
- _M_initialize(__x.size());
- _M_copy_aligned(__xbegin, __xend, begin());
-      }
-
-
-      vector(vector&&) = default;
-
-    private:
-      constexpr
-      vector(vector&& __x, const allocator_type& __a, true_type) noexcept
-      : _Base(std::move(__x), __a)
-      { }
-
-      constexpr
-      vector(vector&& __x, const allocator_type& __a, false_type)
-      : _Base(__a)
-      {
- if (__x.get_allocator() == __a)
-   this->_M_move_data(std::move(__x));
- else
-   {
-     _M_initialize(__x.size());
-     _M_copy_aligned(__x.begin(), __x.end(), begin());
-     __x.clear();
-   }
-      }
-
-    public:
-      constexpr
-      vector(vector&& __x, const __type_identity_t<allocator_type>& __a)
-      noexcept(_Bit_alloc_traits::_S_always_equal())
-      : vector(std::move(__x), __a,
-        typename _Bit_alloc_traits::is_always_equal{})
-      { }
-
-      constexpr
-      vector(const vector& __x, const __type_identity_t<allocator_type>& __a)
-      : _Base(__a)
-      {
- _M_initialize(__x.size());
- _M_copy_aligned(__x.begin(), __x.end(), begin());
-      }
-
-      constexpr
-      vector(initializer_list<bool> __l,
-      const allocator_type& __a = allocator_type())
-      : _Base(__a)
-      {
- _M_initialize_range(__l.begin(), __l.end(),
-       random_access_iterator_tag());
-      }
-
-
-
-      template<typename _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
- vector(_InputIterator __first, _InputIterator __last,
-        const allocator_type& __a = allocator_type())
- : _Base(__a)
- {
-   _M_initialize_range(__first, __last,
-         std::__iterator_category(__first));
- }
-# 889 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
-      constexpr
-      ~vector() noexcept { }
-
-      constexpr
-      vector&
-      operator=(const vector& __x)
-      {
- if (&__x == this)
-   return *this;
-
- if (_Bit_alloc_traits::_S_propagate_on_copy_assign())
-   {
-     if (this->_M_get_Bit_allocator() != __x._M_get_Bit_allocator())
-       {
-  this->_M_deallocate();
-  std::__alloc_on_copy(_M_get_Bit_allocator(),
-         __x._M_get_Bit_allocator());
-  _M_initialize(__x.size());
-       }
-     else
-       std::__alloc_on_copy(_M_get_Bit_allocator(),
-       __x._M_get_Bit_allocator());
-   }
-
- if (__x.size() > capacity())
-   {
-     this->_M_deallocate();
-     _M_initialize(__x.size());
-   }
- this->_M_impl._M_finish = _M_copy_aligned(__x.begin(), __x.end(),
-        begin());
- return *this;
-      }
-
-
-      constexpr
-      vector&
-      operator=(vector&& __x) noexcept(_Bit_alloc_traits::_S_nothrow_move())
-      {
- if (_Bit_alloc_traits::_S_propagate_on_move_assign()
-     || this->_M_get_Bit_allocator() == __x._M_get_Bit_allocator())
-   {
-     this->_M_deallocate();
-     this->_M_move_data(std::move(__x));
-     std::__alloc_on_move(_M_get_Bit_allocator(),
-     __x._M_get_Bit_allocator());
-   }
- else
-   {
-     if (__x.size() > capacity())
-       {
-  this->_M_deallocate();
-  _M_initialize(__x.size());
-       }
-     this->_M_impl._M_finish = _M_copy_aligned(__x.begin(), __x.end(),
-            begin());
-     __x.clear();
-   }
- return *this;
-      }
-
-      constexpr
-      vector&
-      operator=(initializer_list<bool> __l)
-      {
- this->assign(__l.begin(), __l.end());
- return *this;
-      }
-
-
-
-
-
-
-      constexpr
-      void
-      assign(size_type __n, const bool& __x)
-      { _M_fill_assign(__n, __x); }
-
-
-      template<typename _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
- void
- assign(_InputIterator __first, _InputIterator __last)
- { _M_assign_aux(__first, __last, std::__iterator_category(__first)); }
-# 987 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
-      constexpr
-      void
-      assign(initializer_list<bool> __l)
-      { _M_assign_aux(__l.begin(), __l.end(), random_access_iterator_tag()); }
-
-
-      [[__nodiscard__]] constexpr
-      iterator
-      begin() noexcept
-      { return iterator(this->_M_impl._M_start._M_p, 0); }
-
-      [[__nodiscard__]] constexpr
-      const_iterator
-      begin() const noexcept
-      { return const_iterator(this->_M_impl._M_start._M_p, 0); }
-
-      [[__nodiscard__]] constexpr
-      iterator
-      end() noexcept
-      { return this->_M_impl._M_finish; }
-
-      [[__nodiscard__]] constexpr
-      const_iterator
-      end() const noexcept
-      { return this->_M_impl._M_finish; }
-
-      [[__nodiscard__]] constexpr
-      reverse_iterator
-      rbegin() noexcept
-      { return reverse_iterator(end()); }
-
-      [[__nodiscard__]] constexpr
-      const_reverse_iterator
-      rbegin() const noexcept
-      { return const_reverse_iterator(end()); }
-
-      [[__nodiscard__]] constexpr
-      reverse_iterator
-      rend() noexcept
-      { return reverse_iterator(begin()); }
-
-      [[__nodiscard__]] constexpr
-      const_reverse_iterator
-      rend() const noexcept
-      { return const_reverse_iterator(begin()); }
-
-
-      [[__nodiscard__]] constexpr
-      const_iterator
-      cbegin() const noexcept
-      { return const_iterator(this->_M_impl._M_start._M_p, 0); }
-
-      [[__nodiscard__]] constexpr
-      const_iterator
-      cend() const noexcept
-      { return this->_M_impl._M_finish; }
-
-      [[__nodiscard__]] constexpr
-      const_reverse_iterator
-      crbegin() const noexcept
-      { return const_reverse_iterator(end()); }
-
-      [[__nodiscard__]] constexpr
-      const_reverse_iterator
-      crend() const noexcept
-      { return const_reverse_iterator(begin()); }
-
-
-      [[__nodiscard__]] constexpr
-      size_type
-      size() const noexcept
-      { return size_type(end() - begin()); }
-
-      [[__nodiscard__]] constexpr
-      size_type
-      max_size() const noexcept
-      {
- const size_type __isize =
-   __gnu_cxx::__numeric_traits<difference_type>::__max
-   - int(_S_word_bit) + 1;
- const size_type __asize
-   = _Bit_alloc_traits::max_size(_M_get_Bit_allocator());
- return (__asize <= __isize / int(_S_word_bit)
-  ? __asize * int(_S_word_bit) : __isize);
-      }
-
-      [[__nodiscard__]] constexpr
-      size_type
-      capacity() const noexcept
-      { return size_type(const_iterator(this->_M_impl._M_end_addr(), 0)
-    - begin()); }
-
-      [[__nodiscard__]] constexpr
-      bool
-      empty() const noexcept
-      { return begin() == end(); }
-
-      [[__nodiscard__]] constexpr
-      reference
-      operator[](size_type __n)
-      { return begin()[__n]; }
-
-      [[__nodiscard__]] constexpr
-      const_reference
-      operator[](size_type __n) const
-      { return begin()[__n]; }
-
-    protected:
-      constexpr
-      void
-      _M_range_check(size_type __n) const
-      {
- if (__n >= this->size())
-   __throw_out_of_range_fmt(("vector<bool>::_M_range_check: __n " "(which is %zu) >= this->size() " "(which is %zu)")
-
-                            ,
-       __n, this->size());
-      }
-
-    public:
-      [[__nodiscard__]] constexpr
-      reference
-      at(size_type __n)
-      {
- _M_range_check(__n);
- return (*this)[__n];
-      }
-
-      [[__nodiscard__]] constexpr
-      const_reference
-      at(size_type __n) const
-      {
- _M_range_check(__n);
- return (*this)[__n];
-      }
-
-      constexpr
-      void
-      reserve(size_type __n)
-      {
- if (__n > max_size())
-   __throw_length_error(("vector::reserve"));
- if (capacity() < __n)
-   _M_reallocate(__n);
-      }
-
-      [[__nodiscard__]] constexpr
-      reference
-      front()
-      { return *begin(); }
-
-      [[__nodiscard__]] constexpr
-      const_reference
-      front() const
-      { return *begin(); }
-
-      [[__nodiscard__]] constexpr
-      reference
-      back()
-      { return *(end() - 1); }
-
-      [[__nodiscard__]] constexpr
-      const_reference
-      back() const
-      { return *(end() - 1); }
-
-      constexpr
-      void
-      push_back(bool __x)
-      {
- if (this->_M_impl._M_finish._M_p != this->_M_impl._M_end_addr())
-   *this->_M_impl._M_finish++ = __x;
- else
-   _M_insert_aux(end(), __x);
-      }
-
-      constexpr
-      void
-      swap(vector& __x) noexcept
-      {
-
- do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(_Bit_alloc_traits::propagate_on_container_swap::value || _M_get_Bit_allocator() == __x._M_get_Bit_allocator()), false)) std::__glibcxx_assert_fail(); } while (false)
-                                                            ;
-
- this->_M_impl._M_swap_data(__x._M_impl);
- _Bit_alloc_traits::_S_on_swap(_M_get_Bit_allocator(),
-          __x._M_get_Bit_allocator());
-      }
-
-
-      constexpr
-      static void
-      swap(reference __x, reference __y) noexcept
-      {
- bool __tmp = __x;
- __x = __y;
- __y = __tmp;
-      }
-
-      constexpr
-      iterator
-
-      insert(const_iterator __position, const bool& __x)
-
-
-
-      {
- const difference_type __n = __position - begin();
- if (this->_M_impl._M_finish._M_p != this->_M_impl._M_end_addr()
-     && __position == end())
-   *this->_M_impl._M_finish++ = __x;
- else
-   _M_insert_aux(__position._M_const_cast(), __x);
- return begin() + __n;
-      }
-
-
-      __attribute__ ((__deprecated__ ("use '" "insert(position, false)" "' instead")))
-      iterator
-      insert(const_iterator __position)
-      { return this->insert(__position._M_const_cast(), false); }
-
-
-
-      template<typename _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
- iterator
- insert(const_iterator __position,
-        _InputIterator __first, _InputIterator __last)
- {
-   difference_type __offset = __position - cbegin();
-   _M_insert_range(__position._M_const_cast(),
-     __first, __last,
-     std::__iterator_category(__first));
-   return begin() + __offset;
- }
-# 1237 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
-      constexpr
-      iterator
-      insert(const_iterator __position, size_type __n, const bool& __x)
-      {
- difference_type __offset = __position - cbegin();
- _M_fill_insert(__position._M_const_cast(), __n, __x);
- return begin() + __offset;
-      }
-
-
-
-
-
-
-
-      constexpr
-      iterator
-      insert(const_iterator __p, initializer_list<bool> __l)
-      { return this->insert(__p, __l.begin(), __l.end()); }
-
-
-      constexpr
-      void
-      pop_back()
-      { --this->_M_impl._M_finish; }
-
-      constexpr
-      iterator
-
-      erase(const_iterator __position)
-
-
-
-      { return _M_erase(__position._M_const_cast()); }
-
-      constexpr
-      iterator
-
-      erase(const_iterator __first, const_iterator __last)
-
-
-
-      { return _M_erase(__first._M_const_cast(), __last._M_const_cast()); }
-
-      constexpr
-      void
-      resize(size_type __new_size, bool __x = bool())
-      {
- if (__new_size < size())
-   _M_erase_at_end(begin() + difference_type(__new_size));
- else
-   insert(end(), __new_size - size(), __x);
-      }
-
-
-      constexpr
-      void
-      shrink_to_fit()
-      { _M_shrink_to_fit(); }
-
-
-      constexpr
-      void
-      flip() noexcept
-      {
- _Bit_type * const __end = this->_M_impl._M_end_addr();
- for (_Bit_type * __p = this->_M_impl._M_start._M_p; __p != __end; ++__p)
-   *__p = ~*__p;
-      }
-
-      constexpr
-      void
-      clear() noexcept
-      { _M_erase_at_end(begin()); }
-
-
-      template<typename... _Args>
-
- constexpr
- reference
-
-
-
- emplace_back(_Args&&... __args)
- {
-   push_back(bool(__args...));
-
-   return back();
-
- }
-
-      template<typename... _Args>
- constexpr
- iterator
- emplace(const_iterator __pos, _Args&&... __args)
- { return insert(__pos, bool(__args...)); }
-
-
-    protected:
-
-      constexpr
-      iterator
-      _M_copy_aligned(const_iterator __first, const_iterator __last,
-        iterator __result)
-      {
- _Bit_type* __q = std::copy(__first._M_p, __last._M_p, __result._M_p);
- return std::copy(const_iterator(__last._M_p, 0), __last,
-    iterator(__q, 0));
-      }
-
-      constexpr
-      void
-      _M_initialize(size_type __n)
-      {
- if (__n)
-   {
-     _Bit_pointer __q = this->_M_allocate(__n);
-     this->_M_impl._M_end_of_storage = __q + _S_nword(__n);
-     iterator __start = iterator(std::__addressof(*__q), 0);
-     this->_M_impl._M_start = __start;
-     this->_M_impl._M_finish = __start + difference_type(__n);
-   }
-      }
-
-      constexpr
-      void
-      _M_initialize_value(bool __x) noexcept
-      {
- if (_Bit_type* __p = this->_M_impl._M_start._M_p)
-   __fill_bvector_n(__p, this->_M_impl._M_end_addr() - __p, __x);
-      }
-
-      constexpr
-      void
-      _M_reallocate(size_type __n);
-
-
-      constexpr
-      bool
-      _M_shrink_to_fit();
-# 1398 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
-      template<typename _InputIterator>
- constexpr
- void
- _M_initialize_range(_InputIterator __first, _InputIterator __last,
-       std::input_iterator_tag)
- {
-   for (; __first != __last; ++__first)
-     push_back(*__first);
- }
-
-      template<typename _ForwardIterator>
- constexpr
- void
- _M_initialize_range(_ForwardIterator __first, _ForwardIterator __last,
-       std::forward_iterator_tag)
- {
-   const size_type __n = std::distance(__first, __last);
-   _M_initialize(__n);
-   std::copy(__first, __last, begin());
- }
-# 1434 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
-      constexpr
-      void
-      _M_fill_assign(size_t __n, bool __x)
-      {
- if (__n > size())
-   {
-     _M_initialize_value(__x);
-     insert(end(), __n - size(), __x);
-   }
- else
-   {
-     _M_erase_at_end(begin() + __n);
-     _M_initialize_value(__x);
-   }
-      }
-
-      template<typename _InputIterator>
- constexpr
- void
- _M_assign_aux(_InputIterator __first, _InputIterator __last,
-        std::input_iterator_tag)
- {
-   iterator __cur = begin();
-   for (; __first != __last && __cur != end(); ++__cur, (void)++__first)
-     *__cur = *__first;
-   if (__first == __last)
-     _M_erase_at_end(__cur);
-   else
-     insert(end(), __first, __last);
- }
-
-      template<typename _ForwardIterator>
- constexpr
- void
- _M_assign_aux(_ForwardIterator __first, _ForwardIterator __last,
-        std::forward_iterator_tag)
- {
-   const size_type __len = std::distance(__first, __last);
-   if (__len < size())
-     _M_erase_at_end(std::copy(__first, __last, begin()));
-   else
-     {
-       _ForwardIterator __mid = __first;
-       std::advance(__mid, size());
-       std::copy(__first, __mid, begin());
-       insert(end(), __mid, __last);
-     }
- }
-# 1501 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
-      constexpr
-      void
-      _M_fill_insert(iterator __position, size_type __n, bool __x);
-
-      template<typename _InputIterator>
- constexpr
- void
- _M_insert_range(iterator __pos, _InputIterator __first,
-   _InputIterator __last, std::input_iterator_tag)
- {
-   for (; __first != __last; ++__first)
-     {
-       __pos = insert(__pos, *__first);
-       ++__pos;
-     }
- }
-
-      template<typename _ForwardIterator>
- constexpr
- void
- _M_insert_range(iterator __position, _ForwardIterator __first,
-   _ForwardIterator __last, std::forward_iterator_tag);
-
-      constexpr
-      void
-      _M_insert_aux(iterator __position, bool __x);
-
-      constexpr
-      size_type
-      _M_check_len(size_type __n, const char* __s) const
-      {
- if (max_size() - size() < __n)
-   __throw_length_error((__s));
-
- const size_type __len = size() + std::max(size(), __n);
- return (__len < size() || __len > max_size()) ? max_size() : __len;
-      }
-
-      constexpr
-      void
-      _M_erase_at_end(iterator __pos)
-      { this->_M_impl._M_finish = __pos; }
-
-      constexpr
-      iterator
-      _M_erase(iterator __pos);
-
-      constexpr
-      iterator
-      _M_erase(iterator __first, iterator __last);
-
-    protected:
-
-
-
-
-
-
-      void data() = delete;
-
-
-
-    };
-
-
-
-
-  constexpr
-  inline void
-  __fill_bvector(_Bit_type* __v, unsigned int __first, unsigned int __last,
-   bool __x) noexcept
-  {
-    const _Bit_type __fmask = ~0ul << __first;
-    const _Bit_type __lmask = ~0ul >> (_S_word_bit - __last);
-    const _Bit_type __mask = __fmask & __lmask;
-
-    if (__x)
-      *__v |= __mask;
-    else
-      *__v &= ~__mask;
-  }
-
-
-  __attribute__((__nonnull__))
-  constexpr
-  inline void
-  __fill_bvector_n(_Bit_type* __p, size_t __n, bool __x) noexcept
-  {
-
-    if (std::is_constant_evaluated())
-    {
-      for (size_t __i = 0; __i < __n; ++__i)
- __p[__i] = __x ? ~0ul : 0ul;
-      return;
-    }
-
-    __builtin_memset(__p, __x ? ~0 : 0, __n * sizeof(_Bit_type));
-  }
-
-
-  constexpr
-  inline void
-  __fill_a1(std::_Bit_iterator __first,
-     std::_Bit_iterator __last, const bool& __x)
-  {
-    if (__first._M_p != __last._M_p)
-      {
- _Bit_type* __first_p = __first._M_p;
- if (__first._M_offset != 0)
-   __fill_bvector(__first_p++, __first._M_offset, _S_word_bit, __x);
-
- __fill_bvector_n(__first_p, __last._M_p - __first_p, __x);
-
- if (__last._M_offset != 0)
-   __fill_bvector(__last._M_p, 0, __last._M_offset, __x);
-      }
-    else if (__first._M_offset != __last._M_offset)
-      __fill_bvector(__first._M_p, __first._M_offset, __last._M_offset, __x);
-  }
-
-
-
-
-  template<typename _Alloc>
-    struct hash<std::vector<bool, _Alloc>>
-    : public __hash_base<size_t, std::vector<bool, _Alloc>>
-    {
-      size_t
-      operator()(const std::vector<bool, _Alloc>&) const noexcept;
-    };
-
-
-
-}
-# 68 "C:/mingw64/include/c++/14.2.0/vector" 2 3
-
-
-
-
-# 1 "C:/mingw64/include/c++/14.2.0/bits/vector.tcc" 1 3
-# 59 "C:/mingw64/include/c++/14.2.0/bits/vector.tcc" 3
-namespace std
-{
-
-
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    void
-    vector<_Tp, _Alloc>::
-    reserve(size_type __n)
-    {
-      if (__n > this->max_size())
- __throw_length_error(("vector::reserve"));
-      if (this->capacity() < __n)
- {
-   const size_type __old_size = size();
-   pointer __tmp;
-
-   if constexpr (_S_use_relocate())
-     {
-       __tmp = this->_M_allocate(__n);
-       _S_relocate(this->_M_impl._M_start, this->_M_impl._M_finish,
-     __tmp, _M_get_Tp_allocator());
-     }
-   else
-
-     {
-       __tmp = _M_allocate_and_copy(__n,
-  std::__make_move_if_noexcept_iterator(this->_M_impl._M_start),
-  std::__make_move_if_noexcept_iterator(this->_M_impl._M_finish));
-       std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
-       _M_get_Tp_allocator());
-     }
-   ;
-   _M_deallocate(this->_M_impl._M_start,
-   this->_M_impl._M_end_of_storage
-   - this->_M_impl._M_start);
-   this->_M_impl._M_start = __tmp;
-   this->_M_impl._M_finish = __tmp + __old_size;
-   this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __n;
- }
-    }
-
-
-  template<typename _Tp, typename _Alloc>
-    template<typename... _Args>
-
-      constexpr
-      typename vector<_Tp, _Alloc>::reference
-
-
-
-      vector<_Tp, _Alloc>::
-      emplace_back(_Args&&... __args)
-      {
- if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
-   {
-     ;
-     _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
-         std::forward<_Args>(__args)...);
-     ++this->_M_impl._M_finish;
-     ;
-   }
- else
-   _M_realloc_append(std::forward<_Args>(__args)...);
-
- return back();
-
-      }
-
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    typename vector<_Tp, _Alloc>::iterator
-    vector<_Tp, _Alloc>::
-
-    insert(const_iterator __position, const value_type& __x)
-
-
-
-    {
-      const size_type __n = __position - begin();
-      if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
- {
-   do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(__position != const_iterator()), false)) std::__glibcxx_assert_fail(); } while (false);
-   if (!(__position != const_iterator()))
-     __builtin_unreachable();
-
-   if (__position == end())
-     {
-       ;
-       _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
-           __x);
-       ++this->_M_impl._M_finish;
-       ;
-     }
-   else
-     {
-
-       const auto __pos = begin() + (__position - cbegin());
-
-
-       _Temporary_value __x_copy(this, __x);
-       _M_insert_aux(__pos, std::move(__x_copy._M_val()));
-
-
-
-     }
- }
-      else
-
- _M_realloc_insert(begin() + (__position - cbegin()), __x);
-
-
-
-
-      return iterator(this->_M_impl._M_start + __n);
-    }
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    typename vector<_Tp, _Alloc>::iterator
-    vector<_Tp, _Alloc>::
-    _M_erase(iterator __position)
-    {
-      if (__position + 1 != end())
- std::move(__position + 1, end(), __position);
-      --this->_M_impl._M_finish;
-      _Alloc_traits::destroy(this->_M_impl, this->_M_impl._M_finish);
-      ;
-      return __position;
-    }
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    typename vector<_Tp, _Alloc>::iterator
-    vector<_Tp, _Alloc>::
-    _M_erase(iterator __first, iterator __last)
-    {
-      if (__first != __last)
- {
-   if (__last != end())
-     std::move(__last, end(), __first);
-   _M_erase_at_end(__first.base() + (end() - __last));
- }
-      return __first;
-    }
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    vector<_Tp, _Alloc>&
-    vector<_Tp, _Alloc>::
-    operator=(const vector<_Tp, _Alloc>& __x)
-    {
-      if (std::__addressof(__x) != this)
- {
-   ;
-
-   if (_Alloc_traits::_S_propagate_on_copy_assign())
-     {
-       if (!_Alloc_traits::_S_always_equal()
-           && _M_get_Tp_allocator() != __x._M_get_Tp_allocator())
-         {
-
-    this->clear();
-    _M_deallocate(this->_M_impl._M_start,
-    this->_M_impl._M_end_of_storage
-    - this->_M_impl._M_start);
-    this->_M_impl._M_start = nullptr;
-    this->_M_impl._M_finish = nullptr;
-    this->_M_impl._M_end_of_storage = nullptr;
-  }
-       std::__alloc_on_copy(_M_get_Tp_allocator(),
-       __x._M_get_Tp_allocator());
-     }
-
-   const size_type __xlen = __x.size();
-   if (__xlen > capacity())
-     {
-       pointer __tmp = _M_allocate_and_copy(__xlen, __x.begin(),
-         __x.end());
-       std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
-       _M_get_Tp_allocator());
-       _M_deallocate(this->_M_impl._M_start,
-       this->_M_impl._M_end_of_storage
-       - this->_M_impl._M_start);
-       this->_M_impl._M_start = __tmp;
-       this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __xlen;
-     }
-   else if (size() >= __xlen)
-     {
-       std::_Destroy(std::copy(__x.begin(), __x.end(), begin()),
-       end(), _M_get_Tp_allocator());
-     }
-   else
-     {
-       std::copy(__x._M_impl._M_start, __x._M_impl._M_start + size(),
-   this->_M_impl._M_start);
-       std::__uninitialized_copy_a(__x._M_impl._M_start + size(),
-       __x._M_impl._M_finish,
-       this->_M_impl._M_finish,
-       _M_get_Tp_allocator());
-     }
-   this->_M_impl._M_finish = this->_M_impl._M_start + __xlen;
- }
-      return *this;
-    }
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    void
-    vector<_Tp, _Alloc>::
-    _M_fill_assign(size_t __n, const value_type& __val)
-    {
-      const size_type __sz = size();
-      if (__n > capacity())
- {
-   if (__n <= __sz)
-     __builtin_unreachable();
-   vector __tmp(__n, __val, _M_get_Tp_allocator());
-   __tmp._M_impl._M_swap_data(this->_M_impl);
- }
-      else if (__n > __sz)
- {
-   std::fill(begin(), end(), __val);
-   const size_type __add = __n - __sz;
-   ;
-   this->_M_impl._M_finish =
-     std::__uninitialized_fill_n_a(this->_M_impl._M_finish,
-       __add, __val, _M_get_Tp_allocator());
-   ;
- }
-      else
-        _M_erase_at_end(std::fill_n(this->_M_impl._M_start, __n, __val));
-    }
-
-  template<typename _Tp, typename _Alloc>
-    template<typename _InputIterator>
-      constexpr
-      void
-      vector<_Tp, _Alloc>::
-      _M_assign_aux(_InputIterator __first, _InputIterator __last,
-      std::input_iterator_tag)
-      {
- pointer __cur(this->_M_impl._M_start);
- for (; __first != __last && __cur != this->_M_impl._M_finish;
-      ++__cur, (void)++__first)
-   *__cur = *__first;
- if (__first == __last)
-   _M_erase_at_end(__cur);
- else
-   _M_range_insert(end(), __first, __last,
-     std::__iterator_category(__first));
-      }
-
-  template<typename _Tp, typename _Alloc>
-    template<typename _ForwardIterator>
-      constexpr
-      void
-      vector<_Tp, _Alloc>::
-      _M_assign_aux(_ForwardIterator __first, _ForwardIterator __last,
-      std::forward_iterator_tag)
-      {
- const size_type __sz = size();
- const size_type __len = std::distance(__first, __last);
-
- if (__len > capacity())
-   {
-     if (__len <= __sz)
-       __builtin_unreachable();
-
-     _S_check_init_len(__len, _M_get_Tp_allocator());
-     pointer __tmp(_M_allocate_and_copy(__len, __first, __last));
-     std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
-     _M_get_Tp_allocator());
-     ;
-     _M_deallocate(this->_M_impl._M_start,
-     this->_M_impl._M_end_of_storage
-     - this->_M_impl._M_start);
-     this->_M_impl._M_start = __tmp;
-     this->_M_impl._M_finish = this->_M_impl._M_start + __len;
-     this->_M_impl._M_end_of_storage = this->_M_impl._M_finish;
-   }
- else if (__sz >= __len)
-   _M_erase_at_end(std::copy(__first, __last, this->_M_impl._M_start));
- else
-   {
-     _ForwardIterator __mid = __first;
-     std::advance(__mid, __sz);
-     std::copy(__first, __mid, this->_M_impl._M_start);
-     const size_type __attribute__((__unused__)) __n = __len - __sz;
-     ;
-     this->_M_impl._M_finish =
-       std::__uninitialized_copy_a(__mid, __last,
-       this->_M_impl._M_finish,
-       _M_get_Tp_allocator());
-     ;
-   }
-      }
-
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    auto
-    vector<_Tp, _Alloc>::
-    _M_insert_rval(const_iterator __position, value_type&& __v) -> iterator
-    {
-      const auto __n = __position - cbegin();
-      if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
- if (__position == cend())
-   {
-     ;
-     _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
-         std::move(__v));
-     ++this->_M_impl._M_finish;
-     ;
-   }
- else
-   _M_insert_aux(begin() + __n, std::move(__v));
-      else
- _M_realloc_insert(begin() + __n, std::move(__v));
-
-      return iterator(this->_M_impl._M_start + __n);
-    }
-
-  template<typename _Tp, typename _Alloc>
-    template<typename... _Args>
-      constexpr
-      auto
-      vector<_Tp, _Alloc>::
-      _M_emplace_aux(const_iterator __position, _Args&&... __args)
-      -> iterator
-      {
- const auto __n = __position - cbegin();
- if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
-   if (__position == cend())
-     {
-       ;
-       _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
-           std::forward<_Args>(__args)...);
-       ++this->_M_impl._M_finish;
-       ;
-     }
-   else
-     {
-
-
-
-       _Temporary_value __tmp(this, std::forward<_Args>(__args)...);
-       _M_insert_aux(begin() + __n, std::move(__tmp._M_val()));
-     }
- else
-   _M_realloc_insert(begin() + __n, std::forward<_Args>(__args)...);
-
- return iterator(this->_M_impl._M_start + __n);
-      }
-
-  template<typename _Tp, typename _Alloc>
-    template<typename _Arg>
-      constexpr
-      void
-      vector<_Tp, _Alloc>::
-      _M_insert_aux(iterator __position, _Arg&& __arg)
-
-
-
-
-
-
-    {
-      ;
-      _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
-          std::move(*(this->_M_impl._M_finish - 1)));
-      ++this->_M_impl._M_finish;
-      ;
-
-
-
-      std::move_backward(__position.base(), this->_M_impl._M_finish - 2, this->_M_impl._M_finish - 1)
-
-                                     ;
-
-
-
-      *__position = std::forward<_Arg>(__arg);
-
-    }
-
-
-  template<typename _Tp, typename _Alloc>
-    template<typename... _Args>
-      constexpr
-      void
-      vector<_Tp, _Alloc>::
-      _M_realloc_insert(iterator __position, _Args&&... __args)
-
-
-
-
-
-
-    {
-      const size_type __len = _M_check_len(1u, "vector::_M_realloc_insert");
-      if (__len <= 0)
- __builtin_unreachable ();
-      pointer __old_start = this->_M_impl._M_start;
-      pointer __old_finish = this->_M_impl._M_finish;
-      const size_type __elems_before = __position - begin();
-      pointer __new_start(this->_M_allocate(__len));
-      pointer __new_finish(__new_start);
-
-
-      struct _Guard
-      {
- pointer _M_storage;
- size_type _M_len;
- _Tp_alloc_type& _M_alloc;
-
- constexpr
- _Guard(pointer __s, size_type __l, _Tp_alloc_type& __a)
- : _M_storage(__s), _M_len(__l), _M_alloc(__a)
- { }
-
- constexpr
- ~_Guard()
- {
-   if (_M_storage)
-     __gnu_cxx::__alloc_traits<_Tp_alloc_type>::
-       deallocate(_M_alloc, _M_storage, _M_len);
- }
-
-      private:
- _Guard(const _Guard&);
-      };
-
-      {
- _Guard __guard(__new_start, __len, _M_impl);
-# 505 "C:/mingw64/include/c++/14.2.0/bits/vector.tcc" 3
- _Alloc_traits::construct(this->_M_impl,
-     std::__to_address(__new_start + __elems_before),
-     std::forward<_Args>(__args)...);
-
-
-
-
-
-
-
- if constexpr (_S_use_relocate())
-   {
-
-     __new_finish = _S_relocate(__old_start, __position.base(),
-           __new_start, _M_get_Tp_allocator());
-     ++__new_finish;
-     __new_finish = _S_relocate(__position.base(), __old_finish,
-           __new_finish, _M_get_Tp_allocator());
-   }
- else
-
-   {
-
-     struct _Guard_elts
-     {
-       pointer _M_first, _M_last;
-       _Tp_alloc_type& _M_alloc;
-
-       constexpr
-       _Guard_elts(pointer __elt, _Tp_alloc_type& __a)
-       : _M_first(__elt), _M_last(__elt + 1), _M_alloc(__a)
-       { }
-
-       constexpr
-       ~_Guard_elts()
-       { std::_Destroy(_M_first, _M_last, _M_alloc); }
-
-     private:
-       _Guard_elts(const _Guard_elts&);
-     };
-
-
-     _Guard_elts __guard_elts(__new_start + __elems_before, _M_impl);
-
-     __new_finish = std::__uninitialized_move_if_noexcept_a(
-        __old_start, __position.base(),
-        __new_start, _M_get_Tp_allocator());
-
-     ++__new_finish;
-
-     __guard_elts._M_first = __new_start;
-
-     __new_finish = std::__uninitialized_move_if_noexcept_a(
-         __position.base(), __old_finish,
-         __new_finish, _M_get_Tp_allocator());
-
-
-     __guard_elts._M_first = __old_start;
-     __guard_elts._M_last = __old_finish;
-   }
- __guard._M_storage = __old_start;
- __guard._M_len = this->_M_impl._M_end_of_storage - __old_start;
-      }
-
-
-
-      this->_M_impl._M_start = __new_start;
-      this->_M_impl._M_finish = __new_finish;
-      this->_M_impl._M_end_of_storage = __new_start + __len;
-    }
-
-
-  template<typename _Tp, typename _Alloc>
-    template<typename... _Args>
-      constexpr
-      void
-      vector<_Tp, _Alloc>::
-      _M_realloc_append(_Args&&... __args)
-
-
-
-
-
-
-    {
-      const size_type __len = _M_check_len(1u, "vector::_M_realloc_append");
-      if (__len <= 0)
- __builtin_unreachable ();
-      pointer __old_start = this->_M_impl._M_start;
-      pointer __old_finish = this->_M_impl._M_finish;
-      const size_type __elems = end() - begin();
-      pointer __new_start(this->_M_allocate(__len));
-      pointer __new_finish(__new_start);
-
-
-      struct _Guard
-      {
- pointer _M_storage;
- size_type _M_len;
- _Tp_alloc_type& _M_alloc;
-
- constexpr
- _Guard(pointer __s, size_type __l, _Tp_alloc_type& __a)
- : _M_storage(__s), _M_len(__l), _M_alloc(__a)
- { }
-
- constexpr
- ~_Guard()
- {
-   if (_M_storage)
-     __gnu_cxx::__alloc_traits<_Tp_alloc_type>::
-       deallocate(_M_alloc, _M_storage, _M_len);
- }
-
-      private:
- _Guard(const _Guard&);
-      };
-
-      {
- _Guard __guard(__new_start, __len, _M_impl);
-# 634 "C:/mingw64/include/c++/14.2.0/bits/vector.tcc" 3
- _Alloc_traits::construct(this->_M_impl,
-     std::__to_address(__new_start + __elems),
-     std::forward<_Args>(__args)...);
-
-
-
-
-
-
-
- if constexpr (_S_use_relocate())
-   {
-
-     __new_finish = _S_relocate(__old_start, __old_finish,
-           __new_start, _M_get_Tp_allocator());
-     ++__new_finish;
-   }
- else
-
-   {
-
-     struct _Guard_elts
-     {
-       pointer _M_first, _M_last;
-       _Tp_alloc_type& _M_alloc;
-
-       constexpr
-       _Guard_elts(pointer __elt, _Tp_alloc_type& __a)
-       : _M_first(__elt), _M_last(__elt + 1), _M_alloc(__a)
-       { }
-
-       constexpr
-       ~_Guard_elts()
-       { std::_Destroy(_M_first, _M_last, _M_alloc); }
-
-     private:
-       _Guard_elts(const _Guard_elts&);
-     };
-
-
-     _Guard_elts __guard_elts(__new_start + __elems, _M_impl);
-
-     __new_finish = std::__uninitialized_move_if_noexcept_a(
-        __old_start, __old_finish,
-        __new_start, _M_get_Tp_allocator());
-
-     ++__new_finish;
-
-
-     __guard_elts._M_first = __old_start;
-     __guard_elts._M_last = __old_finish;
-   }
- __guard._M_storage = __old_start;
- __guard._M_len = this->_M_impl._M_end_of_storage - __old_start;
-      }
-
-
-
-      this->_M_impl._M_start = __new_start;
-      this->_M_impl._M_finish = __new_finish;
-      this->_M_impl._M_end_of_storage = __new_start + __len;
-    }
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    void
-    vector<_Tp, _Alloc>::
-    _M_fill_insert(iterator __position, size_type __n, const value_type& __x)
-    {
-      if (__n != 0)
- {
-   if (size_type(this->_M_impl._M_end_of_storage
-   - this->_M_impl._M_finish) >= __n)
-     {
-
-
-
-       _Temporary_value __tmp(this, __x);
-       value_type& __x_copy = __tmp._M_val();
-
-       const size_type __elems_after = end() - __position;
-       pointer __old_finish(this->_M_impl._M_finish);
-       if (__elems_after > __n)
-  {
-    ;
-    std::__uninitialized_move_a(__old_finish - __n,
-           __old_finish,
-           __old_finish,
-           _M_get_Tp_allocator());
-    this->_M_impl._M_finish += __n;
-    ;
-    std::move_backward(__position.base(), __old_finish - __n, __old_finish)
-                                        ;
-    std::fill(__position.base(), __position.base() + __n,
-       __x_copy);
-  }
-       else
-  {
-    ;
-    this->_M_impl._M_finish =
-      std::__uninitialized_fill_n_a(__old_finish,
-        __n - __elems_after,
-        __x_copy,
-        _M_get_Tp_allocator());
-    ;
-    std::__uninitialized_move_a(__position.base(), __old_finish,
-           this->_M_impl._M_finish,
-           _M_get_Tp_allocator());
-    this->_M_impl._M_finish += __elems_after;
-    ;
-    std::fill(__position.base(), __old_finish, __x_copy);
-  }
-     }
-   else
-     {
-
-
-       pointer __old_start = this->_M_impl._M_start;
-       pointer __old_finish = this->_M_impl._M_finish;
-       const pointer __pos = __position.base();
-
-       const size_type __len =
-  _M_check_len(__n, "vector::_M_fill_insert");
-       const size_type __elems_before = __pos - __old_start;
-       pointer __new_start(this->_M_allocate(__len));
-       pointer __new_finish(__new_start);
-       try
-  {
-
-    std::__uninitialized_fill_n_a(__new_start + __elems_before,
-      __n, __x,
-      _M_get_Tp_allocator());
-    __new_finish = pointer();
-
-    __new_finish
-      = std::__uninitialized_move_if_noexcept_a
-      (__old_start, __pos, __new_start, _M_get_Tp_allocator());
-
-    __new_finish += __n;
-
-    __new_finish
-      = std::__uninitialized_move_if_noexcept_a
-      (__pos, __old_finish, __new_finish, _M_get_Tp_allocator());
-  }
-       catch(...)
-  {
-    if (!__new_finish)
-      std::_Destroy(__new_start + __elems_before,
-      __new_start + __elems_before + __n,
-      _M_get_Tp_allocator());
-    else
-      std::_Destroy(__new_start, __new_finish,
-      _M_get_Tp_allocator());
-    _M_deallocate(__new_start, __len);
-    throw;
-  }
-       std::_Destroy(__old_start, __old_finish, _M_get_Tp_allocator());
-       ;
-       _M_deallocate(__old_start,
-       this->_M_impl._M_end_of_storage - __old_start);
-       this->_M_impl._M_start = __new_start;
-       this->_M_impl._M_finish = __new_finish;
-       this->_M_impl._M_end_of_storage = __new_start + __len;
-     }
- }
-    }
-
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    void
-    vector<_Tp, _Alloc>::
-    _M_default_append(size_type __n)
-    {
-      if (__n != 0)
- {
-   const size_type __size = size();
-   size_type __navail = size_type(this->_M_impl._M_end_of_storage
-      - this->_M_impl._M_finish);
-
-   if (__size > max_size() || __navail > max_size() - __size)
-     __builtin_unreachable();
-
-   if (__navail >= __n)
-     {
-       ;
-       this->_M_impl._M_finish =
-  std::__uninitialized_default_n_a(this->_M_impl._M_finish,
-       __n, _M_get_Tp_allocator());
-       ;
-     }
-   else
-     {
-
-
-       pointer __old_start = this->_M_impl._M_start;
-       pointer __old_finish = this->_M_impl._M_finish;
-
-       const size_type __len =
-  _M_check_len(__n, "vector::_M_default_append");
-       pointer __new_start(this->_M_allocate(__len));
-
-
-       struct _Guard
-       {
-  pointer _M_storage;
-  size_type _M_len;
-  _Tp_alloc_type& _M_alloc;
-
-  constexpr
-  _Guard(pointer __s, size_type __l, _Tp_alloc_type& __a)
-  : _M_storage(__s), _M_len(__l), _M_alloc(__a)
-  { }
-
-  constexpr
-  ~_Guard()
-  {
-    if (_M_storage)
-      __gnu_cxx::__alloc_traits<_Tp_alloc_type>::
-        deallocate(_M_alloc, _M_storage, _M_len);
-  }
-
-       private:
-  _Guard(const _Guard&);
-       };
-
-       {
-  _Guard __guard(__new_start, __len, _M_impl);
-
-  std::__uninitialized_default_n_a(__new_start + __size, __n,
-       _M_get_Tp_allocator());
-
-  if constexpr (_S_use_relocate())
-    {
-      _S_relocate(__old_start, __old_finish,
-    __new_start, _M_get_Tp_allocator());
-    }
-  else
-    {
-
-      struct _Guard_elts
-      {
-        pointer _M_first, _M_last;
-        _Tp_alloc_type& _M_alloc;
-
-        constexpr
-        _Guard_elts(pointer __first, size_type __n,
-      _Tp_alloc_type& __a)
-        : _M_first(__first), _M_last(__first + __n), _M_alloc(__a)
-        { }
-
-        constexpr
-        ~_Guard_elts()
-        { std::_Destroy(_M_first, _M_last, _M_alloc); }
-
-      private:
-        _Guard_elts(const _Guard_elts&);
-      };
-      _Guard_elts __guard_elts(__new_start + __size, __n, _M_impl);
-
-      std::__uninitialized_move_if_noexcept_a(
-        __old_start, __old_finish, __new_start,
-        _M_get_Tp_allocator());
-
-      __guard_elts._M_first = __old_start;
-      __guard_elts._M_last = __old_finish;
-    }
-  ;
-  __guard._M_storage = __old_start;
-  __guard._M_len = this->_M_impl._M_end_of_storage - __old_start;
-       }
-
-
-
-       this->_M_impl._M_start = __new_start;
-       this->_M_impl._M_finish = __new_start + __size + __n;
-       this->_M_impl._M_end_of_storage = __new_start + __len;
-     }
- }
-    }
-
-  template<typename _Tp, typename _Alloc>
-    constexpr
-    bool
-    vector<_Tp, _Alloc>::
-    _M_shrink_to_fit()
-    {
-      if (capacity() == size())
- return false;
-      ;
-      return std::__shrink_to_fit_aux<vector>::_S_do_it(*this);
-    }
-
-
-  template<typename _Tp, typename _Alloc>
-    template<typename _InputIterator>
-      constexpr
-      void
-      vector<_Tp, _Alloc>::
-      _M_range_insert(iterator __pos, _InputIterator __first,
-        _InputIterator __last, std::input_iterator_tag)
-      {
- if (__pos == end())
-   {
-     for (; __first != __last; ++__first)
-       insert(end(), *__first);
-   }
- else if (__first != __last)
-   {
-     vector __tmp(__first, __last, _M_get_Tp_allocator());
-     insert(__pos,
-     std::make_move_iterator(__tmp.begin()),
-     std::make_move_iterator(__tmp.end()));
-   }
-      }
-
-  template<typename _Tp, typename _Alloc>
-    template<typename _ForwardIterator>
-      constexpr
-      void
-      vector<_Tp, _Alloc>::
-      _M_range_insert(iterator __position, _ForwardIterator __first,
-        _ForwardIterator __last, std::forward_iterator_tag)
-      {
- if (__first != __last)
-   {
-     const size_type __n = std::distance(__first, __last);
-     if (size_type(this->_M_impl._M_end_of_storage
-     - this->_M_impl._M_finish) >= __n)
-       {
-  const size_type __elems_after = end() - __position;
-  pointer __old_finish(this->_M_impl._M_finish);
-  if (__elems_after > __n)
-    {
-      ;
-      std::__uninitialized_move_a(this->_M_impl._M_finish - __n,
-      this->_M_impl._M_finish,
-      this->_M_impl._M_finish,
-      _M_get_Tp_allocator());
-      this->_M_impl._M_finish += __n;
-      ;
-      std::move_backward(__position.base(), __old_finish - __n, __old_finish)
-                                          ;
-      std::copy(__first, __last, __position);
-    }
-  else
-    {
-      _ForwardIterator __mid = __first;
-      std::advance(__mid, __elems_after);
-      ;
-      std::__uninitialized_copy_a(__mid, __last,
-      this->_M_impl._M_finish,
-      _M_get_Tp_allocator());
-      this->_M_impl._M_finish += __n - __elems_after;
-      ;
-      std::__uninitialized_move_a(__position.base(),
-      __old_finish,
-      this->_M_impl._M_finish,
-      _M_get_Tp_allocator());
-      this->_M_impl._M_finish += __elems_after;
-      ;
-      std::copy(__first, __mid, __position);
-    }
-       }
-     else
-       {
-
-
-
-  pointer __old_start = this->_M_impl._M_start;
-  pointer __old_finish = this->_M_impl._M_finish;
-
-  const size_type __len =
-    _M_check_len(__n, "vector::_M_range_insert");
-
-
-
-
-
-  pointer __new_start(this->_M_allocate(__len));
-  pointer __new_finish(__new_start);
-  try
-    {
-      __new_finish
-        = std::__uninitialized_move_if_noexcept_a
-        (__old_start, __position.base(),
-         __new_start, _M_get_Tp_allocator());
-      __new_finish
-        = std::__uninitialized_copy_a(__first, __last,
-          __new_finish,
-          _M_get_Tp_allocator());
-      __new_finish
-        = std::__uninitialized_move_if_noexcept_a
-        (__position.base(), __old_finish,
-         __new_finish, _M_get_Tp_allocator());
-    }
-  catch(...)
-    {
-      std::_Destroy(__new_start, __new_finish,
-      _M_get_Tp_allocator());
-      _M_deallocate(__new_start, __len);
-      throw;
-    }
-  std::_Destroy(__old_start, __old_finish,
-         _M_get_Tp_allocator());
-  ;
-  _M_deallocate(__old_start,
-         this->_M_impl._M_end_of_storage - __old_start);
-  this->_M_impl._M_start = __new_start;
-  this->_M_impl._M_finish = __new_finish;
-  this->_M_impl._M_end_of_storage = __new_start + __len;
-       }
-   }
-      }
-
-
-
-  template<typename _Alloc>
-    constexpr
-    void
-    vector<bool, _Alloc>::
-    _M_reallocate(size_type __n)
-    {
-      _Bit_pointer __q = this->_M_allocate(__n);
-      iterator __start(std::__addressof(*__q), 0);
-      iterator __finish(_M_copy_aligned(begin(), end(), __start));
-      this->_M_deallocate();
-      this->_M_impl._M_start = __start;
-      this->_M_impl._M_finish = __finish;
-      this->_M_impl._M_end_of_storage = __q + _S_nword(__n);
-    }
-
-  template<typename _Alloc>
-    constexpr
-    void
-    vector<bool, _Alloc>::
-    _M_fill_insert(iterator __position, size_type __n, bool __x)
-    {
-      if (__n == 0)
- return;
-      if (capacity() - size() >= __n)
- {
-   std::copy_backward(__position, end(),
-        this->_M_impl._M_finish + difference_type(__n));
-   std::fill(__position, __position + difference_type(__n), __x);
-   this->_M_impl._M_finish += difference_type(__n);
- }
-      else
- {
-   const size_type __len =
-     _M_check_len(__n, "vector<bool>::_M_fill_insert");
-   _Bit_pointer __q = this->_M_allocate(__len);
-   iterator __start(std::__addressof(*__q), 0);
-   iterator __i = _M_copy_aligned(begin(), __position, __start);
-   std::fill(__i, __i + difference_type(__n), __x);
-   iterator __finish = std::copy(__position, end(),
-     __i + difference_type(__n));
-   this->_M_deallocate();
-   this->_M_impl._M_end_of_storage = __q + _S_nword(__len);
-   this->_M_impl._M_start = __start;
-   this->_M_impl._M_finish = __finish;
- }
-    }
-
-  template<typename _Alloc>
-    template<typename _ForwardIterator>
-      constexpr
-      void
-      vector<bool, _Alloc>::
-      _M_insert_range(iterator __position, _ForwardIterator __first,
-        _ForwardIterator __last, std::forward_iterator_tag)
-      {
- if (__first != __last)
-   {
-     size_type __n = std::distance(__first, __last);
-     if (capacity() - size() >= __n)
-       {
-  std::copy_backward(__position, end(),
-       this->_M_impl._M_finish
-       + difference_type(__n));
-  std::copy(__first, __last, __position);
-  this->_M_impl._M_finish += difference_type(__n);
-       }
-     else
-       {
-  const size_type __len =
-    _M_check_len(__n, "vector<bool>::_M_insert_range");
-  const iterator __begin = begin(), __end = end();
-  _Bit_pointer __q = this->_M_allocate(__len);
-  iterator __start(std::__addressof(*__q), 0);
-  iterator __i = _M_copy_aligned(__begin, __position, __start);
-  __i = std::copy(__first, __last, __i);
-  iterator __finish = std::copy(__position, __end, __i);
-  this->_M_deallocate();
-  this->_M_impl._M_end_of_storage = __q + _S_nword(__len);
-  this->_M_impl._M_start = __start;
-  this->_M_impl._M_finish = __finish;
-       }
-   }
-      }
-
-  template<typename _Alloc>
-    constexpr
-    void
-    vector<bool, _Alloc>::
-    _M_insert_aux(iterator __position, bool __x)
-    {
-      if (this->_M_impl._M_finish._M_p != this->_M_impl._M_end_addr())
- {
-   std::copy_backward(__position, this->_M_impl._M_finish,
-        this->_M_impl._M_finish + 1);
-   *__position = __x;
-   ++this->_M_impl._M_finish;
- }
-      else
- {
-   const size_type __len =
-     _M_check_len(size_type(1), "vector<bool>::_M_insert_aux");
-   _Bit_pointer __q = this->_M_allocate(__len);
-   iterator __start(std::__addressof(*__q), 0);
-   iterator __i = _M_copy_aligned(begin(), __position, __start);
-   *__i++ = __x;
-   iterator __finish = std::copy(__position, end(), __i);
-   this->_M_deallocate();
-   this->_M_impl._M_end_of_storage = __q + _S_nword(__len);
-   this->_M_impl._M_start = __start;
-   this->_M_impl._M_finish = __finish;
- }
-    }
-
-  template<typename _Alloc>
-    constexpr
-    typename vector<bool, _Alloc>::iterator
-    vector<bool, _Alloc>::
-    _M_erase(iterator __position)
-    {
-      if (__position + 1 != end())
-        std::copy(__position + 1, end(), __position);
-      --this->_M_impl._M_finish;
-      return __position;
-    }
-
-  template<typename _Alloc>
-    constexpr
-    typename vector<bool, _Alloc>::iterator
-    vector<bool, _Alloc>::
-    _M_erase(iterator __first, iterator __last)
-    {
-      if (__first != __last)
- _M_erase_at_end(std::copy(__last, end(), __first));
-      return __first;
-    }
-
-
-  template<typename _Alloc>
-    constexpr
-    bool
-    vector<bool, _Alloc>::
-    _M_shrink_to_fit()
-    {
-      if (capacity() - size() < int(_S_word_bit))
- return false;
-      try
- {
-   if (size_type __n = size())
-     _M_reallocate(__n);
-   else
-     {
-       this->_M_deallocate();
-       this->_M_impl._M_reset();
-     }
-   return true;
- }
-      catch(...)
- { return false; }
-    }
-
-
-
-
-}
-
-
-
-namespace std
-{
-
-
-  template<typename _Alloc>
-    size_t
-    hash<std::vector<bool, _Alloc>>::
-    operator()(const std::vector<bool, _Alloc>& __b) const noexcept
-    {
-      size_t __hash = 0;
-      const size_t __words = __b.size() / _S_word_bit;
-      if (__words)
- {
-   const size_t __clength = __words * sizeof(_Bit_type);
-   __hash = std::_Hash_impl::hash(__b._M_impl._M_start._M_p, __clength);
- }
-
-      const size_t __extrabits = __b.size() % _S_word_bit;
-      if (__extrabits)
- {
-   _Bit_type __hiword = *__b._M_impl._M_finish._M_p;
-   __hiword &= ~((~static_cast<_Bit_type>(0)) << __extrabits);
-
-   const size_t __clength
-     = (__extrabits + 8 - 1) / 8;
-   if (__words)
-     __hash = std::_Hash_impl::hash(&__hiword, __clength, __hash);
-   else
-     __hash = std::_Hash_impl::hash(&__hiword, __clength);
- }
-
-      return __hash;
-    }
-
-
-}
-# 73 "C:/mingw64/include/c++/14.2.0/vector" 2 3
-# 83 "C:/mingw64/include/c++/14.2.0/vector" 3
-# 1 "C:/mingw64/include/c++/14.2.0/bits/version.h" 1 3
-# 47 "C:/mingw64/include/c++/14.2.0/bits/version.h" 3
-       
-# 48 "C:/mingw64/include/c++/14.2.0/bits/version.h" 3
-# 84 "C:/mingw64/include/c++/14.2.0/vector" 2 3
-
-
-
-namespace std
-{
-
-  namespace pmr {
-    template<typename _Tp>
-      using vector = std::vector<_Tp, polymorphic_allocator<_Tp>>;
-  }
-
-
-
-
-
-
-
-
-}
-
-
-
-namespace std
-{
-
-
-  template<typename _Tp, typename _Alloc, typename _Predicate>
-    constexpr
-    inline typename vector<_Tp, _Alloc>::size_type
-    erase_if(vector<_Tp, _Alloc>& __cont, _Predicate __pred)
-    {
-      using namespace __gnu_cxx;
-      std::vector<_Tp, _Alloc>& __ucont = __cont;
-      const auto __osz = __cont.size();
-      const auto __end = __ucont.end();
-      auto __removed = std::__remove_if(__ucont.begin(), __end,
-     __ops::__pred_iter(std::ref(__pred)));
-      if (__removed != __end)
- {
-   __cont.erase(__niter_wrap(__cont.begin(), __removed),
-         __cont.end());
-   return __osz - __cont.size();
- }
-
-      return 0;
-    }
-
-  template<typename _Tp, typename _Alloc, typename _Up>
-    constexpr
-    inline typename vector<_Tp, _Alloc>::size_type
-    erase(vector<_Tp, _Alloc>& __cont, const _Up& __value)
-    {
-      using namespace __gnu_cxx;
-      std::vector<_Tp, _Alloc>& __ucont = __cont;
-      const auto __osz = __cont.size();
-      const auto __end = __ucont.end();
-      auto __removed = std::__remove_if(__ucont.begin(), __end,
-     __ops::__iter_equals_val(__value));
-      if (__removed != __end)
- {
-   __cont.erase(__niter_wrap(__cont.begin(), __removed),
-         __cont.end());
-   return __osz - __cont.size();
- }
-
-      return 0;
-    }
-
-}
-# 7 "C:/Users/makar/CLionProjects/laba2/test.h" 2
-
-
-# 8 "C:/Users/makar/CLionProjects/laba2/test.h"
+# 7 "C:/Users/makar/CLionProjects/laba2/test.h"
 struct PerformanceResult {
-    int data_size;
-    std::string generator_name;
-    std::string sorter_name;
-    double average_time;
+    int dataSize;
+    std::string dataGenerator;
+    std::string sorter;
+    double averageTime;
 };
 
 void runTests();
@@ -75129,7 +70208,4927 @@ namespace std
 # 1239 "C:/mingw64/include/c++/14.2.0/sstream" 2 3
 # 46 "C:/mingw64/include/c++/14.2.0/chrono" 2 3
 
+# 1 "C:/mingw64/include/c++/14.2.0/vector" 1 3
+# 58 "C:/mingw64/include/c++/14.2.0/vector" 3
+       
+# 59 "C:/mingw64/include/c++/14.2.0/vector" 3
 
+
+
+
+
+
+# 1 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 1 3
+# 70 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+namespace std
+{
+
+# 81 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template<typename _ValueType, typename _Tp>
+    constexpr bool
+    __check_constructible()
+    {
+
+
+
+
+
+      static_assert(is_constructible<_ValueType, _Tp>::value,
+   "result type must be constructible from input type");
+
+      return true;
+    }
+# 110 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template<typename _InputIterator, typename _ForwardIterator>
+    constexpr
+    _ForwardIterator
+    __do_uninit_copy(_InputIterator __first, _InputIterator __last,
+       _ForwardIterator __result)
+    {
+      _ForwardIterator __cur = __result;
+      try
+ {
+   for (; __first != __last; ++__first, (void)++__cur)
+     std::_Construct(std::__addressof(*__cur), *__first);
+   return __cur;
+ }
+      catch(...)
+ {
+   std::_Destroy(__result, __cur);
+   throw;
+ }
+    }
+
+  template<bool _TrivialValueTypes>
+    struct __uninitialized_copy
+    {
+      template<typename _InputIterator, typename _ForwardIterator>
+        static _ForwardIterator
+        __uninit_copy(_InputIterator __first, _InputIterator __last,
+        _ForwardIterator __result)
+ { return std::__do_uninit_copy(__first, __last, __result); }
+    };
+
+  template<>
+    struct __uninitialized_copy<true>
+    {
+      template<typename _InputIterator, typename _ForwardIterator>
+        static _ForwardIterator
+        __uninit_copy(_InputIterator __first, _InputIterator __last,
+        _ForwardIterator __result)
+        { return std::copy(__first, __last, __result); }
+    };
+# 161 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template<typename _InputIterator, typename _ForwardIterator>
+    inline _ForwardIterator
+    uninitialized_copy(_InputIterator __first, _InputIterator __last,
+         _ForwardIterator __result)
+    {
+      typedef typename iterator_traits<_InputIterator>::value_type
+ _ValueType1;
+      typedef typename iterator_traits<_ForwardIterator>::value_type
+ _ValueType2;
+
+
+
+
+      const bool __can_memmove = __is_trivial(_ValueType1);
+
+
+
+
+      using _From = decltype(*__first);
+
+      const bool __assignable
+ = __is_trivial(_ValueType2) && __is_assignable(_ValueType2&, _From) && std::__check_constructible<_ValueType2, _From>();
+
+      return std::__uninitialized_copy<__can_memmove && __assignable>::
+ __uninit_copy(__first, __last, __result);
+    }
+
+
+
+  template<typename _ForwardIterator, typename _Tp>
+    constexpr void
+    __do_uninit_fill(_ForwardIterator __first, _ForwardIterator __last,
+       const _Tp& __x)
+    {
+      _ForwardIterator __cur = __first;
+      try
+ {
+   for (; __cur != __last; ++__cur)
+     std::_Construct(std::__addressof(*__cur), __x);
+ }
+      catch(...)
+ {
+   std::_Destroy(__first, __cur);
+   throw;
+ }
+    }
+
+  template<bool _TrivialValueType>
+    struct __uninitialized_fill
+    {
+      template<typename _ForwardIterator, typename _Tp>
+        static void
+        __uninit_fill(_ForwardIterator __first, _ForwardIterator __last,
+        const _Tp& __x)
+ { std::__do_uninit_fill(__first, __last, __x); }
+    };
+
+  template<>
+    struct __uninitialized_fill<true>
+    {
+      template<typename _ForwardIterator, typename _Tp>
+        static void
+        __uninit_fill(_ForwardIterator __first, _ForwardIterator __last,
+        const _Tp& __x)
+        { std::fill(__first, __last, __x); }
+    };
+# 239 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template<typename _ForwardIterator, typename _Tp>
+    inline void
+    uninitialized_fill(_ForwardIterator __first, _ForwardIterator __last,
+         const _Tp& __x)
+    {
+      typedef typename iterator_traits<_ForwardIterator>::value_type
+ _ValueType;
+
+
+
+      const bool __can_fill
+ = __is_trivial(_ValueType) && __is_assignable(_ValueType&, const _Tp&) && std::__check_constructible<_ValueType, const _Tp&>();
+
+      std::__uninitialized_fill<__can_fill>::
+ __uninit_fill(__first, __last, __x);
+    }
+
+
+
+  template<typename _ForwardIterator, typename _Size, typename _Tp>
+    constexpr
+    _ForwardIterator
+    __do_uninit_fill_n(_ForwardIterator __first, _Size __n, const _Tp& __x)
+    {
+      _ForwardIterator __cur = __first;
+      try
+ {
+   for (; __n > 0; --__n, (void) ++__cur)
+     std::_Construct(std::__addressof(*__cur), __x);
+   return __cur;
+ }
+      catch(...)
+ {
+   std::_Destroy(__first, __cur);
+   throw;
+ }
+    }
+
+  template<bool _TrivialValueType>
+    struct __uninitialized_fill_n
+    {
+      template<typename _ForwardIterator, typename _Size, typename _Tp>
+ static _ForwardIterator
+        __uninit_fill_n(_ForwardIterator __first, _Size __n,
+   const _Tp& __x)
+ { return std::__do_uninit_fill_n(__first, __n, __x); }
+    };
+
+  template<>
+    struct __uninitialized_fill_n<true>
+    {
+      template<typename _ForwardIterator, typename _Size, typename _Tp>
+ static _ForwardIterator
+        __uninit_fill_n(_ForwardIterator __first, _Size __n,
+   const _Tp& __x)
+        { return std::fill_n(__first, __n, __x); }
+    };
+# 310 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template<typename _ForwardIterator, typename _Size, typename _Tp>
+    inline _ForwardIterator
+    uninitialized_fill_n(_ForwardIterator __first, _Size __n, const _Tp& __x)
+    {
+      typedef typename iterator_traits<_ForwardIterator>::value_type
+ _ValueType;
+
+
+
+      const bool __can_fill
+ = __is_trivial(_ValueType) && __is_assignable(_ValueType&, const _Tp&) && std::__check_constructible<_ValueType, const _Tp&>()
+
+
+
+ && __is_integer<_Size>::__value;
+
+      return __uninitialized_fill_n<__can_fill>::
+ __uninit_fill_n(__first, __n, __x);
+    }
+# 340 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template<typename _InputIterator, typename _ForwardIterator,
+    typename _Allocator>
+    constexpr
+    _ForwardIterator
+    __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      _ForwardIterator __result, _Allocator& __alloc)
+    {
+      _ForwardIterator __cur = __result;
+      try
+ {
+   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
+   for (; __first != __last; ++__first, (void)++__cur)
+     __traits::construct(__alloc, std::__addressof(*__cur), *__first);
+   return __cur;
+ }
+      catch(...)
+ {
+   std::_Destroy(__result, __cur, __alloc);
+   throw;
+ }
+    }
+
+
+  template<typename _InputIterator, typename _ForwardIterator, typename _Tp>
+    constexpr
+    inline _ForwardIterator
+    __uninitialized_copy_a(_InputIterator __first, _InputIterator __last,
+      _ForwardIterator __result, allocator<_Tp>&)
+    {
+
+      if (std::is_constant_evaluated())
+ return std::__do_uninit_copy(__first, __last, __result);
+
+      return std::uninitialized_copy(__first, __last, __result);
+    }
+
+
+  template<typename _InputIterator, typename _ForwardIterator,
+    typename _Allocator>
+    constexpr
+    inline _ForwardIterator
+    __uninitialized_move_a(_InputIterator __first, _InputIterator __last,
+      _ForwardIterator __result, _Allocator& __alloc)
+    {
+      return std::__uninitialized_copy_a(std::make_move_iterator(__first),
+      std::make_move_iterator(__last),
+      __result, __alloc);
+    }
+
+  template<typename _InputIterator, typename _ForwardIterator,
+    typename _Allocator>
+    constexpr
+    inline _ForwardIterator
+    __uninitialized_move_if_noexcept_a(_InputIterator __first,
+           _InputIterator __last,
+           _ForwardIterator __result,
+           _Allocator& __alloc)
+    {
+      return std::__uninitialized_copy_a
+ (std::__make_move_if_noexcept_iterator(__first),
+  std::__make_move_if_noexcept_iterator(__last), __result, __alloc);
+    }
+
+  template<typename _ForwardIterator, typename _Tp, typename _Allocator>
+    constexpr
+    void
+    __uninitialized_fill_a(_ForwardIterator __first, _ForwardIterator __last,
+      const _Tp& __x, _Allocator& __alloc)
+    {
+      _ForwardIterator __cur = __first;
+      try
+ {
+   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
+   for (; __cur != __last; ++__cur)
+     __traits::construct(__alloc, std::__addressof(*__cur), __x);
+ }
+      catch(...)
+ {
+   std::_Destroy(__first, __cur, __alloc);
+   throw;
+ }
+    }
+
+
+  template<typename _ForwardIterator, typename _Tp, typename _Tp2>
+    constexpr
+    inline void
+    __uninitialized_fill_a(_ForwardIterator __first, _ForwardIterator __last,
+      const _Tp& __x, allocator<_Tp2>&)
+    {
+
+      if (std::is_constant_evaluated())
+ return std::__do_uninit_fill(__first, __last, __x);
+
+      std::uninitialized_fill(__first, __last, __x);
+    }
+
+
+  template<typename _ForwardIterator, typename _Size, typename _Tp,
+    typename _Allocator>
+     constexpr
+    _ForwardIterator
+    __uninitialized_fill_n_a(_ForwardIterator __first, _Size __n,
+        const _Tp& __x, _Allocator& __alloc)
+    {
+      _ForwardIterator __cur = __first;
+      try
+ {
+   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
+   for (; __n > 0; --__n, (void) ++__cur)
+     __traits::construct(__alloc, std::__addressof(*__cur), __x);
+   return __cur;
+ }
+      catch(...)
+ {
+   std::_Destroy(__first, __cur, __alloc);
+   throw;
+ }
+    }
+
+
+  template<typename _ForwardIterator, typename _Size, typename _Tp,
+    typename _Tp2>
+    constexpr
+    inline _ForwardIterator
+    __uninitialized_fill_n_a(_ForwardIterator __first, _Size __n,
+        const _Tp& __x, allocator<_Tp2>&)
+    {
+
+      if (std::is_constant_evaluated())
+ return std::__do_uninit_fill_n(__first, __n, __x);
+
+      return std::uninitialized_fill_n(__first, __n, __x);
+    }
+# 485 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template<typename _InputIterator1, typename _InputIterator2,
+    typename _ForwardIterator, typename _Allocator>
+    inline _ForwardIterator
+    __uninitialized_copy_move(_InputIterator1 __first1,
+         _InputIterator1 __last1,
+         _InputIterator2 __first2,
+         _InputIterator2 __last2,
+         _ForwardIterator __result,
+         _Allocator& __alloc)
+    {
+      _ForwardIterator __mid = std::__uninitialized_copy_a(__first1, __last1,
+          __result,
+          __alloc);
+      try
+ {
+   return std::__uninitialized_move_a(__first2, __last2, __mid, __alloc);
+ }
+      catch(...)
+ {
+   std::_Destroy(__result, __mid, __alloc);
+   throw;
+ }
+    }
+
+
+
+
+
+  template<typename _InputIterator1, typename _InputIterator2,
+    typename _ForwardIterator, typename _Allocator>
+    inline _ForwardIterator
+    __uninitialized_move_copy(_InputIterator1 __first1,
+         _InputIterator1 __last1,
+         _InputIterator2 __first2,
+         _InputIterator2 __last2,
+         _ForwardIterator __result,
+         _Allocator& __alloc)
+    {
+      _ForwardIterator __mid = std::__uninitialized_move_a(__first1, __last1,
+          __result,
+          __alloc);
+      try
+ {
+   return std::__uninitialized_copy_a(__first2, __last2, __mid, __alloc);
+ }
+      catch(...)
+ {
+   std::_Destroy(__result, __mid, __alloc);
+   throw;
+ }
+    }
+
+
+
+
+  template<typename _ForwardIterator, typename _Tp, typename _InputIterator,
+    typename _Allocator>
+    inline _ForwardIterator
+    __uninitialized_fill_move(_ForwardIterator __result, _ForwardIterator __mid,
+         const _Tp& __x, _InputIterator __first,
+         _InputIterator __last, _Allocator& __alloc)
+    {
+      std::__uninitialized_fill_a(__result, __mid, __x, __alloc);
+      try
+ {
+   return std::__uninitialized_move_a(__first, __last, __mid, __alloc);
+ }
+      catch(...)
+ {
+   std::_Destroy(__result, __mid, __alloc);
+   throw;
+ }
+    }
+
+
+
+
+  template<typename _InputIterator, typename _ForwardIterator, typename _Tp,
+    typename _Allocator>
+    inline void
+    __uninitialized_move_fill(_InputIterator __first1, _InputIterator __last1,
+         _ForwardIterator __first2,
+         _ForwardIterator __last2, const _Tp& __x,
+         _Allocator& __alloc)
+    {
+      _ForwardIterator __mid2 = std::__uninitialized_move_a(__first1, __last1,
+           __first2,
+           __alloc);
+      try
+ {
+   std::__uninitialized_fill_a(__mid2, __last2, __x, __alloc);
+ }
+      catch(...)
+ {
+   std::_Destroy(__first2, __mid2, __alloc);
+   throw;
+ }
+    }
+# 592 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template<bool _TrivialValueType>
+    struct __uninitialized_default_1
+    {
+      template<typename _ForwardIterator>
+        static void
+        __uninit_default(_ForwardIterator __first, _ForwardIterator __last)
+        {
+   _ForwardIterator __cur = __first;
+   try
+     {
+       for (; __cur != __last; ++__cur)
+  std::_Construct(std::__addressof(*__cur));
+     }
+   catch(...)
+     {
+       std::_Destroy(__first, __cur);
+       throw;
+     }
+ }
+    };
+
+  template<>
+    struct __uninitialized_default_1<true>
+    {
+      template<typename _ForwardIterator>
+        static void
+        __uninit_default(_ForwardIterator __first, _ForwardIterator __last)
+        {
+   if (__first == __last)
+     return;
+
+   typename iterator_traits<_ForwardIterator>::value_type* __val
+     = std::__addressof(*__first);
+   std::_Construct(__val);
+   if (++__first != __last)
+     std::fill(__first, __last, *__val);
+ }
+    };
+
+  template<bool _TrivialValueType>
+    struct __uninitialized_default_n_1
+    {
+      template<typename _ForwardIterator, typename _Size>
+ constexpr
+        static _ForwardIterator
+        __uninit_default_n(_ForwardIterator __first, _Size __n)
+        {
+   _ForwardIterator __cur = __first;
+   try
+     {
+       for (; __n > 0; --__n, (void) ++__cur)
+  std::_Construct(std::__addressof(*__cur));
+       return __cur;
+     }
+   catch(...)
+     {
+       std::_Destroy(__first, __cur);
+       throw;
+     }
+ }
+    };
+
+  template<>
+    struct __uninitialized_default_n_1<true>
+    {
+      template<typename _ForwardIterator, typename _Size>
+ constexpr
+        static _ForwardIterator
+        __uninit_default_n(_ForwardIterator __first, _Size __n)
+        {
+   if (__n > 0)
+     {
+       typename iterator_traits<_ForwardIterator>::value_type* __val
+  = std::__addressof(*__first);
+       std::_Construct(__val);
+       ++__first;
+       __first = std::fill_n(__first, __n - 1, *__val);
+     }
+   return __first;
+ }
+    };
+
+
+
+  template<typename _ForwardIterator>
+    inline void
+    __uninitialized_default(_ForwardIterator __first,
+       _ForwardIterator __last)
+    {
+      typedef typename iterator_traits<_ForwardIterator>::value_type
+ _ValueType;
+
+      const bool __assignable = is_copy_assignable<_ValueType>::value;
+
+      std::__uninitialized_default_1<__is_trivial(_ValueType)
+         && __assignable>::
+ __uninit_default(__first, __last);
+    }
+
+
+
+  template<typename _ForwardIterator, typename _Size>
+    constexpr
+    inline _ForwardIterator
+    __uninitialized_default_n(_ForwardIterator __first, _Size __n)
+    {
+
+      if (std::is_constant_evaluated())
+ return __uninitialized_default_n_1<false>::
+   __uninit_default_n(__first, __n);
+
+
+      typedef typename iterator_traits<_ForwardIterator>::value_type
+ _ValueType;
+
+      constexpr bool __can_fill
+ = __and_<is_integral<_Size>, is_copy_assignable<_ValueType>>::value;
+
+      return __uninitialized_default_n_1<__is_trivial(_ValueType)
+      && __can_fill>::
+ __uninit_default_n(__first, __n);
+    }
+
+
+
+
+
+  template<typename _ForwardIterator, typename _Allocator>
+    void
+    __uninitialized_default_a(_ForwardIterator __first,
+         _ForwardIterator __last,
+         _Allocator& __alloc)
+    {
+      _ForwardIterator __cur = __first;
+      try
+ {
+   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
+   for (; __cur != __last; ++__cur)
+     __traits::construct(__alloc, std::__addressof(*__cur));
+ }
+      catch(...)
+ {
+   std::_Destroy(__first, __cur, __alloc);
+   throw;
+ }
+    }
+
+
+  template<typename _ForwardIterator, typename _Tp>
+    inline void
+    __uninitialized_default_a(_ForwardIterator __first,
+         _ForwardIterator __last,
+         allocator<_Tp>&)
+    { std::__uninitialized_default(__first, __last); }
+
+
+
+
+
+  template<typename _ForwardIterator, typename _Size, typename _Allocator>
+    constexpr _ForwardIterator
+    __uninitialized_default_n_a(_ForwardIterator __first, _Size __n,
+    _Allocator& __alloc)
+    {
+      _ForwardIterator __cur = __first;
+      try
+ {
+   typedef __gnu_cxx::__alloc_traits<_Allocator> __traits;
+   for (; __n > 0; --__n, (void) ++__cur)
+     __traits::construct(__alloc, std::__addressof(*__cur));
+   return __cur;
+ }
+      catch(...)
+ {
+   std::_Destroy(__first, __cur, __alloc);
+   throw;
+ }
+    }
+
+
+
+
+  template<typename _ForwardIterator, typename _Size, typename _Tp>
+    constexpr
+    inline _ForwardIterator
+    __uninitialized_default_n_a(_ForwardIterator __first, _Size __n,
+    allocator<_Tp>&)
+    { return std::__uninitialized_default_n(__first, __n); }
+
+
+  template<bool _TrivialValueType>
+    struct __uninitialized_default_novalue_1
+    {
+      template<typename _ForwardIterator>
+ static void
+ __uninit_default_novalue(_ForwardIterator __first,
+     _ForwardIterator __last)
+ {
+   _ForwardIterator __cur = __first;
+   try
+     {
+       for (; __cur != __last; ++__cur)
+  std::_Construct_novalue(std::__addressof(*__cur));
+     }
+   catch(...)
+     {
+       std::_Destroy(__first, __cur);
+       throw;
+     }
+ }
+    };
+
+  template<>
+    struct __uninitialized_default_novalue_1<true>
+    {
+      template<typename _ForwardIterator>
+        static void
+        __uninit_default_novalue(_ForwardIterator, _ForwardIterator)
+ {
+ }
+    };
+
+  template<bool _TrivialValueType>
+    struct __uninitialized_default_novalue_n_1
+    {
+      template<typename _ForwardIterator, typename _Size>
+ static _ForwardIterator
+ __uninit_default_novalue_n(_ForwardIterator __first, _Size __n)
+ {
+   _ForwardIterator __cur = __first;
+   try
+     {
+       for (; __n > 0; --__n, (void) ++__cur)
+  std::_Construct_novalue(std::__addressof(*__cur));
+       return __cur;
+     }
+   catch(...)
+     {
+       std::_Destroy(__first, __cur);
+       throw;
+     }
+ }
+    };
+
+  template<>
+    struct __uninitialized_default_novalue_n_1<true>
+    {
+      template<typename _ForwardIterator, typename _Size>
+ static _ForwardIterator
+ __uninit_default_novalue_n(_ForwardIterator __first, _Size __n)
+ { return std::next(__first, __n); }
+    };
+
+
+
+  template<typename _ForwardIterator>
+    inline void
+    __uninitialized_default_novalue(_ForwardIterator __first,
+        _ForwardIterator __last)
+    {
+      typedef typename iterator_traits<_ForwardIterator>::value_type
+ _ValueType;
+
+      std::__uninitialized_default_novalue_1<
+ is_trivially_default_constructible<_ValueType>::value>::
+ __uninit_default_novalue(__first, __last);
+    }
+
+
+
+  template<typename _ForwardIterator, typename _Size>
+    inline _ForwardIterator
+    __uninitialized_default_novalue_n(_ForwardIterator __first, _Size __n)
+    {
+      typedef typename iterator_traits<_ForwardIterator>::value_type
+ _ValueType;
+
+      return __uninitialized_default_novalue_n_1<
+ is_trivially_default_constructible<_ValueType>::value>::
+ __uninit_default_novalue_n(__first, __n);
+    }
+
+  template<typename _InputIterator, typename _Size,
+    typename _ForwardIterator>
+    _ForwardIterator
+    __uninitialized_copy_n(_InputIterator __first, _Size __n,
+      _ForwardIterator __result, input_iterator_tag)
+    {
+      _ForwardIterator __cur = __result;
+      try
+ {
+   for (; __n > 0; --__n, (void) ++__first, ++__cur)
+     std::_Construct(std::__addressof(*__cur), *__first);
+   return __cur;
+ }
+      catch(...)
+ {
+   std::_Destroy(__result, __cur);
+   throw;
+ }
+    }
+
+  template<typename _RandomAccessIterator, typename _Size,
+    typename _ForwardIterator>
+    inline _ForwardIterator
+    __uninitialized_copy_n(_RandomAccessIterator __first, _Size __n,
+      _ForwardIterator __result,
+      random_access_iterator_tag)
+    { return std::uninitialized_copy(__first, __first + __n, __result); }
+
+  template<typename _InputIterator, typename _Size,
+    typename _ForwardIterator>
+    pair<_InputIterator, _ForwardIterator>
+    __uninitialized_copy_n_pair(_InputIterator __first, _Size __n,
+      _ForwardIterator __result, input_iterator_tag)
+    {
+      _ForwardIterator __cur = __result;
+      try
+ {
+   for (; __n > 0; --__n, (void) ++__first, ++__cur)
+     std::_Construct(std::__addressof(*__cur), *__first);
+   return {__first, __cur};
+ }
+      catch(...)
+ {
+   std::_Destroy(__result, __cur);
+   throw;
+ }
+    }
+
+  template<typename _RandomAccessIterator, typename _Size,
+    typename _ForwardIterator>
+    inline pair<_RandomAccessIterator, _ForwardIterator>
+    __uninitialized_copy_n_pair(_RandomAccessIterator __first, _Size __n,
+      _ForwardIterator __result,
+      random_access_iterator_tag)
+    {
+      auto __second_res = uninitialized_copy(__first, __first + __n, __result);
+      auto __first_res = std::next(__first, __n);
+      return {__first_res, __second_res};
+    }
+# 946 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template<typename _InputIterator, typename _Size, typename _ForwardIterator>
+    inline _ForwardIterator
+    uninitialized_copy_n(_InputIterator __first, _Size __n,
+    _ForwardIterator __result)
+    { return std::__uninitialized_copy_n(__first, __n, __result,
+      std::__iterator_category(__first)); }
+
+
+  template<typename _InputIterator, typename _Size, typename _ForwardIterator>
+    inline pair<_InputIterator, _ForwardIterator>
+    __uninitialized_copy_n_pair(_InputIterator __first, _Size __n,
+         _ForwardIterator __result)
+    {
+      return
+ std::__uninitialized_copy_n_pair(__first, __n, __result,
+      std::__iterator_category(__first));
+    }
+# 973 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template <typename _ForwardIterator>
+    inline void
+    uninitialized_default_construct(_ForwardIterator __first,
+        _ForwardIterator __last)
+    {
+      __uninitialized_default_novalue(__first, __last);
+    }
+# 988 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template <typename _ForwardIterator, typename _Size>
+    inline _ForwardIterator
+    uninitialized_default_construct_n(_ForwardIterator __first, _Size __count)
+    {
+      return __uninitialized_default_novalue_n(__first, __count);
+    }
+
+
+
+
+
+
+
+  template <typename _ForwardIterator>
+    inline void
+    uninitialized_value_construct(_ForwardIterator __first,
+      _ForwardIterator __last)
+    {
+      return __uninitialized_default(__first, __last);
+    }
+# 1016 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template <typename _ForwardIterator, typename _Size>
+    inline _ForwardIterator
+    uninitialized_value_construct_n(_ForwardIterator __first, _Size __count)
+    {
+      return __uninitialized_default_n(__first, __count);
+    }
+# 1031 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template <typename _InputIterator, typename _ForwardIterator>
+    inline _ForwardIterator
+    uninitialized_move(_InputIterator __first, _InputIterator __last,
+         _ForwardIterator __result)
+    {
+      return std::uninitialized_copy
+ (std::make_move_iterator(__first),
+  std::make_move_iterator(__last), __result);
+    }
+# 1049 "C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h" 3
+  template <typename _InputIterator, typename _Size, typename _ForwardIterator>
+    inline pair<_InputIterator, _ForwardIterator>
+    uninitialized_move_n(_InputIterator __first, _Size __count,
+    _ForwardIterator __result)
+    {
+      auto __res = std::__uninitialized_copy_n_pair
+ (std::make_move_iterator(__first),
+  __count, __result);
+      return {__res.first.base(), __res.second};
+    }
+
+
+
+
+
+  template<typename _Tp, typename _Up, typename _Allocator>
+    constexpr
+    inline void
+    __relocate_object_a(_Tp* __restrict __dest, _Up* __restrict __orig,
+   _Allocator& __alloc)
+    noexcept(noexcept(std::allocator_traits<_Allocator>::construct(__alloc,
+    __dest, std::move(*__orig)))
+      && noexcept(std::allocator_traits<_Allocator>::destroy(
+       __alloc, std::__addressof(*__orig))))
+    {
+      typedef std::allocator_traits<_Allocator> __traits;
+      __traits::construct(__alloc, __dest, std::move(*__orig));
+      __traits::destroy(__alloc, std::__addressof(*__orig));
+    }
+
+
+
+  template<typename _Tp, typename = void>
+    struct __is_bitwise_relocatable
+    : is_trivial<_Tp> { };
+
+  template <typename _InputIterator, typename _ForwardIterator,
+     typename _Allocator>
+    constexpr
+    inline _ForwardIterator
+    __relocate_a_1(_InputIterator __first, _InputIterator __last,
+     _ForwardIterator __result, _Allocator& __alloc)
+    noexcept(noexcept(std::__relocate_object_a(std::addressof(*__result),
+            std::addressof(*__first),
+            __alloc)))
+    {
+      typedef typename iterator_traits<_InputIterator>::value_type
+ _ValueType;
+      typedef typename iterator_traits<_ForwardIterator>::value_type
+ _ValueType2;
+      static_assert(std::is_same<_ValueType, _ValueType2>::value,
+   "relocation is only possible for values of the same type");
+      _ForwardIterator __cur = __result;
+      for (; __first != __last; ++__first, (void)++__cur)
+ std::__relocate_object_a(std::__addressof(*__cur),
+     std::__addressof(*__first), __alloc);
+      return __cur;
+    }
+
+
+  template <typename _Tp, typename _Up>
+    constexpr
+    inline __enable_if_t<std::__is_bitwise_relocatable<_Tp>::value, _Tp*>
+    __relocate_a_1(_Tp* __first, _Tp* __last,
+     _Tp* __result,
+     [[__maybe_unused__]] allocator<_Up>& __alloc) noexcept
+    {
+      ptrdiff_t __count = __last - __first;
+      if (__count > 0)
+ {
+
+   if (std::is_constant_evaluated())
+     {
+
+
+       __gnu_cxx::__normal_iterator<_Tp*, void> __out(__result);
+       __out = std::__relocate_a_1(__first, __last, __out, __alloc);
+       return __out.base();
+     }
+
+   __builtin_memcpy(__result, __first, __count * sizeof(_Tp));
+ }
+      return __result + __count;
+    }
+
+
+  template <typename _InputIterator, typename _ForwardIterator,
+     typename _Allocator>
+    constexpr
+    inline _ForwardIterator
+    __relocate_a(_InputIterator __first, _InputIterator __last,
+   _ForwardIterator __result, _Allocator& __alloc)
+    noexcept(noexcept(__relocate_a_1(std::__niter_base(__first),
+         std::__niter_base(__last),
+         std::__niter_base(__result), __alloc)))
+    {
+      return std::__relocate_a_1(std::__niter_base(__first),
+     std::__niter_base(__last),
+     std::__niter_base(__result), __alloc);
+    }
+
+
+
+
+
+
+
+}
+# 66 "C:/mingw64/include/c++/14.2.0/vector" 2 3
+# 1 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 1 3
+# 77 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+namespace std
+{
+
+
+
+
+  template<typename _Tp, typename _Alloc>
+    struct _Vector_base
+    {
+      typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
+ rebind<_Tp>::other _Tp_alloc_type;
+      typedef typename __gnu_cxx::__alloc_traits<_Tp_alloc_type>::pointer
+        pointer;
+
+      struct _Vector_impl_data
+      {
+ pointer _M_start;
+ pointer _M_finish;
+ pointer _M_end_of_storage;
+
+ constexpr
+ _Vector_impl_data() noexcept
+ : _M_start(), _M_finish(), _M_end_of_storage()
+ { }
+
+
+ constexpr
+ _Vector_impl_data(_Vector_impl_data&& __x) noexcept
+ : _M_start(__x._M_start), _M_finish(__x._M_finish),
+   _M_end_of_storage(__x._M_end_of_storage)
+ { __x._M_start = __x._M_finish = __x._M_end_of_storage = pointer(); }
+
+
+ constexpr
+ void
+ _M_copy_data(_Vector_impl_data const& __x) noexcept
+ {
+   _M_start = __x._M_start;
+   _M_finish = __x._M_finish;
+   _M_end_of_storage = __x._M_end_of_storage;
+ }
+
+ constexpr
+ void
+ _M_swap_data(_Vector_impl_data& __x) noexcept
+ {
+
+
+   _Vector_impl_data __tmp;
+   __tmp._M_copy_data(*this);
+   _M_copy_data(__x);
+   __x._M_copy_data(__tmp);
+ }
+      };
+
+      struct _Vector_impl
+ : public _Tp_alloc_type, public _Vector_impl_data
+      {
+ constexpr
+ _Vector_impl() noexcept(is_nothrow_default_constructible<_Tp_alloc_type>::value)
+
+
+ requires is_default_constructible_v<_Tp_alloc_type>
+
+ : _Tp_alloc_type()
+ { }
+
+ constexpr
+ _Vector_impl(_Tp_alloc_type const& __a) noexcept
+ : _Tp_alloc_type(__a)
+ { }
+
+
+
+
+ constexpr
+ _Vector_impl(_Vector_impl&& __x) noexcept
+ : _Tp_alloc_type(std::move(__x)), _Vector_impl_data(std::move(__x))
+ { }
+
+ constexpr
+ _Vector_impl(_Tp_alloc_type&& __a) noexcept
+ : _Tp_alloc_type(std::move(__a))
+ { }
+
+ constexpr
+ _Vector_impl(_Tp_alloc_type&& __a, _Vector_impl&& __rv) noexcept
+ : _Tp_alloc_type(std::move(__a)), _Vector_impl_data(std::move(__rv))
+ { }
+# 293 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      };
+
+    public:
+      typedef _Alloc allocator_type;
+
+      constexpr
+      _Tp_alloc_type&
+      _M_get_Tp_allocator() noexcept
+      { return this->_M_impl; }
+
+      constexpr
+      const _Tp_alloc_type&
+      _M_get_Tp_allocator() const noexcept
+      { return this->_M_impl; }
+
+      constexpr
+      allocator_type
+      get_allocator() const noexcept
+      { return allocator_type(_M_get_Tp_allocator()); }
+
+
+      _Vector_base() = default;
+
+
+
+
+      constexpr
+      _Vector_base(const allocator_type& __a) noexcept
+      : _M_impl(__a) { }
+
+
+
+      constexpr
+      _Vector_base(size_t __n)
+      : _M_impl()
+      { _M_create_storage(__n); }
+
+
+      constexpr
+      _Vector_base(size_t __n, const allocator_type& __a)
+      : _M_impl(__a)
+      { _M_create_storage(__n); }
+
+
+      _Vector_base(_Vector_base&&) = default;
+
+
+
+      constexpr
+      _Vector_base(_Tp_alloc_type&& __a) noexcept
+      : _M_impl(std::move(__a)) { }
+
+      constexpr
+      _Vector_base(_Vector_base&& __x, const allocator_type& __a)
+      : _M_impl(__a)
+      {
+ if (__x.get_allocator() == __a)
+   this->_M_impl._M_swap_data(__x._M_impl);
+ else
+   {
+     size_t __n = __x._M_impl._M_finish - __x._M_impl._M_start;
+     _M_create_storage(__n);
+   }
+      }
+
+
+      constexpr
+      _Vector_base(const allocator_type& __a, _Vector_base&& __x)
+      : _M_impl(_Tp_alloc_type(__a), std::move(__x._M_impl))
+      { }
+
+
+      constexpr
+      ~_Vector_base() noexcept
+      {
+ _M_deallocate(_M_impl._M_start,
+        _M_impl._M_end_of_storage - _M_impl._M_start);
+      }
+
+    public:
+      _Vector_impl _M_impl;
+
+      constexpr
+      pointer
+      _M_allocate(size_t __n)
+      {
+ typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+ return __n != 0 ? _Tr::allocate(_M_impl, __n) : pointer();
+      }
+
+      constexpr
+      void
+      _M_deallocate(pointer __p, size_t __n)
+      {
+ typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Tr;
+ if (__p)
+   _Tr::deallocate(_M_impl, __p, __n);
+      }
+
+    protected:
+
+      constexpr
+      void
+      _M_create_storage(size_t __n)
+      {
+ this->_M_impl._M_start = this->_M_allocate(__n);
+ this->_M_impl._M_finish = this->_M_impl._M_start;
+ this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __n;
+      }
+    };
+# 427 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+  template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
+    class vector : protected _Vector_base<_Tp, _Alloc>
+    {
+# 440 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      static_assert(is_same<typename remove_cv<_Tp>::type, _Tp>::value,
+   "std::vector must have a non-const, non-volatile value_type");
+
+      static_assert(is_same<typename _Alloc::value_type, _Tp>::value,
+   "std::vector must have the same value_type as its allocator");
+
+
+
+      typedef _Vector_base<_Tp, _Alloc> _Base;
+      typedef typename _Base::_Tp_alloc_type _Tp_alloc_type;
+      typedef __gnu_cxx::__alloc_traits<_Tp_alloc_type> _Alloc_traits;
+
+    public:
+      typedef _Tp value_type;
+      typedef typename _Base::pointer pointer;
+      typedef typename _Alloc_traits::const_pointer const_pointer;
+      typedef typename _Alloc_traits::reference reference;
+      typedef typename _Alloc_traits::const_reference const_reference;
+      typedef __gnu_cxx::__normal_iterator<pointer, vector> iterator;
+      typedef __gnu_cxx::__normal_iterator<const_pointer, vector>
+      const_iterator;
+      typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+      typedef std::reverse_iterator<iterator> reverse_iterator;
+      typedef size_t size_type;
+      typedef ptrdiff_t difference_type;
+      typedef _Alloc allocator_type;
+
+    private:
+
+      static constexpr bool
+      _S_nothrow_relocate(true_type)
+      {
+ return noexcept(std::__relocate_a(std::declval<pointer>(),
+       std::declval<pointer>(),
+       std::declval<pointer>(),
+       std::declval<_Tp_alloc_type&>()));
+      }
+
+      static constexpr bool
+      _S_nothrow_relocate(false_type)
+      { return false; }
+
+      static constexpr bool
+      _S_use_relocate()
+      {
+
+
+
+ return _S_nothrow_relocate(__is_move_insertable<_Tp_alloc_type>{});
+      }
+
+      static pointer
+      _S_do_relocate(pointer __first, pointer __last, pointer __result,
+       _Tp_alloc_type& __alloc, true_type) noexcept
+      {
+ return std::__relocate_a(__first, __last, __result, __alloc);
+      }
+
+      static pointer
+      _S_do_relocate(pointer, pointer, pointer __result,
+       _Tp_alloc_type&, false_type) noexcept
+      { return __result; }
+
+      static constexpr pointer
+      _S_relocate(pointer __first, pointer __last, pointer __result,
+    _Tp_alloc_type& __alloc) noexcept
+      {
+
+
+ return std::__relocate_a(__first, __last, __result, __alloc);
+
+
+
+
+      }
+
+
+    protected:
+      using _Base::_M_allocate;
+      using _Base::_M_deallocate;
+      using _Base::_M_impl;
+      using _Base::_M_get_Tp_allocator;
+
+    public:
+
+
+
+
+
+
+
+      vector() = default;
+# 540 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      explicit
+      constexpr
+      vector(const allocator_type& __a) noexcept
+      : _Base(__a) { }
+# 554 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      explicit
+      constexpr
+      vector(size_type __n, const allocator_type& __a = allocator_type())
+      : _Base(_S_check_init_len(__n, __a), __a)
+      { _M_default_initialize(__n); }
+# 568 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      vector(size_type __n, const value_type& __value,
+      const allocator_type& __a = allocator_type())
+      : _Base(_S_check_init_len(__n, __a), __a)
+      { _M_fill_initialize(__n, __value); }
+# 600 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      vector(const vector& __x)
+      : _Base(__x.size(),
+ _Alloc_traits::_S_select_on_copy(__x._M_get_Tp_allocator()))
+      {
+ this->_M_impl._M_finish =
+   std::__uninitialized_copy_a(__x.begin(), __x.end(),
+          this->_M_impl._M_start,
+          _M_get_Tp_allocator());
+      }
+# 620 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      vector(vector&&) noexcept = default;
+
+
+      constexpr
+      vector(const vector& __x, const __type_identity_t<allocator_type>& __a)
+      : _Base(__x.size(), __a)
+      {
+ this->_M_impl._M_finish =
+   std::__uninitialized_copy_a(__x.begin(), __x.end(),
+          this->_M_impl._M_start,
+          _M_get_Tp_allocator());
+      }
+
+    private:
+      constexpr
+      vector(vector&& __rv, const allocator_type& __m, true_type) noexcept
+      : _Base(__m, std::move(__rv))
+      { }
+
+      constexpr
+      vector(vector&& __rv, const allocator_type& __m, false_type)
+      : _Base(__m)
+      {
+ if (__rv.get_allocator() == __m)
+   this->_M_impl._M_swap_data(__rv._M_impl);
+ else if (!__rv.empty())
+   {
+     this->_M_create_storage(__rv.size());
+     this->_M_impl._M_finish =
+       std::__uninitialized_move_a(__rv.begin(), __rv.end(),
+       this->_M_impl._M_start,
+       _M_get_Tp_allocator());
+     __rv.clear();
+   }
+      }
+
+    public:
+
+      constexpr
+      vector(vector&& __rv, const __type_identity_t<allocator_type>& __m)
+      noexcept( noexcept(
+ vector(std::declval<vector&&>(), std::declval<const allocator_type&>(),
+        std::declval<typename _Alloc_traits::is_always_equal>())) )
+      : vector(std::move(__rv), __m, typename _Alloc_traits::is_always_equal{})
+      { }
+# 677 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      vector(initializer_list<value_type> __l,
+      const allocator_type& __a = allocator_type())
+      : _Base(__a)
+      {
+ _M_range_initialize(__l.begin(), __l.end(),
+       random_access_iterator_tag());
+      }
+# 704 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      template<typename _InputIterator,
+        typename = std::_RequireInputIter<_InputIterator>>
+ constexpr
+ vector(_InputIterator __first, _InputIterator __last,
+        const allocator_type& __a = allocator_type())
+ : _Base(__a)
+ {
+   _M_range_initialize(__first, __last,
+         std::__iterator_category(__first));
+ }
+# 732 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      ~vector() noexcept
+      {
+ std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+        _M_get_Tp_allocator());
+ ;
+      }
+# 749 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      vector&
+      operator=(const vector& __x);
+# 764 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      vector&
+      operator=(vector&& __x) noexcept(_Alloc_traits::_S_nothrow_move())
+      {
+ constexpr bool __move_storage =
+   _Alloc_traits::_S_propagate_on_move_assign()
+   || _Alloc_traits::_S_always_equal();
+ _M_move_assign(std::move(__x), __bool_constant<__move_storage>());
+ return *this;
+      }
+# 786 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      vector&
+      operator=(initializer_list<value_type> __l)
+      {
+ this->_M_assign_aux(__l.begin(), __l.end(),
+       random_access_iterator_tag());
+ return *this;
+      }
+# 806 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      void
+      assign(size_type __n, const value_type& __val)
+      { _M_fill_assign(__n, __val); }
+# 824 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      template<typename _InputIterator,
+        typename = std::_RequireInputIter<_InputIterator>>
+ constexpr
+ void
+ assign(_InputIterator __first, _InputIterator __last)
+ { _M_assign_aux(__first, __last, std::__iterator_category(__first)); }
+# 853 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      void
+      assign(initializer_list<value_type> __l)
+      {
+ this->_M_assign_aux(__l.begin(), __l.end(),
+       random_access_iterator_tag());
+      }
+
+
+
+      using _Base::get_allocator;
+
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      iterator
+      begin() noexcept
+      { return iterator(this->_M_impl._M_start); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_iterator
+      begin() const noexcept
+      { return const_iterator(this->_M_impl._M_start); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      iterator
+      end() noexcept
+      { return iterator(this->_M_impl._M_finish); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_iterator
+      end() const noexcept
+      { return const_iterator(this->_M_impl._M_finish); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      reverse_iterator
+      rbegin() noexcept
+      { return reverse_iterator(end()); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_reverse_iterator
+      rbegin() const noexcept
+      { return const_reverse_iterator(end()); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      reverse_iterator
+      rend() noexcept
+      { return reverse_iterator(begin()); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_reverse_iterator
+      rend() const noexcept
+      { return const_reverse_iterator(begin()); }
+
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_iterator
+      cbegin() const noexcept
+      { return const_iterator(this->_M_impl._M_start); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_iterator
+      cend() const noexcept
+      { return const_iterator(this->_M_impl._M_finish); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_reverse_iterator
+      crbegin() const noexcept
+      { return const_reverse_iterator(end()); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_reverse_iterator
+      crend() const noexcept
+      { return const_reverse_iterator(begin()); }
+
+
+
+
+      [[__nodiscard__]] constexpr
+      size_type
+      size() const noexcept
+      { return size_type(this->_M_impl._M_finish - this->_M_impl._M_start); }
+
+
+      [[__nodiscard__]] constexpr
+      size_type
+      max_size() const noexcept
+      { return _S_max_size(_M_get_Tp_allocator()); }
+# 1011 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      void
+      resize(size_type __new_size)
+      {
+ if (__new_size > size())
+   _M_default_append(__new_size - size());
+ else if (__new_size < size())
+   _M_erase_at_end(this->_M_impl._M_start + __new_size);
+      }
+# 1032 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      void
+      resize(size_type __new_size, const value_type& __x)
+      {
+ if (__new_size > size())
+   _M_fill_insert(end(), __new_size - size(), __x);
+ else if (__new_size < size())
+   _M_erase_at_end(this->_M_impl._M_start + __new_size);
+      }
+# 1066 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      void
+      shrink_to_fit()
+      { _M_shrink_to_fit(); }
+
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      size_type
+      capacity() const noexcept
+      {
+ return size_type(this->_M_impl._M_end_of_storage
+      - this->_M_impl._M_start);
+      }
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      bool
+      empty() const noexcept
+      { return begin() == end(); }
+# 1110 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      void
+      reserve(size_type __n);
+# 1126 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      [[__nodiscard__]] constexpr
+      reference
+      operator[](size_type __n) noexcept
+      {
+ ;
+ return *(this->_M_impl._M_start + __n);
+      }
+# 1145 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      [[__nodiscard__]] constexpr
+      const_reference
+      operator[](size_type __n) const noexcept
+      {
+ ;
+ return *(this->_M_impl._M_start + __n);
+      }
+
+    protected:
+
+      constexpr
+      void
+      _M_range_check(size_type __n) const
+      {
+ if (__n >= this->size())
+   __throw_out_of_range_fmt(("vector::_M_range_check: __n " "(which is %zu) >= this->size() " "(which is %zu)")
+
+                            ,
+       __n, this->size());
+      }
+
+    public:
+# 1178 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      [[__nodiscard__]] constexpr
+      reference
+      at(size_type __n)
+      {
+ _M_range_check(__n);
+ return (*this)[__n];
+      }
+# 1197 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      [[__nodiscard__]] constexpr
+      const_reference
+      at(size_type __n) const
+      {
+ _M_range_check(__n);
+ return (*this)[__n];
+      }
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      reference
+      front() noexcept
+      {
+ ;
+ return *begin();
+      }
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_reference
+      front() const noexcept
+      {
+ ;
+ return *begin();
+      }
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      reference
+      back() noexcept
+      {
+ ;
+ return *(end() - 1);
+      }
+
+
+
+
+
+      [[__nodiscard__]] constexpr
+      const_reference
+      back() const noexcept
+      {
+ ;
+ return *(end() - 1);
+      }
+# 1260 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      [[__nodiscard__]] constexpr
+      _Tp*
+      data() noexcept
+      { return _M_data_ptr(this->_M_impl._M_start); }
+
+      [[__nodiscard__]] constexpr
+      const _Tp*
+      data() const noexcept
+      { return _M_data_ptr(this->_M_impl._M_start); }
+# 1281 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      void
+      push_back(const value_type& __x)
+      {
+ if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
+   {
+     ;
+     _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
+         __x);
+     ++this->_M_impl._M_finish;
+     ;
+   }
+ else
+   _M_realloc_append(__x);
+      }
+
+
+      constexpr
+      void
+      push_back(value_type&& __x)
+      { emplace_back(std::move(__x)); }
+
+      template<typename... _Args>
+
+ constexpr
+ reference
+
+
+
+ emplace_back(_Args&&... __args);
+# 1322 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      void
+      pop_back() noexcept
+      {
+ ;
+ --this->_M_impl._M_finish;
+ _Alloc_traits::destroy(this->_M_impl, this->_M_impl._M_finish);
+ ;
+      }
+# 1345 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      template<typename... _Args>
+ constexpr
+ iterator
+ emplace(const_iterator __position, _Args&&... __args)
+ { return _M_emplace_aux(__position, std::forward<_Args>(__args)...); }
+# 1362 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      iterator
+      insert(const_iterator __position, const value_type& __x);
+# 1393 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      iterator
+      insert(const_iterator __position, value_type&& __x)
+      { return _M_insert_rval(__position, std::move(__x)); }
+# 1411 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      iterator
+      insert(const_iterator __position, initializer_list<value_type> __l)
+      {
+ auto __offset = __position - cbegin();
+ _M_range_insert(begin() + __offset, __l.begin(), __l.end(),
+   std::random_access_iterator_tag());
+ return begin() + __offset;
+      }
+# 1437 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      iterator
+      insert(const_iterator __position, size_type __n, const value_type& __x)
+      {
+ difference_type __offset = __position - cbegin();
+ _M_fill_insert(begin() + __offset, __n, __x);
+ return begin() + __offset;
+      }
+# 1480 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      template<typename _InputIterator,
+        typename = std::_RequireInputIter<_InputIterator>>
+ constexpr
+ iterator
+ insert(const_iterator __position, _InputIterator __first,
+        _InputIterator __last)
+ {
+   difference_type __offset = __position - cbegin();
+   _M_range_insert(begin() + __offset, __first, __last,
+     std::__iterator_category(__first));
+   return begin() + __offset;
+ }
+# 1533 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      iterator
+
+      erase(const_iterator __position)
+      { return _M_erase(begin() + (__position - cbegin())); }
+# 1561 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      iterator
+
+      erase(const_iterator __first, const_iterator __last)
+      {
+ const auto __beg = begin();
+ const auto __cbeg = cbegin();
+ return _M_erase(__beg + (__first - __cbeg), __beg + (__last - __cbeg));
+      }
+# 1586 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      constexpr
+      void
+      swap(vector& __x) noexcept
+      {
+
+ do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(_Alloc_traits::propagate_on_container_swap::value || _M_get_Tp_allocator() == __x._M_get_Tp_allocator()), false)) std::__glibcxx_assert_fail(); } while (false)
+                                                          ;
+
+ this->_M_impl._M_swap_data(__x._M_impl);
+ _Alloc_traits::_S_on_swap(_M_get_Tp_allocator(),
+      __x._M_get_Tp_allocator());
+      }
+
+
+
+
+
+
+
+      constexpr
+      void
+      clear() noexcept
+      { _M_erase_at_end(this->_M_impl._M_start); }
+
+    protected:
+
+
+
+
+      template<typename _ForwardIterator>
+ constexpr
+ pointer
+ _M_allocate_and_copy(size_type __n,
+        _ForwardIterator __first, _ForwardIterator __last)
+ {
+   pointer __result = this->_M_allocate(__n);
+   try
+     {
+       std::__uninitialized_copy_a(__first, __last, __result,
+       _M_get_Tp_allocator());
+       return __result;
+     }
+   catch(...)
+     {
+       _M_deallocate(__result, __n);
+       throw;
+     }
+ }
+# 1666 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      template<typename _InputIterator>
+ constexpr
+ void
+ _M_range_initialize(_InputIterator __first, _InputIterator __last,
+       std::input_iterator_tag)
+ {
+   try {
+     for (; __first != __last; ++__first)
+
+       emplace_back(*__first);
+
+
+
+   } catch(...) {
+     clear();
+     throw;
+   }
+ }
+
+
+      template<typename _ForwardIterator>
+ constexpr
+ void
+ _M_range_initialize(_ForwardIterator __first, _ForwardIterator __last,
+       std::forward_iterator_tag)
+ {
+   const size_type __n = std::distance(__first, __last);
+   this->_M_impl._M_start
+     = this->_M_allocate(_S_check_init_len(__n, _M_get_Tp_allocator()));
+   this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __n;
+   this->_M_impl._M_finish =
+     std::__uninitialized_copy_a(__first, __last,
+     this->_M_impl._M_start,
+     _M_get_Tp_allocator());
+ }
+
+
+
+      constexpr
+      void
+      _M_fill_initialize(size_type __n, const value_type& __value)
+      {
+ this->_M_impl._M_finish =
+   std::__uninitialized_fill_n_a(this->_M_impl._M_start, __n, __value,
+     _M_get_Tp_allocator());
+      }
+
+
+
+      constexpr
+      void
+      _M_default_initialize(size_type __n)
+      {
+ this->_M_impl._M_finish =
+   std::__uninitialized_default_n_a(this->_M_impl._M_start, __n,
+        _M_get_Tp_allocator());
+      }
+# 1732 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      template<typename _Integer>
+ constexpr
+ void
+ _M_assign_dispatch(_Integer __n, _Integer __val, __true_type)
+ { _M_fill_assign(__n, __val); }
+
+
+      template<typename _InputIterator>
+ constexpr
+ void
+ _M_assign_dispatch(_InputIterator __first, _InputIterator __last,
+      __false_type)
+ { _M_assign_aux(__first, __last, std::__iterator_category(__first)); }
+
+
+      template<typename _InputIterator>
+ constexpr
+ void
+ _M_assign_aux(_InputIterator __first, _InputIterator __last,
+        std::input_iterator_tag);
+
+
+      template<typename _ForwardIterator>
+ constexpr
+ void
+ _M_assign_aux(_ForwardIterator __first, _ForwardIterator __last,
+        std::forward_iterator_tag);
+
+
+
+      constexpr
+      void
+      _M_fill_assign(size_type __n, const value_type& __val);
+
+
+
+
+
+
+
+      template<typename _Integer>
+ constexpr
+ void
+ _M_insert_dispatch(iterator __pos, _Integer __n, _Integer __val,
+      __true_type)
+ { _M_fill_insert(__pos, __n, __val); }
+
+
+      template<typename _InputIterator>
+ constexpr
+ void
+ _M_insert_dispatch(iterator __pos, _InputIterator __first,
+      _InputIterator __last, __false_type)
+ {
+   _M_range_insert(__pos, __first, __last,
+     std::__iterator_category(__first));
+ }
+
+
+      template<typename _InputIterator>
+ constexpr
+ void
+ _M_range_insert(iterator __pos, _InputIterator __first,
+   _InputIterator __last, std::input_iterator_tag);
+
+
+      template<typename _ForwardIterator>
+ constexpr
+ void
+ _M_range_insert(iterator __pos, _ForwardIterator __first,
+   _ForwardIterator __last, std::forward_iterator_tag);
+
+
+
+      constexpr
+      void
+      _M_fill_insert(iterator __pos, size_type __n, const value_type& __x);
+
+
+
+      constexpr
+      void
+      _M_default_append(size_type __n);
+
+      constexpr
+      bool
+      _M_shrink_to_fit();
+# 1834 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+      struct _Temporary_value
+      {
+ template<typename... _Args>
+   constexpr explicit
+   _Temporary_value(vector* __vec, _Args&&... __args) : _M_this(__vec)
+   {
+     _Alloc_traits::construct(_M_this->_M_impl, _M_ptr(),
+         std::forward<_Args>(__args)...);
+   }
+
+ constexpr
+ ~_Temporary_value()
+ { _Alloc_traits::destroy(_M_this->_M_impl, _M_ptr()); }
+
+ constexpr value_type&
+ _M_val() noexcept { return _M_storage._M_val; }
+
+      private:
+ constexpr _Tp*
+ _M_ptr() noexcept { return std::__addressof(_M_storage._M_val); }
+
+ union _Storage
+ {
+   constexpr _Storage() : _M_byte() { }
+   constexpr ~_Storage() { }
+   _Storage& operator=(const _Storage&) = delete;
+   unsigned char _M_byte;
+   _Tp _M_val;
+ };
+
+ vector* _M_this;
+ _Storage _M_storage;
+      };
+
+
+
+      template<typename _Arg>
+ constexpr
+ void
+ _M_insert_aux(iterator __position, _Arg&& __arg);
+
+      template<typename... _Args>
+ constexpr
+ void
+ _M_realloc_insert(iterator __position, _Args&&... __args);
+
+      template<typename... _Args>
+ constexpr
+ void
+ _M_realloc_append(_Args&&... __args);
+
+
+      constexpr
+      iterator
+      _M_insert_rval(const_iterator __position, value_type&& __v);
+
+
+      template<typename... _Args>
+ constexpr
+ iterator
+ _M_emplace_aux(const_iterator __position, _Args&&... __args);
+
+
+      constexpr
+      iterator
+      _M_emplace_aux(const_iterator __position, value_type&& __v)
+      { return _M_insert_rval(__position, std::move(__v)); }
+
+
+
+      constexpr
+      size_type
+      _M_check_len(size_type __n, const char* __s) const
+      {
+ if (max_size() - size() < __n)
+   __throw_length_error((__s));
+
+ const size_type __len = size() + (std::max)(size(), __n);
+ return (__len < size() || __len > max_size()) ? max_size() : __len;
+      }
+
+
+      static constexpr size_type
+      _S_check_init_len(size_type __n, const allocator_type& __a)
+      {
+ if (__n > _S_max_size(_Tp_alloc_type(__a)))
+   __throw_length_error(
+       ("cannot create std::vector larger than max_size()"));
+ return __n;
+      }
+
+      static constexpr size_type
+      _S_max_size(const _Tp_alloc_type& __a) noexcept
+      {
+
+
+
+ const size_t __diffmax
+   = __gnu_cxx::__numeric_traits<ptrdiff_t>::__max / sizeof(_Tp);
+ const size_t __allocmax = _Alloc_traits::max_size(__a);
+ return (std::min)(__diffmax, __allocmax);
+      }
+
+
+
+
+
+      constexpr
+      void
+      _M_erase_at_end(pointer __pos) noexcept
+      {
+ if (size_type __n = this->_M_impl._M_finish - __pos)
+   {
+     std::_Destroy(__pos, this->_M_impl._M_finish,
+     _M_get_Tp_allocator());
+     this->_M_impl._M_finish = __pos;
+     ;
+   }
+      }
+
+      constexpr
+      iterator
+      _M_erase(iterator __position);
+
+      constexpr
+      iterator
+      _M_erase(iterator __first, iterator __last);
+
+
+    private:
+
+
+
+      constexpr
+      void
+      _M_move_assign(vector&& __x, true_type) noexcept
+      {
+ vector __tmp(get_allocator());
+ this->_M_impl._M_swap_data(__x._M_impl);
+ __tmp._M_impl._M_swap_data(__x._M_impl);
+ std::__alloc_on_move(_M_get_Tp_allocator(), __x._M_get_Tp_allocator());
+      }
+
+
+
+      constexpr
+      void
+      _M_move_assign(vector&& __x, false_type)
+      {
+ if (__x._M_get_Tp_allocator() == this->_M_get_Tp_allocator())
+   _M_move_assign(std::move(__x), true_type());
+ else
+   {
+
+
+     this->_M_assign_aux(std::make_move_iterator(__x.begin()),
+           std::make_move_iterator(__x.end()),
+    std::random_access_iterator_tag());
+     __x.clear();
+   }
+      }
+
+
+      template<typename _Up>
+ constexpr
+ _Up*
+ _M_data_ptr(_Up* __ptr) const noexcept
+ { return __ptr; }
+
+
+      template<typename _Ptr>
+ constexpr
+ typename std::pointer_traits<_Ptr>::element_type*
+ _M_data_ptr(_Ptr __ptr) const
+ { return empty() ? nullptr : std::__to_address(__ptr); }
+# 2025 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+    };
+
+
+  template<typename _InputIterator, typename _ValT
+      = typename iterator_traits<_InputIterator>::value_type,
+    typename _Allocator = allocator<_ValT>,
+    typename = _RequireInputIter<_InputIterator>,
+    typename = _RequireAllocator<_Allocator>>
+    vector(_InputIterator, _InputIterator, _Allocator = _Allocator())
+      -> vector<_ValT, _Allocator>;
+# 2047 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+  template<typename _Tp, typename _Alloc>
+    [[__nodiscard__]] constexpr
+    inline bool
+    operator==(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+    { return (__x.size() == __y.size()
+       && std::equal(__x.begin(), __x.end(), __y.begin())); }
+# 2066 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+  template<typename _Tp, typename _Alloc>
+    [[nodiscard]] constexpr
+    inline __detail::__synth3way_t<_Tp>
+    operator<=>(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+    {
+      return std::lexicographical_compare_three_way(__x.begin(), __x.end(),
+          __y.begin(), __y.end(),
+          __detail::__synth3way);
+    }
+# 2119 "C:/mingw64/include/c++/14.2.0/bits/stl_vector.h" 3
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    inline void
+    swap(vector<_Tp, _Alloc>& __x, vector<_Tp, _Alloc>& __y)
+    noexcept(noexcept(__x.swap(__y)))
+    { __x.swap(__y); }
+
+
+
+
+  namespace __detail::__variant
+  {
+    template<typename> struct _Never_valueless_alt;
+
+
+
+    template<typename _Tp, typename _Alloc>
+      struct _Never_valueless_alt<std::vector<_Tp, _Alloc>>
+      : std::is_nothrow_move_assignable<std::vector<_Tp, _Alloc>>
+      { };
+  }
+
+
+
+}
+# 67 "C:/mingw64/include/c++/14.2.0/vector" 2 3
+# 1 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 1 3
+# 68 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+namespace std
+{
+
+
+  typedef unsigned long _Bit_type;
+  enum { _S_word_bit = int(8 * sizeof(_Bit_type)) };
+
+  __attribute__((__nonnull__))
+  constexpr
+  void
+  __fill_bvector_n(_Bit_type*, size_t, bool) noexcept;
+
+
+
+  struct _Bit_reference
+  {
+    _Bit_type * _M_p;
+    _Bit_type _M_mask;
+
+    constexpr
+    _Bit_reference(_Bit_type * __x, _Bit_type __y)
+    : _M_p(__x), _M_mask(__y) { }
+
+    constexpr
+    _Bit_reference() noexcept : _M_p(0), _M_mask(0) { }
+
+
+    _Bit_reference(const _Bit_reference&) = default;
+
+
+    [[__nodiscard__]] constexpr
+    operator bool() const noexcept
+    { return !!(*_M_p & _M_mask); }
+
+    constexpr
+    _Bit_reference&
+    operator=(bool __x) noexcept
+    {
+      if (__x)
+ *_M_p |= _M_mask;
+      else
+ *_M_p &= ~_M_mask;
+      return *this;
+    }
+
+
+    constexpr const _Bit_reference&
+    operator=(bool __x) const noexcept
+    {
+      if (__x)
+ *_M_p |= _M_mask;
+      else
+ *_M_p &= ~_M_mask;
+      return *this;
+    }
+
+
+    constexpr
+    _Bit_reference&
+    operator=(const _Bit_reference& __x) noexcept
+    { return *this = bool(__x); }
+
+    [[__nodiscard__]] constexpr
+    bool
+    operator==(const _Bit_reference& __x) const
+    { return bool(*this) == bool(__x); }
+
+    [[__nodiscard__]] constexpr
+    bool
+    operator<(const _Bit_reference& __x) const
+    { return !bool(*this) && bool(__x); }
+
+    constexpr
+    void
+    flip() noexcept
+    { *_M_p ^= _M_mask; }
+
+
+    constexpr
+    friend void
+    swap(_Bit_reference __x, _Bit_reference __y) noexcept
+    {
+      bool __tmp = __x;
+      __x = __y;
+      __y = __tmp;
+    }
+
+    constexpr
+    friend void
+    swap(_Bit_reference __x, bool& __y) noexcept
+    {
+      bool __tmp = __x;
+      __x = __y;
+      __y = __tmp;
+    }
+
+    constexpr
+    friend void
+    swap(bool& __x, _Bit_reference __y) noexcept
+    {
+      bool __tmp = __x;
+      __x = __y;
+      __y = __tmp;
+    }
+
+  };
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  struct _Bit_iterator_base
+  : public std::iterator<std::random_access_iterator_tag, bool>
+  {
+    _Bit_type * _M_p;
+    unsigned int _M_offset;
+
+    constexpr inline __attribute__((__always_inline__))
+    void
+    _M_assume_normalized() const
+    {
+
+      unsigned int __ofst = _M_offset;
+      __attribute__ ((__assume__ (__ofst < unsigned(_S_word_bit))));
+
+    }
+
+    constexpr
+    _Bit_iterator_base(_Bit_type * __x, unsigned int __y)
+    : _M_p(__x), _M_offset(__y) { }
+
+    constexpr
+    void
+    _M_bump_up()
+    {
+      _M_assume_normalized();
+      if (_M_offset++ == int(_S_word_bit) - 1)
+ {
+   _M_offset = 0;
+   ++_M_p;
+ }
+    }
+
+    constexpr
+    void
+    _M_bump_down()
+    {
+      _M_assume_normalized();
+      if (_M_offset-- == 0)
+ {
+   _M_offset = int(_S_word_bit) - 1;
+   --_M_p;
+ }
+    }
+
+    constexpr
+    void
+    _M_incr(ptrdiff_t __i)
+    {
+      _M_assume_normalized();
+      difference_type __n = __i + _M_offset;
+      _M_p += __n / int(_S_word_bit);
+      __n = __n % int(_S_word_bit);
+      if (__n < 0)
+ {
+   __n += int(_S_word_bit);
+   --_M_p;
+ }
+      _M_offset = static_cast<unsigned int>(__n);
+    }
+
+    [[__nodiscard__]]
+    friend constexpr bool
+    operator==(const _Bit_iterator_base& __x, const _Bit_iterator_base& __y)
+    {
+      __x._M_assume_normalized();
+      __y._M_assume_normalized();
+      return __x._M_p == __y._M_p && __x._M_offset == __y._M_offset;
+    }
+
+
+    [[nodiscard]]
+    friend constexpr strong_ordering
+    operator<=>(const _Bit_iterator_base& __x, const _Bit_iterator_base& __y)
+    noexcept
+    {
+      __x._M_assume_normalized();
+      __y._M_assume_normalized();
+      if (const auto __cmp = __x._M_p <=> __y._M_p; __cmp != 0)
+ return __cmp;
+      return __x._M_offset <=> __y._M_offset;
+    }
+# 291 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+    friend constexpr ptrdiff_t
+    operator-(const _Bit_iterator_base& __x, const _Bit_iterator_base& __y)
+    {
+      __x._M_assume_normalized();
+      __y._M_assume_normalized();
+      return (int(_S_word_bit) * (__x._M_p - __y._M_p)
+       + __x._M_offset - __y._M_offset);
+    }
+  };
+#pragma GCC diagnostic pop
+
+  struct _Bit_iterator : public _Bit_iterator_base
+  {
+    typedef _Bit_reference reference;
+
+    typedef void pointer;
+
+
+
+    typedef _Bit_iterator iterator;
+
+    constexpr
+    _Bit_iterator() : _Bit_iterator_base(0, 0) { }
+
+    constexpr
+    _Bit_iterator(_Bit_type * __x, unsigned int __y)
+    : _Bit_iterator_base(__x, __y) { }
+
+    constexpr
+    iterator
+    _M_const_cast() const
+    { return *this; }
+
+    [[__nodiscard__]] constexpr
+    reference
+    operator*() const
+    {
+      _M_assume_normalized();
+      return reference(_M_p, 1UL << _M_offset);
+    }
+
+    constexpr
+    iterator&
+    operator++()
+    {
+      _M_bump_up();
+      return *this;
+    }
+
+    constexpr
+    iterator
+    operator++(int)
+    {
+      iterator __tmp = *this;
+      _M_bump_up();
+      return __tmp;
+    }
+
+    constexpr
+    iterator&
+    operator--()
+    {
+      _M_bump_down();
+      return *this;
+    }
+
+    constexpr
+    iterator
+    operator--(int)
+    {
+      iterator __tmp = *this;
+      _M_bump_down();
+      return __tmp;
+    }
+
+    constexpr
+    iterator&
+    operator+=(difference_type __i)
+    {
+      _M_incr(__i);
+      return *this;
+    }
+
+    constexpr
+    iterator&
+    operator-=(difference_type __i)
+    {
+      *this += -__i;
+      return *this;
+    }
+
+    [[__nodiscard__]] constexpr
+    reference
+    operator[](difference_type __i) const
+    { return *(*this + __i); }
+
+    [[__nodiscard__]]
+    friend constexpr iterator
+    operator+(const iterator& __x, difference_type __n)
+    {
+      iterator __tmp = __x;
+      __tmp += __n;
+      return __tmp;
+    }
+
+    [[__nodiscard__]]
+    friend constexpr iterator
+    operator+(difference_type __n, const iterator& __x)
+    { return __x + __n; }
+
+    [[__nodiscard__]]
+    friend constexpr iterator
+    operator-(const iterator& __x, difference_type __n)
+    {
+      iterator __tmp = __x;
+      __tmp -= __n;
+      return __tmp;
+    }
+  };
+
+  struct _Bit_const_iterator : public _Bit_iterator_base
+  {
+    typedef bool reference;
+    typedef bool const_reference;
+
+    typedef void pointer;
+
+
+
+    typedef _Bit_const_iterator const_iterator;
+
+    constexpr
+    _Bit_const_iterator() : _Bit_iterator_base(0, 0) { }
+
+    constexpr
+    _Bit_const_iterator(_Bit_type * __x, unsigned int __y)
+    : _Bit_iterator_base(__x, __y) { }
+
+    constexpr
+    _Bit_const_iterator(const _Bit_iterator& __x)
+    : _Bit_iterator_base(__x._M_p, __x._M_offset) { }
+
+    constexpr
+    _Bit_iterator
+    _M_const_cast() const
+    { return _Bit_iterator(_M_p, _M_offset); }
+
+    [[__nodiscard__]] constexpr
+    const_reference
+    operator*() const
+    {
+      _M_assume_normalized();
+      return _Bit_reference(_M_p, 1UL << _M_offset);
+    }
+
+    constexpr
+    const_iterator&
+    operator++()
+    {
+      _M_bump_up();
+      return *this;
+    }
+
+    constexpr
+    const_iterator
+    operator++(int)
+    {
+      const_iterator __tmp = *this;
+      _M_bump_up();
+      return __tmp;
+    }
+
+    constexpr
+    const_iterator&
+    operator--()
+    {
+      _M_bump_down();
+      return *this;
+    }
+
+    constexpr
+    const_iterator
+    operator--(int)
+    {
+      const_iterator __tmp = *this;
+      _M_bump_down();
+      return __tmp;
+    }
+
+    constexpr
+    const_iterator&
+    operator+=(difference_type __i)
+    {
+      _M_incr(__i);
+      return *this;
+    }
+
+    constexpr
+    const_iterator&
+    operator-=(difference_type __i)
+    {
+      *this += -__i;
+      return *this;
+    }
+
+    [[__nodiscard__]] constexpr
+    const_reference
+    operator[](difference_type __i) const
+    { return *(*this + __i); }
+
+    [[__nodiscard__]]
+    friend constexpr const_iterator
+    operator+(const const_iterator& __x, difference_type __n)
+    {
+      const_iterator __tmp = __x;
+      __tmp += __n;
+      return __tmp;
+    }
+
+    [[__nodiscard__]]
+    friend constexpr const_iterator
+    operator-(const const_iterator& __x, difference_type __n)
+    {
+      const_iterator __tmp = __x;
+      __tmp -= __n;
+      return __tmp;
+    }
+
+    [[__nodiscard__]]
+    friend constexpr const_iterator
+    operator+(difference_type __n, const const_iterator& __x)
+    { return __x + __n; }
+  };
+
+  template<typename _Alloc>
+    struct _Bvector_base
+    {
+      typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
+        rebind<_Bit_type>::other _Bit_alloc_type;
+      typedef typename __gnu_cxx::__alloc_traits<_Bit_alloc_type>
+ _Bit_alloc_traits;
+      typedef typename _Bit_alloc_traits::pointer _Bit_pointer;
+
+      struct _Bvector_impl_data
+      {
+
+ _Bit_iterator _M_start;
+# 547 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+ _Bit_iterator _M_finish;
+ _Bit_pointer _M_end_of_storage;
+
+ constexpr
+ _Bvector_impl_data() noexcept
+ : _M_start(), _M_finish(), _M_end_of_storage()
+ { }
+
+
+ _Bvector_impl_data(const _Bvector_impl_data&) = default;
+
+ _Bvector_impl_data&
+ operator=(const _Bvector_impl_data&) = default;
+
+ constexpr
+ _Bvector_impl_data(_Bvector_impl_data&& __x) noexcept
+ : _Bvector_impl_data(__x)
+ { __x._M_reset(); }
+
+ constexpr
+ void
+ _M_move_data(_Bvector_impl_data&& __x) noexcept
+ {
+   *this = __x;
+   __x._M_reset();
+ }
+
+
+ constexpr
+ void
+ _M_reset() noexcept
+ { *this = _Bvector_impl_data(); }
+
+ constexpr
+ void
+ _M_swap_data(_Bvector_impl_data& __x) noexcept
+ {
+
+
+   std::swap(*this, __x);
+ }
+      };
+
+      struct _Bvector_impl
+ : public _Bit_alloc_type, public _Bvector_impl_data
+      {
+ constexpr
+ _Bvector_impl() noexcept(is_nothrow_default_constructible<_Bit_alloc_type>::value)
+
+
+ requires is_default_constructible_v<_Bit_alloc_type>
+
+ : _Bit_alloc_type()
+ { }
+
+ constexpr
+ _Bvector_impl(const _Bit_alloc_type& __a) noexcept
+ : _Bit_alloc_type(__a)
+ { }
+
+
+
+
+ constexpr
+ _Bvector_impl(_Bvector_impl&& __x) noexcept
+ : _Bit_alloc_type(std::move(__x)), _Bvector_impl_data(std::move(__x))
+ { }
+
+ constexpr
+ _Bvector_impl(_Bit_alloc_type&& __a, _Bvector_impl&& __x) noexcept
+ : _Bit_alloc_type(std::move(__a)), _Bvector_impl_data(std::move(__x))
+ { }
+
+
+ constexpr
+ _Bit_type*
+ _M_end_addr() const noexcept
+ {
+   if (this->_M_end_of_storage)
+     return std::__addressof(this->_M_end_of_storage[-1]) + 1;
+   return 0;
+ }
+      };
+
+    public:
+      typedef _Alloc allocator_type;
+
+      constexpr
+      _Bit_alloc_type&
+      _M_get_Bit_allocator() noexcept
+      { return this->_M_impl; }
+
+      constexpr
+      const _Bit_alloc_type&
+      _M_get_Bit_allocator() const noexcept
+      { return this->_M_impl; }
+
+      constexpr
+      allocator_type
+      get_allocator() const noexcept
+      { return allocator_type(_M_get_Bit_allocator()); }
+
+
+      _Bvector_base() = default;
+
+
+
+
+      constexpr
+      _Bvector_base(const allocator_type& __a)
+      : _M_impl(__a) { }
+
+
+      _Bvector_base(_Bvector_base&&) = default;
+
+      constexpr
+      _Bvector_base(_Bvector_base&& __x, const allocator_type& __a) noexcept
+      : _M_impl(_Bit_alloc_type(__a), std::move(__x._M_impl))
+      { }
+
+
+      constexpr
+      ~_Bvector_base()
+      { this->_M_deallocate(); }
+
+    protected:
+      _Bvector_impl _M_impl;
+
+      constexpr
+      _Bit_pointer
+      _M_allocate(size_t __n)
+      {
+ _Bit_pointer __p = _Bit_alloc_traits::allocate(_M_impl, _S_nword(__n));
+
+ if (std::is_constant_evaluated())
+   {
+     __n = _S_nword(__n);
+     for (size_t __i = 0; __i < __n; ++__i)
+       std::construct_at(std::to_address(__p) + __i);
+   }
+
+ return __p;
+      }
+
+      constexpr
+      void
+      _M_deallocate()
+      {
+ if (_M_impl._M_start._M_p)
+   {
+     const size_t __n = _M_impl._M_end_addr() - _M_impl._M_start._M_p;
+     _Bit_alloc_traits::deallocate(_M_impl,
+       _M_impl._M_end_of_storage - __n,
+       __n);
+     _M_impl._M_reset();
+   }
+      }
+
+
+      constexpr
+      void
+      _M_move_data(_Bvector_base&& __x) noexcept
+      { _M_impl._M_move_data(std::move(__x._M_impl)); }
+
+
+      constexpr
+      static size_t
+      _S_nword(size_t __n)
+      { return (__n + int(_S_word_bit) - 1) / int(_S_word_bit); }
+    };
+# 739 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+  template<typename _Alloc>
+    class vector<bool, _Alloc> : protected _Bvector_base<_Alloc>
+    {
+      typedef _Bvector_base<_Alloc> _Base;
+      typedef typename _Base::_Bit_pointer _Bit_pointer;
+      typedef typename _Base::_Bit_alloc_traits _Bit_alloc_traits;
+
+
+      friend struct std::hash<vector>;
+
+
+    public:
+      typedef bool value_type;
+      typedef size_t size_type;
+      typedef ptrdiff_t difference_type;
+      typedef _Bit_reference reference;
+      typedef bool const_reference;
+      typedef _Bit_reference* pointer;
+      typedef const bool* const_pointer;
+      typedef _Bit_iterator iterator;
+      typedef _Bit_const_iterator const_iterator;
+      typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+      typedef std::reverse_iterator<iterator> reverse_iterator;
+      typedef _Alloc allocator_type;
+
+      constexpr
+      allocator_type
+      get_allocator() const
+      { return _Base::get_allocator(); }
+
+    protected:
+      using _Base::_M_allocate;
+      using _Base::_M_deallocate;
+      using _Base::_S_nword;
+      using _Base::_M_get_Bit_allocator;
+
+    public:
+
+      vector() = default;
+
+
+
+
+      constexpr
+      explicit
+      vector(const allocator_type& __a)
+      : _Base(__a) { }
+
+
+      constexpr
+      explicit
+      vector(size_type __n, const allocator_type& __a = allocator_type())
+      : vector(__n, false, __a)
+      { }
+
+      constexpr
+      vector(size_type __n, const bool& __value,
+      const allocator_type& __a = allocator_type())
+
+
+
+
+
+      : _Base(__a)
+      {
+ _M_initialize(__n);
+ _M_initialize_value(__value);
+      }
+
+      constexpr
+      vector(const vector& __x)
+      : _Base(_Bit_alloc_traits::_S_select_on_copy(__x._M_get_Bit_allocator()))
+      {
+ const_iterator __xbegin = __x.begin(), __xend = __x.end();
+ _M_initialize(__x.size());
+ _M_copy_aligned(__xbegin, __xend, begin());
+      }
+
+
+      vector(vector&&) = default;
+
+    private:
+      constexpr
+      vector(vector&& __x, const allocator_type& __a, true_type) noexcept
+      : _Base(std::move(__x), __a)
+      { }
+
+      constexpr
+      vector(vector&& __x, const allocator_type& __a, false_type)
+      : _Base(__a)
+      {
+ if (__x.get_allocator() == __a)
+   this->_M_move_data(std::move(__x));
+ else
+   {
+     _M_initialize(__x.size());
+     _M_copy_aligned(__x.begin(), __x.end(), begin());
+     __x.clear();
+   }
+      }
+
+    public:
+      constexpr
+      vector(vector&& __x, const __type_identity_t<allocator_type>& __a)
+      noexcept(_Bit_alloc_traits::_S_always_equal())
+      : vector(std::move(__x), __a,
+        typename _Bit_alloc_traits::is_always_equal{})
+      { }
+
+      constexpr
+      vector(const vector& __x, const __type_identity_t<allocator_type>& __a)
+      : _Base(__a)
+      {
+ _M_initialize(__x.size());
+ _M_copy_aligned(__x.begin(), __x.end(), begin());
+      }
+
+      constexpr
+      vector(initializer_list<bool> __l,
+      const allocator_type& __a = allocator_type())
+      : _Base(__a)
+      {
+ _M_initialize_range(__l.begin(), __l.end(),
+       random_access_iterator_tag());
+      }
+
+
+
+      template<typename _InputIterator,
+        typename = std::_RequireInputIter<_InputIterator>>
+ constexpr
+ vector(_InputIterator __first, _InputIterator __last,
+        const allocator_type& __a = allocator_type())
+ : _Base(__a)
+ {
+   _M_initialize_range(__first, __last,
+         std::__iterator_category(__first));
+ }
+# 889 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+      constexpr
+      ~vector() noexcept { }
+
+      constexpr
+      vector&
+      operator=(const vector& __x)
+      {
+ if (&__x == this)
+   return *this;
+
+ if (_Bit_alloc_traits::_S_propagate_on_copy_assign())
+   {
+     if (this->_M_get_Bit_allocator() != __x._M_get_Bit_allocator())
+       {
+  this->_M_deallocate();
+  std::__alloc_on_copy(_M_get_Bit_allocator(),
+         __x._M_get_Bit_allocator());
+  _M_initialize(__x.size());
+       }
+     else
+       std::__alloc_on_copy(_M_get_Bit_allocator(),
+       __x._M_get_Bit_allocator());
+   }
+
+ if (__x.size() > capacity())
+   {
+     this->_M_deallocate();
+     _M_initialize(__x.size());
+   }
+ this->_M_impl._M_finish = _M_copy_aligned(__x.begin(), __x.end(),
+        begin());
+ return *this;
+      }
+
+
+      constexpr
+      vector&
+      operator=(vector&& __x) noexcept(_Bit_alloc_traits::_S_nothrow_move())
+      {
+ if (_Bit_alloc_traits::_S_propagate_on_move_assign()
+     || this->_M_get_Bit_allocator() == __x._M_get_Bit_allocator())
+   {
+     this->_M_deallocate();
+     this->_M_move_data(std::move(__x));
+     std::__alloc_on_move(_M_get_Bit_allocator(),
+     __x._M_get_Bit_allocator());
+   }
+ else
+   {
+     if (__x.size() > capacity())
+       {
+  this->_M_deallocate();
+  _M_initialize(__x.size());
+       }
+     this->_M_impl._M_finish = _M_copy_aligned(__x.begin(), __x.end(),
+            begin());
+     __x.clear();
+   }
+ return *this;
+      }
+
+      constexpr
+      vector&
+      operator=(initializer_list<bool> __l)
+      {
+ this->assign(__l.begin(), __l.end());
+ return *this;
+      }
+
+
+
+
+
+
+      constexpr
+      void
+      assign(size_type __n, const bool& __x)
+      { _M_fill_assign(__n, __x); }
+
+
+      template<typename _InputIterator,
+        typename = std::_RequireInputIter<_InputIterator>>
+ constexpr
+ void
+ assign(_InputIterator __first, _InputIterator __last)
+ { _M_assign_aux(__first, __last, std::__iterator_category(__first)); }
+# 987 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+      constexpr
+      void
+      assign(initializer_list<bool> __l)
+      { _M_assign_aux(__l.begin(), __l.end(), random_access_iterator_tag()); }
+
+
+      [[__nodiscard__]] constexpr
+      iterator
+      begin() noexcept
+      { return iterator(this->_M_impl._M_start._M_p, 0); }
+
+      [[__nodiscard__]] constexpr
+      const_iterator
+      begin() const noexcept
+      { return const_iterator(this->_M_impl._M_start._M_p, 0); }
+
+      [[__nodiscard__]] constexpr
+      iterator
+      end() noexcept
+      { return this->_M_impl._M_finish; }
+
+      [[__nodiscard__]] constexpr
+      const_iterator
+      end() const noexcept
+      { return this->_M_impl._M_finish; }
+
+      [[__nodiscard__]] constexpr
+      reverse_iterator
+      rbegin() noexcept
+      { return reverse_iterator(end()); }
+
+      [[__nodiscard__]] constexpr
+      const_reverse_iterator
+      rbegin() const noexcept
+      { return const_reverse_iterator(end()); }
+
+      [[__nodiscard__]] constexpr
+      reverse_iterator
+      rend() noexcept
+      { return reverse_iterator(begin()); }
+
+      [[__nodiscard__]] constexpr
+      const_reverse_iterator
+      rend() const noexcept
+      { return const_reverse_iterator(begin()); }
+
+
+      [[__nodiscard__]] constexpr
+      const_iterator
+      cbegin() const noexcept
+      { return const_iterator(this->_M_impl._M_start._M_p, 0); }
+
+      [[__nodiscard__]] constexpr
+      const_iterator
+      cend() const noexcept
+      { return this->_M_impl._M_finish; }
+
+      [[__nodiscard__]] constexpr
+      const_reverse_iterator
+      crbegin() const noexcept
+      { return const_reverse_iterator(end()); }
+
+      [[__nodiscard__]] constexpr
+      const_reverse_iterator
+      crend() const noexcept
+      { return const_reverse_iterator(begin()); }
+
+
+      [[__nodiscard__]] constexpr
+      size_type
+      size() const noexcept
+      { return size_type(end() - begin()); }
+
+      [[__nodiscard__]] constexpr
+      size_type
+      max_size() const noexcept
+      {
+ const size_type __isize =
+   __gnu_cxx::__numeric_traits<difference_type>::__max
+   - int(_S_word_bit) + 1;
+ const size_type __asize
+   = _Bit_alloc_traits::max_size(_M_get_Bit_allocator());
+ return (__asize <= __isize / int(_S_word_bit)
+  ? __asize * int(_S_word_bit) : __isize);
+      }
+
+      [[__nodiscard__]] constexpr
+      size_type
+      capacity() const noexcept
+      { return size_type(const_iterator(this->_M_impl._M_end_addr(), 0)
+    - begin()); }
+
+      [[__nodiscard__]] constexpr
+      bool
+      empty() const noexcept
+      { return begin() == end(); }
+
+      [[__nodiscard__]] constexpr
+      reference
+      operator[](size_type __n)
+      { return begin()[__n]; }
+
+      [[__nodiscard__]] constexpr
+      const_reference
+      operator[](size_type __n) const
+      { return begin()[__n]; }
+
+    protected:
+      constexpr
+      void
+      _M_range_check(size_type __n) const
+      {
+ if (__n >= this->size())
+   __throw_out_of_range_fmt(("vector<bool>::_M_range_check: __n " "(which is %zu) >= this->size() " "(which is %zu)")
+
+                            ,
+       __n, this->size());
+      }
+
+    public:
+      [[__nodiscard__]] constexpr
+      reference
+      at(size_type __n)
+      {
+ _M_range_check(__n);
+ return (*this)[__n];
+      }
+
+      [[__nodiscard__]] constexpr
+      const_reference
+      at(size_type __n) const
+      {
+ _M_range_check(__n);
+ return (*this)[__n];
+      }
+
+      constexpr
+      void
+      reserve(size_type __n)
+      {
+ if (__n > max_size())
+   __throw_length_error(("vector::reserve"));
+ if (capacity() < __n)
+   _M_reallocate(__n);
+      }
+
+      [[__nodiscard__]] constexpr
+      reference
+      front()
+      { return *begin(); }
+
+      [[__nodiscard__]] constexpr
+      const_reference
+      front() const
+      { return *begin(); }
+
+      [[__nodiscard__]] constexpr
+      reference
+      back()
+      { return *(end() - 1); }
+
+      [[__nodiscard__]] constexpr
+      const_reference
+      back() const
+      { return *(end() - 1); }
+
+      constexpr
+      void
+      push_back(bool __x)
+      {
+ if (this->_M_impl._M_finish._M_p != this->_M_impl._M_end_addr())
+   *this->_M_impl._M_finish++ = __x;
+ else
+   _M_insert_aux(end(), __x);
+      }
+
+      constexpr
+      void
+      swap(vector& __x) noexcept
+      {
+
+ do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(_Bit_alloc_traits::propagate_on_container_swap::value || _M_get_Bit_allocator() == __x._M_get_Bit_allocator()), false)) std::__glibcxx_assert_fail(); } while (false)
+                                                            ;
+
+ this->_M_impl._M_swap_data(__x._M_impl);
+ _Bit_alloc_traits::_S_on_swap(_M_get_Bit_allocator(),
+          __x._M_get_Bit_allocator());
+      }
+
+
+      constexpr
+      static void
+      swap(reference __x, reference __y) noexcept
+      {
+ bool __tmp = __x;
+ __x = __y;
+ __y = __tmp;
+      }
+
+      constexpr
+      iterator
+
+      insert(const_iterator __position, const bool& __x)
+
+
+
+      {
+ const difference_type __n = __position - begin();
+ if (this->_M_impl._M_finish._M_p != this->_M_impl._M_end_addr()
+     && __position == end())
+   *this->_M_impl._M_finish++ = __x;
+ else
+   _M_insert_aux(__position._M_const_cast(), __x);
+ return begin() + __n;
+      }
+
+
+      __attribute__ ((__deprecated__ ("use '" "insert(position, false)" "' instead")))
+      iterator
+      insert(const_iterator __position)
+      { return this->insert(__position._M_const_cast(), false); }
+
+
+
+      template<typename _InputIterator,
+        typename = std::_RequireInputIter<_InputIterator>>
+ constexpr
+ iterator
+ insert(const_iterator __position,
+        _InputIterator __first, _InputIterator __last)
+ {
+   difference_type __offset = __position - cbegin();
+   _M_insert_range(__position._M_const_cast(),
+     __first, __last,
+     std::__iterator_category(__first));
+   return begin() + __offset;
+ }
+# 1237 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+      constexpr
+      iterator
+      insert(const_iterator __position, size_type __n, const bool& __x)
+      {
+ difference_type __offset = __position - cbegin();
+ _M_fill_insert(__position._M_const_cast(), __n, __x);
+ return begin() + __offset;
+      }
+
+
+
+
+
+
+
+      constexpr
+      iterator
+      insert(const_iterator __p, initializer_list<bool> __l)
+      { return this->insert(__p, __l.begin(), __l.end()); }
+
+
+      constexpr
+      void
+      pop_back()
+      { --this->_M_impl._M_finish; }
+
+      constexpr
+      iterator
+
+      erase(const_iterator __position)
+
+
+
+      { return _M_erase(__position._M_const_cast()); }
+
+      constexpr
+      iterator
+
+      erase(const_iterator __first, const_iterator __last)
+
+
+
+      { return _M_erase(__first._M_const_cast(), __last._M_const_cast()); }
+
+      constexpr
+      void
+      resize(size_type __new_size, bool __x = bool())
+      {
+ if (__new_size < size())
+   _M_erase_at_end(begin() + difference_type(__new_size));
+ else
+   insert(end(), __new_size - size(), __x);
+      }
+
+
+      constexpr
+      void
+      shrink_to_fit()
+      { _M_shrink_to_fit(); }
+
+
+      constexpr
+      void
+      flip() noexcept
+      {
+ _Bit_type * const __end = this->_M_impl._M_end_addr();
+ for (_Bit_type * __p = this->_M_impl._M_start._M_p; __p != __end; ++__p)
+   *__p = ~*__p;
+      }
+
+      constexpr
+      void
+      clear() noexcept
+      { _M_erase_at_end(begin()); }
+
+
+      template<typename... _Args>
+
+ constexpr
+ reference
+
+
+
+ emplace_back(_Args&&... __args)
+ {
+   push_back(bool(__args...));
+
+   return back();
+
+ }
+
+      template<typename... _Args>
+ constexpr
+ iterator
+ emplace(const_iterator __pos, _Args&&... __args)
+ { return insert(__pos, bool(__args...)); }
+
+
+    protected:
+
+      constexpr
+      iterator
+      _M_copy_aligned(const_iterator __first, const_iterator __last,
+        iterator __result)
+      {
+ _Bit_type* __q = std::copy(__first._M_p, __last._M_p, __result._M_p);
+ return std::copy(const_iterator(__last._M_p, 0), __last,
+    iterator(__q, 0));
+      }
+
+      constexpr
+      void
+      _M_initialize(size_type __n)
+      {
+ if (__n)
+   {
+     _Bit_pointer __q = this->_M_allocate(__n);
+     this->_M_impl._M_end_of_storage = __q + _S_nword(__n);
+     iterator __start = iterator(std::__addressof(*__q), 0);
+     this->_M_impl._M_start = __start;
+     this->_M_impl._M_finish = __start + difference_type(__n);
+   }
+      }
+
+      constexpr
+      void
+      _M_initialize_value(bool __x) noexcept
+      {
+ if (_Bit_type* __p = this->_M_impl._M_start._M_p)
+   __fill_bvector_n(__p, this->_M_impl._M_end_addr() - __p, __x);
+      }
+
+      constexpr
+      void
+      _M_reallocate(size_type __n);
+
+
+      constexpr
+      bool
+      _M_shrink_to_fit();
+# 1398 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+      template<typename _InputIterator>
+ constexpr
+ void
+ _M_initialize_range(_InputIterator __first, _InputIterator __last,
+       std::input_iterator_tag)
+ {
+   for (; __first != __last; ++__first)
+     push_back(*__first);
+ }
+
+      template<typename _ForwardIterator>
+ constexpr
+ void
+ _M_initialize_range(_ForwardIterator __first, _ForwardIterator __last,
+       std::forward_iterator_tag)
+ {
+   const size_type __n = std::distance(__first, __last);
+   _M_initialize(__n);
+   std::copy(__first, __last, begin());
+ }
+# 1434 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+      constexpr
+      void
+      _M_fill_assign(size_t __n, bool __x)
+      {
+ if (__n > size())
+   {
+     _M_initialize_value(__x);
+     insert(end(), __n - size(), __x);
+   }
+ else
+   {
+     _M_erase_at_end(begin() + __n);
+     _M_initialize_value(__x);
+   }
+      }
+
+      template<typename _InputIterator>
+ constexpr
+ void
+ _M_assign_aux(_InputIterator __first, _InputIterator __last,
+        std::input_iterator_tag)
+ {
+   iterator __cur = begin();
+   for (; __first != __last && __cur != end(); ++__cur, (void)++__first)
+     *__cur = *__first;
+   if (__first == __last)
+     _M_erase_at_end(__cur);
+   else
+     insert(end(), __first, __last);
+ }
+
+      template<typename _ForwardIterator>
+ constexpr
+ void
+ _M_assign_aux(_ForwardIterator __first, _ForwardIterator __last,
+        std::forward_iterator_tag)
+ {
+   const size_type __len = std::distance(__first, __last);
+   if (__len < size())
+     _M_erase_at_end(std::copy(__first, __last, begin()));
+   else
+     {
+       _ForwardIterator __mid = __first;
+       std::advance(__mid, size());
+       std::copy(__first, __mid, begin());
+       insert(end(), __mid, __last);
+     }
+ }
+# 1501 "C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h" 3
+      constexpr
+      void
+      _M_fill_insert(iterator __position, size_type __n, bool __x);
+
+      template<typename _InputIterator>
+ constexpr
+ void
+ _M_insert_range(iterator __pos, _InputIterator __first,
+   _InputIterator __last, std::input_iterator_tag)
+ {
+   for (; __first != __last; ++__first)
+     {
+       __pos = insert(__pos, *__first);
+       ++__pos;
+     }
+ }
+
+      template<typename _ForwardIterator>
+ constexpr
+ void
+ _M_insert_range(iterator __position, _ForwardIterator __first,
+   _ForwardIterator __last, std::forward_iterator_tag);
+
+      constexpr
+      void
+      _M_insert_aux(iterator __position, bool __x);
+
+      constexpr
+      size_type
+      _M_check_len(size_type __n, const char* __s) const
+      {
+ if (max_size() - size() < __n)
+   __throw_length_error((__s));
+
+ const size_type __len = size() + std::max(size(), __n);
+ return (__len < size() || __len > max_size()) ? max_size() : __len;
+      }
+
+      constexpr
+      void
+      _M_erase_at_end(iterator __pos)
+      { this->_M_impl._M_finish = __pos; }
+
+      constexpr
+      iterator
+      _M_erase(iterator __pos);
+
+      constexpr
+      iterator
+      _M_erase(iterator __first, iterator __last);
+
+    protected:
+
+
+
+
+
+
+      void data() = delete;
+
+
+
+    };
+
+
+
+
+  constexpr
+  inline void
+  __fill_bvector(_Bit_type* __v, unsigned int __first, unsigned int __last,
+   bool __x) noexcept
+  {
+    const _Bit_type __fmask = ~0ul << __first;
+    const _Bit_type __lmask = ~0ul >> (_S_word_bit - __last);
+    const _Bit_type __mask = __fmask & __lmask;
+
+    if (__x)
+      *__v |= __mask;
+    else
+      *__v &= ~__mask;
+  }
+
+
+  __attribute__((__nonnull__))
+  constexpr
+  inline void
+  __fill_bvector_n(_Bit_type* __p, size_t __n, bool __x) noexcept
+  {
+
+    if (std::is_constant_evaluated())
+    {
+      for (size_t __i = 0; __i < __n; ++__i)
+ __p[__i] = __x ? ~0ul : 0ul;
+      return;
+    }
+
+    __builtin_memset(__p, __x ? ~0 : 0, __n * sizeof(_Bit_type));
+  }
+
+
+  constexpr
+  inline void
+  __fill_a1(std::_Bit_iterator __first,
+     std::_Bit_iterator __last, const bool& __x)
+  {
+    if (__first._M_p != __last._M_p)
+      {
+ _Bit_type* __first_p = __first._M_p;
+ if (__first._M_offset != 0)
+   __fill_bvector(__first_p++, __first._M_offset, _S_word_bit, __x);
+
+ __fill_bvector_n(__first_p, __last._M_p - __first_p, __x);
+
+ if (__last._M_offset != 0)
+   __fill_bvector(__last._M_p, 0, __last._M_offset, __x);
+      }
+    else if (__first._M_offset != __last._M_offset)
+      __fill_bvector(__first._M_p, __first._M_offset, __last._M_offset, __x);
+  }
+
+
+
+
+  template<typename _Alloc>
+    struct hash<std::vector<bool, _Alloc>>
+    : public __hash_base<size_t, std::vector<bool, _Alloc>>
+    {
+      size_t
+      operator()(const std::vector<bool, _Alloc>&) const noexcept;
+    };
+
+
+
+}
+# 68 "C:/mingw64/include/c++/14.2.0/vector" 2 3
+
+
+
+
+# 1 "C:/mingw64/include/c++/14.2.0/bits/vector.tcc" 1 3
+# 59 "C:/mingw64/include/c++/14.2.0/bits/vector.tcc" 3
+namespace std
+{
+
+
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    void
+    vector<_Tp, _Alloc>::
+    reserve(size_type __n)
+    {
+      if (__n > this->max_size())
+ __throw_length_error(("vector::reserve"));
+      if (this->capacity() < __n)
+ {
+   const size_type __old_size = size();
+   pointer __tmp;
+
+   if constexpr (_S_use_relocate())
+     {
+       __tmp = this->_M_allocate(__n);
+       _S_relocate(this->_M_impl._M_start, this->_M_impl._M_finish,
+     __tmp, _M_get_Tp_allocator());
+     }
+   else
+
+     {
+       __tmp = _M_allocate_and_copy(__n,
+  std::__make_move_if_noexcept_iterator(this->_M_impl._M_start),
+  std::__make_move_if_noexcept_iterator(this->_M_impl._M_finish));
+       std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+       _M_get_Tp_allocator());
+     }
+   ;
+   _M_deallocate(this->_M_impl._M_start,
+   this->_M_impl._M_end_of_storage
+   - this->_M_impl._M_start);
+   this->_M_impl._M_start = __tmp;
+   this->_M_impl._M_finish = __tmp + __old_size;
+   this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __n;
+ }
+    }
+
+
+  template<typename _Tp, typename _Alloc>
+    template<typename... _Args>
+
+      constexpr
+      typename vector<_Tp, _Alloc>::reference
+
+
+
+      vector<_Tp, _Alloc>::
+      emplace_back(_Args&&... __args)
+      {
+ if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
+   {
+     ;
+     _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
+         std::forward<_Args>(__args)...);
+     ++this->_M_impl._M_finish;
+     ;
+   }
+ else
+   _M_realloc_append(std::forward<_Args>(__args)...);
+
+ return back();
+
+      }
+
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    typename vector<_Tp, _Alloc>::iterator
+    vector<_Tp, _Alloc>::
+
+    insert(const_iterator __position, const value_type& __x)
+
+
+
+    {
+      const size_type __n = __position - begin();
+      if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
+ {
+   do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(__position != const_iterator()), false)) std::__glibcxx_assert_fail(); } while (false);
+   if (!(__position != const_iterator()))
+     __builtin_unreachable();
+
+   if (__position == end())
+     {
+       ;
+       _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
+           __x);
+       ++this->_M_impl._M_finish;
+       ;
+     }
+   else
+     {
+
+       const auto __pos = begin() + (__position - cbegin());
+
+
+       _Temporary_value __x_copy(this, __x);
+       _M_insert_aux(__pos, std::move(__x_copy._M_val()));
+
+
+
+     }
+ }
+      else
+
+ _M_realloc_insert(begin() + (__position - cbegin()), __x);
+
+
+
+
+      return iterator(this->_M_impl._M_start + __n);
+    }
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    typename vector<_Tp, _Alloc>::iterator
+    vector<_Tp, _Alloc>::
+    _M_erase(iterator __position)
+    {
+      if (__position + 1 != end())
+ std::move(__position + 1, end(), __position);
+      --this->_M_impl._M_finish;
+      _Alloc_traits::destroy(this->_M_impl, this->_M_impl._M_finish);
+      ;
+      return __position;
+    }
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    typename vector<_Tp, _Alloc>::iterator
+    vector<_Tp, _Alloc>::
+    _M_erase(iterator __first, iterator __last)
+    {
+      if (__first != __last)
+ {
+   if (__last != end())
+     std::move(__last, end(), __first);
+   _M_erase_at_end(__first.base() + (end() - __last));
+ }
+      return __first;
+    }
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    vector<_Tp, _Alloc>&
+    vector<_Tp, _Alloc>::
+    operator=(const vector<_Tp, _Alloc>& __x)
+    {
+      if (std::__addressof(__x) != this)
+ {
+   ;
+
+   if (_Alloc_traits::_S_propagate_on_copy_assign())
+     {
+       if (!_Alloc_traits::_S_always_equal()
+           && _M_get_Tp_allocator() != __x._M_get_Tp_allocator())
+         {
+
+    this->clear();
+    _M_deallocate(this->_M_impl._M_start,
+    this->_M_impl._M_end_of_storage
+    - this->_M_impl._M_start);
+    this->_M_impl._M_start = nullptr;
+    this->_M_impl._M_finish = nullptr;
+    this->_M_impl._M_end_of_storage = nullptr;
+  }
+       std::__alloc_on_copy(_M_get_Tp_allocator(),
+       __x._M_get_Tp_allocator());
+     }
+
+   const size_type __xlen = __x.size();
+   if (__xlen > capacity())
+     {
+       pointer __tmp = _M_allocate_and_copy(__xlen, __x.begin(),
+         __x.end());
+       std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+       _M_get_Tp_allocator());
+       _M_deallocate(this->_M_impl._M_start,
+       this->_M_impl._M_end_of_storage
+       - this->_M_impl._M_start);
+       this->_M_impl._M_start = __tmp;
+       this->_M_impl._M_end_of_storage = this->_M_impl._M_start + __xlen;
+     }
+   else if (size() >= __xlen)
+     {
+       std::_Destroy(std::copy(__x.begin(), __x.end(), begin()),
+       end(), _M_get_Tp_allocator());
+     }
+   else
+     {
+       std::copy(__x._M_impl._M_start, __x._M_impl._M_start + size(),
+   this->_M_impl._M_start);
+       std::__uninitialized_copy_a(__x._M_impl._M_start + size(),
+       __x._M_impl._M_finish,
+       this->_M_impl._M_finish,
+       _M_get_Tp_allocator());
+     }
+   this->_M_impl._M_finish = this->_M_impl._M_start + __xlen;
+ }
+      return *this;
+    }
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    void
+    vector<_Tp, _Alloc>::
+    _M_fill_assign(size_t __n, const value_type& __val)
+    {
+      const size_type __sz = size();
+      if (__n > capacity())
+ {
+   if (__n <= __sz)
+     __builtin_unreachable();
+   vector __tmp(__n, __val, _M_get_Tp_allocator());
+   __tmp._M_impl._M_swap_data(this->_M_impl);
+ }
+      else if (__n > __sz)
+ {
+   std::fill(begin(), end(), __val);
+   const size_type __add = __n - __sz;
+   ;
+   this->_M_impl._M_finish =
+     std::__uninitialized_fill_n_a(this->_M_impl._M_finish,
+       __add, __val, _M_get_Tp_allocator());
+   ;
+ }
+      else
+        _M_erase_at_end(std::fill_n(this->_M_impl._M_start, __n, __val));
+    }
+
+  template<typename _Tp, typename _Alloc>
+    template<typename _InputIterator>
+      constexpr
+      void
+      vector<_Tp, _Alloc>::
+      _M_assign_aux(_InputIterator __first, _InputIterator __last,
+      std::input_iterator_tag)
+      {
+ pointer __cur(this->_M_impl._M_start);
+ for (; __first != __last && __cur != this->_M_impl._M_finish;
+      ++__cur, (void)++__first)
+   *__cur = *__first;
+ if (__first == __last)
+   _M_erase_at_end(__cur);
+ else
+   _M_range_insert(end(), __first, __last,
+     std::__iterator_category(__first));
+      }
+
+  template<typename _Tp, typename _Alloc>
+    template<typename _ForwardIterator>
+      constexpr
+      void
+      vector<_Tp, _Alloc>::
+      _M_assign_aux(_ForwardIterator __first, _ForwardIterator __last,
+      std::forward_iterator_tag)
+      {
+ const size_type __sz = size();
+ const size_type __len = std::distance(__first, __last);
+
+ if (__len > capacity())
+   {
+     if (__len <= __sz)
+       __builtin_unreachable();
+
+     _S_check_init_len(__len, _M_get_Tp_allocator());
+     pointer __tmp(_M_allocate_and_copy(__len, __first, __last));
+     std::_Destroy(this->_M_impl._M_start, this->_M_impl._M_finish,
+     _M_get_Tp_allocator());
+     ;
+     _M_deallocate(this->_M_impl._M_start,
+     this->_M_impl._M_end_of_storage
+     - this->_M_impl._M_start);
+     this->_M_impl._M_start = __tmp;
+     this->_M_impl._M_finish = this->_M_impl._M_start + __len;
+     this->_M_impl._M_end_of_storage = this->_M_impl._M_finish;
+   }
+ else if (__sz >= __len)
+   _M_erase_at_end(std::copy(__first, __last, this->_M_impl._M_start));
+ else
+   {
+     _ForwardIterator __mid = __first;
+     std::advance(__mid, __sz);
+     std::copy(__first, __mid, this->_M_impl._M_start);
+     const size_type __attribute__((__unused__)) __n = __len - __sz;
+     ;
+     this->_M_impl._M_finish =
+       std::__uninitialized_copy_a(__mid, __last,
+       this->_M_impl._M_finish,
+       _M_get_Tp_allocator());
+     ;
+   }
+      }
+
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    auto
+    vector<_Tp, _Alloc>::
+    _M_insert_rval(const_iterator __position, value_type&& __v) -> iterator
+    {
+      const auto __n = __position - cbegin();
+      if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
+ if (__position == cend())
+   {
+     ;
+     _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
+         std::move(__v));
+     ++this->_M_impl._M_finish;
+     ;
+   }
+ else
+   _M_insert_aux(begin() + __n, std::move(__v));
+      else
+ _M_realloc_insert(begin() + __n, std::move(__v));
+
+      return iterator(this->_M_impl._M_start + __n);
+    }
+
+  template<typename _Tp, typename _Alloc>
+    template<typename... _Args>
+      constexpr
+      auto
+      vector<_Tp, _Alloc>::
+      _M_emplace_aux(const_iterator __position, _Args&&... __args)
+      -> iterator
+      {
+ const auto __n = __position - cbegin();
+ if (this->_M_impl._M_finish != this->_M_impl._M_end_of_storage)
+   if (__position == cend())
+     {
+       ;
+       _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
+           std::forward<_Args>(__args)...);
+       ++this->_M_impl._M_finish;
+       ;
+     }
+   else
+     {
+
+
+
+       _Temporary_value __tmp(this, std::forward<_Args>(__args)...);
+       _M_insert_aux(begin() + __n, std::move(__tmp._M_val()));
+     }
+ else
+   _M_realloc_insert(begin() + __n, std::forward<_Args>(__args)...);
+
+ return iterator(this->_M_impl._M_start + __n);
+      }
+
+  template<typename _Tp, typename _Alloc>
+    template<typename _Arg>
+      constexpr
+      void
+      vector<_Tp, _Alloc>::
+      _M_insert_aux(iterator __position, _Arg&& __arg)
+
+
+
+
+
+
+    {
+      ;
+      _Alloc_traits::construct(this->_M_impl, this->_M_impl._M_finish,
+          std::move(*(this->_M_impl._M_finish - 1)));
+      ++this->_M_impl._M_finish;
+      ;
+
+
+
+      std::move_backward(__position.base(), this->_M_impl._M_finish - 2, this->_M_impl._M_finish - 1)
+
+                                     ;
+
+
+
+      *__position = std::forward<_Arg>(__arg);
+
+    }
+
+
+  template<typename _Tp, typename _Alloc>
+    template<typename... _Args>
+      constexpr
+      void
+      vector<_Tp, _Alloc>::
+      _M_realloc_insert(iterator __position, _Args&&... __args)
+
+
+
+
+
+
+    {
+      const size_type __len = _M_check_len(1u, "vector::_M_realloc_insert");
+      if (__len <= 0)
+ __builtin_unreachable ();
+      pointer __old_start = this->_M_impl._M_start;
+      pointer __old_finish = this->_M_impl._M_finish;
+      const size_type __elems_before = __position - begin();
+      pointer __new_start(this->_M_allocate(__len));
+      pointer __new_finish(__new_start);
+
+
+      struct _Guard
+      {
+ pointer _M_storage;
+ size_type _M_len;
+ _Tp_alloc_type& _M_alloc;
+
+ constexpr
+ _Guard(pointer __s, size_type __l, _Tp_alloc_type& __a)
+ : _M_storage(__s), _M_len(__l), _M_alloc(__a)
+ { }
+
+ constexpr
+ ~_Guard()
+ {
+   if (_M_storage)
+     __gnu_cxx::__alloc_traits<_Tp_alloc_type>::
+       deallocate(_M_alloc, _M_storage, _M_len);
+ }
+
+      private:
+ _Guard(const _Guard&);
+      };
+
+      {
+ _Guard __guard(__new_start, __len, _M_impl);
+# 505 "C:/mingw64/include/c++/14.2.0/bits/vector.tcc" 3
+ _Alloc_traits::construct(this->_M_impl,
+     std::__to_address(__new_start + __elems_before),
+     std::forward<_Args>(__args)...);
+
+
+
+
+
+
+
+ if constexpr (_S_use_relocate())
+   {
+
+     __new_finish = _S_relocate(__old_start, __position.base(),
+           __new_start, _M_get_Tp_allocator());
+     ++__new_finish;
+     __new_finish = _S_relocate(__position.base(), __old_finish,
+           __new_finish, _M_get_Tp_allocator());
+   }
+ else
+
+   {
+
+     struct _Guard_elts
+     {
+       pointer _M_first, _M_last;
+       _Tp_alloc_type& _M_alloc;
+
+       constexpr
+       _Guard_elts(pointer __elt, _Tp_alloc_type& __a)
+       : _M_first(__elt), _M_last(__elt + 1), _M_alloc(__a)
+       { }
+
+       constexpr
+       ~_Guard_elts()
+       { std::_Destroy(_M_first, _M_last, _M_alloc); }
+
+     private:
+       _Guard_elts(const _Guard_elts&);
+     };
+
+
+     _Guard_elts __guard_elts(__new_start + __elems_before, _M_impl);
+
+     __new_finish = std::__uninitialized_move_if_noexcept_a(
+        __old_start, __position.base(),
+        __new_start, _M_get_Tp_allocator());
+
+     ++__new_finish;
+
+     __guard_elts._M_first = __new_start;
+
+     __new_finish = std::__uninitialized_move_if_noexcept_a(
+         __position.base(), __old_finish,
+         __new_finish, _M_get_Tp_allocator());
+
+
+     __guard_elts._M_first = __old_start;
+     __guard_elts._M_last = __old_finish;
+   }
+ __guard._M_storage = __old_start;
+ __guard._M_len = this->_M_impl._M_end_of_storage - __old_start;
+      }
+
+
+
+      this->_M_impl._M_start = __new_start;
+      this->_M_impl._M_finish = __new_finish;
+      this->_M_impl._M_end_of_storage = __new_start + __len;
+    }
+
+
+  template<typename _Tp, typename _Alloc>
+    template<typename... _Args>
+      constexpr
+      void
+      vector<_Tp, _Alloc>::
+      _M_realloc_append(_Args&&... __args)
+
+
+
+
+
+
+    {
+      const size_type __len = _M_check_len(1u, "vector::_M_realloc_append");
+      if (__len <= 0)
+ __builtin_unreachable ();
+      pointer __old_start = this->_M_impl._M_start;
+      pointer __old_finish = this->_M_impl._M_finish;
+      const size_type __elems = end() - begin();
+      pointer __new_start(this->_M_allocate(__len));
+      pointer __new_finish(__new_start);
+
+
+      struct _Guard
+      {
+ pointer _M_storage;
+ size_type _M_len;
+ _Tp_alloc_type& _M_alloc;
+
+ constexpr
+ _Guard(pointer __s, size_type __l, _Tp_alloc_type& __a)
+ : _M_storage(__s), _M_len(__l), _M_alloc(__a)
+ { }
+
+ constexpr
+ ~_Guard()
+ {
+   if (_M_storage)
+     __gnu_cxx::__alloc_traits<_Tp_alloc_type>::
+       deallocate(_M_alloc, _M_storage, _M_len);
+ }
+
+      private:
+ _Guard(const _Guard&);
+      };
+
+      {
+ _Guard __guard(__new_start, __len, _M_impl);
+# 634 "C:/mingw64/include/c++/14.2.0/bits/vector.tcc" 3
+ _Alloc_traits::construct(this->_M_impl,
+     std::__to_address(__new_start + __elems),
+     std::forward<_Args>(__args)...);
+
+
+
+
+
+
+
+ if constexpr (_S_use_relocate())
+   {
+
+     __new_finish = _S_relocate(__old_start, __old_finish,
+           __new_start, _M_get_Tp_allocator());
+     ++__new_finish;
+   }
+ else
+
+   {
+
+     struct _Guard_elts
+     {
+       pointer _M_first, _M_last;
+       _Tp_alloc_type& _M_alloc;
+
+       constexpr
+       _Guard_elts(pointer __elt, _Tp_alloc_type& __a)
+       : _M_first(__elt), _M_last(__elt + 1), _M_alloc(__a)
+       { }
+
+       constexpr
+       ~_Guard_elts()
+       { std::_Destroy(_M_first, _M_last, _M_alloc); }
+
+     private:
+       _Guard_elts(const _Guard_elts&);
+     };
+
+
+     _Guard_elts __guard_elts(__new_start + __elems, _M_impl);
+
+     __new_finish = std::__uninitialized_move_if_noexcept_a(
+        __old_start, __old_finish,
+        __new_start, _M_get_Tp_allocator());
+
+     ++__new_finish;
+
+
+     __guard_elts._M_first = __old_start;
+     __guard_elts._M_last = __old_finish;
+   }
+ __guard._M_storage = __old_start;
+ __guard._M_len = this->_M_impl._M_end_of_storage - __old_start;
+      }
+
+
+
+      this->_M_impl._M_start = __new_start;
+      this->_M_impl._M_finish = __new_finish;
+      this->_M_impl._M_end_of_storage = __new_start + __len;
+    }
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    void
+    vector<_Tp, _Alloc>::
+    _M_fill_insert(iterator __position, size_type __n, const value_type& __x)
+    {
+      if (__n != 0)
+ {
+   if (size_type(this->_M_impl._M_end_of_storage
+   - this->_M_impl._M_finish) >= __n)
+     {
+
+
+
+       _Temporary_value __tmp(this, __x);
+       value_type& __x_copy = __tmp._M_val();
+
+       const size_type __elems_after = end() - __position;
+       pointer __old_finish(this->_M_impl._M_finish);
+       if (__elems_after > __n)
+  {
+    ;
+    std::__uninitialized_move_a(__old_finish - __n,
+           __old_finish,
+           __old_finish,
+           _M_get_Tp_allocator());
+    this->_M_impl._M_finish += __n;
+    ;
+    std::move_backward(__position.base(), __old_finish - __n, __old_finish)
+                                        ;
+    std::fill(__position.base(), __position.base() + __n,
+       __x_copy);
+  }
+       else
+  {
+    ;
+    this->_M_impl._M_finish =
+      std::__uninitialized_fill_n_a(__old_finish,
+        __n - __elems_after,
+        __x_copy,
+        _M_get_Tp_allocator());
+    ;
+    std::__uninitialized_move_a(__position.base(), __old_finish,
+           this->_M_impl._M_finish,
+           _M_get_Tp_allocator());
+    this->_M_impl._M_finish += __elems_after;
+    ;
+    std::fill(__position.base(), __old_finish, __x_copy);
+  }
+     }
+   else
+     {
+
+
+       pointer __old_start = this->_M_impl._M_start;
+       pointer __old_finish = this->_M_impl._M_finish;
+       const pointer __pos = __position.base();
+
+       const size_type __len =
+  _M_check_len(__n, "vector::_M_fill_insert");
+       const size_type __elems_before = __pos - __old_start;
+       pointer __new_start(this->_M_allocate(__len));
+       pointer __new_finish(__new_start);
+       try
+  {
+
+    std::__uninitialized_fill_n_a(__new_start + __elems_before,
+      __n, __x,
+      _M_get_Tp_allocator());
+    __new_finish = pointer();
+
+    __new_finish
+      = std::__uninitialized_move_if_noexcept_a
+      (__old_start, __pos, __new_start, _M_get_Tp_allocator());
+
+    __new_finish += __n;
+
+    __new_finish
+      = std::__uninitialized_move_if_noexcept_a
+      (__pos, __old_finish, __new_finish, _M_get_Tp_allocator());
+  }
+       catch(...)
+  {
+    if (!__new_finish)
+      std::_Destroy(__new_start + __elems_before,
+      __new_start + __elems_before + __n,
+      _M_get_Tp_allocator());
+    else
+      std::_Destroy(__new_start, __new_finish,
+      _M_get_Tp_allocator());
+    _M_deallocate(__new_start, __len);
+    throw;
+  }
+       std::_Destroy(__old_start, __old_finish, _M_get_Tp_allocator());
+       ;
+       _M_deallocate(__old_start,
+       this->_M_impl._M_end_of_storage - __old_start);
+       this->_M_impl._M_start = __new_start;
+       this->_M_impl._M_finish = __new_finish;
+       this->_M_impl._M_end_of_storage = __new_start + __len;
+     }
+ }
+    }
+
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    void
+    vector<_Tp, _Alloc>::
+    _M_default_append(size_type __n)
+    {
+      if (__n != 0)
+ {
+   const size_type __size = size();
+   size_type __navail = size_type(this->_M_impl._M_end_of_storage
+      - this->_M_impl._M_finish);
+
+   if (__size > max_size() || __navail > max_size() - __size)
+     __builtin_unreachable();
+
+   if (__navail >= __n)
+     {
+       ;
+       this->_M_impl._M_finish =
+  std::__uninitialized_default_n_a(this->_M_impl._M_finish,
+       __n, _M_get_Tp_allocator());
+       ;
+     }
+   else
+     {
+
+
+       pointer __old_start = this->_M_impl._M_start;
+       pointer __old_finish = this->_M_impl._M_finish;
+
+       const size_type __len =
+  _M_check_len(__n, "vector::_M_default_append");
+       pointer __new_start(this->_M_allocate(__len));
+
+
+       struct _Guard
+       {
+  pointer _M_storage;
+  size_type _M_len;
+  _Tp_alloc_type& _M_alloc;
+
+  constexpr
+  _Guard(pointer __s, size_type __l, _Tp_alloc_type& __a)
+  : _M_storage(__s), _M_len(__l), _M_alloc(__a)
+  { }
+
+  constexpr
+  ~_Guard()
+  {
+    if (_M_storage)
+      __gnu_cxx::__alloc_traits<_Tp_alloc_type>::
+        deallocate(_M_alloc, _M_storage, _M_len);
+  }
+
+       private:
+  _Guard(const _Guard&);
+       };
+
+       {
+  _Guard __guard(__new_start, __len, _M_impl);
+
+  std::__uninitialized_default_n_a(__new_start + __size, __n,
+       _M_get_Tp_allocator());
+
+  if constexpr (_S_use_relocate())
+    {
+      _S_relocate(__old_start, __old_finish,
+    __new_start, _M_get_Tp_allocator());
+    }
+  else
+    {
+
+      struct _Guard_elts
+      {
+        pointer _M_first, _M_last;
+        _Tp_alloc_type& _M_alloc;
+
+        constexpr
+        _Guard_elts(pointer __first, size_type __n,
+      _Tp_alloc_type& __a)
+        : _M_first(__first), _M_last(__first + __n), _M_alloc(__a)
+        { }
+
+        constexpr
+        ~_Guard_elts()
+        { std::_Destroy(_M_first, _M_last, _M_alloc); }
+
+      private:
+        _Guard_elts(const _Guard_elts&);
+      };
+      _Guard_elts __guard_elts(__new_start + __size, __n, _M_impl);
+
+      std::__uninitialized_move_if_noexcept_a(
+        __old_start, __old_finish, __new_start,
+        _M_get_Tp_allocator());
+
+      __guard_elts._M_first = __old_start;
+      __guard_elts._M_last = __old_finish;
+    }
+  ;
+  __guard._M_storage = __old_start;
+  __guard._M_len = this->_M_impl._M_end_of_storage - __old_start;
+       }
+
+
+
+       this->_M_impl._M_start = __new_start;
+       this->_M_impl._M_finish = __new_start + __size + __n;
+       this->_M_impl._M_end_of_storage = __new_start + __len;
+     }
+ }
+    }
+
+  template<typename _Tp, typename _Alloc>
+    constexpr
+    bool
+    vector<_Tp, _Alloc>::
+    _M_shrink_to_fit()
+    {
+      if (capacity() == size())
+ return false;
+      ;
+      return std::__shrink_to_fit_aux<vector>::_S_do_it(*this);
+    }
+
+
+  template<typename _Tp, typename _Alloc>
+    template<typename _InputIterator>
+      constexpr
+      void
+      vector<_Tp, _Alloc>::
+      _M_range_insert(iterator __pos, _InputIterator __first,
+        _InputIterator __last, std::input_iterator_tag)
+      {
+ if (__pos == end())
+   {
+     for (; __first != __last; ++__first)
+       insert(end(), *__first);
+   }
+ else if (__first != __last)
+   {
+     vector __tmp(__first, __last, _M_get_Tp_allocator());
+     insert(__pos,
+     std::make_move_iterator(__tmp.begin()),
+     std::make_move_iterator(__tmp.end()));
+   }
+      }
+
+  template<typename _Tp, typename _Alloc>
+    template<typename _ForwardIterator>
+      constexpr
+      void
+      vector<_Tp, _Alloc>::
+      _M_range_insert(iterator __position, _ForwardIterator __first,
+        _ForwardIterator __last, std::forward_iterator_tag)
+      {
+ if (__first != __last)
+   {
+     const size_type __n = std::distance(__first, __last);
+     if (size_type(this->_M_impl._M_end_of_storage
+     - this->_M_impl._M_finish) >= __n)
+       {
+  const size_type __elems_after = end() - __position;
+  pointer __old_finish(this->_M_impl._M_finish);
+  if (__elems_after > __n)
+    {
+      ;
+      std::__uninitialized_move_a(this->_M_impl._M_finish - __n,
+      this->_M_impl._M_finish,
+      this->_M_impl._M_finish,
+      _M_get_Tp_allocator());
+      this->_M_impl._M_finish += __n;
+      ;
+      std::move_backward(__position.base(), __old_finish - __n, __old_finish)
+                                          ;
+      std::copy(__first, __last, __position);
+    }
+  else
+    {
+      _ForwardIterator __mid = __first;
+      std::advance(__mid, __elems_after);
+      ;
+      std::__uninitialized_copy_a(__mid, __last,
+      this->_M_impl._M_finish,
+      _M_get_Tp_allocator());
+      this->_M_impl._M_finish += __n - __elems_after;
+      ;
+      std::__uninitialized_move_a(__position.base(),
+      __old_finish,
+      this->_M_impl._M_finish,
+      _M_get_Tp_allocator());
+      this->_M_impl._M_finish += __elems_after;
+      ;
+      std::copy(__first, __mid, __position);
+    }
+       }
+     else
+       {
+
+
+
+  pointer __old_start = this->_M_impl._M_start;
+  pointer __old_finish = this->_M_impl._M_finish;
+
+  const size_type __len =
+    _M_check_len(__n, "vector::_M_range_insert");
+
+
+
+
+
+  pointer __new_start(this->_M_allocate(__len));
+  pointer __new_finish(__new_start);
+  try
+    {
+      __new_finish
+        = std::__uninitialized_move_if_noexcept_a
+        (__old_start, __position.base(),
+         __new_start, _M_get_Tp_allocator());
+      __new_finish
+        = std::__uninitialized_copy_a(__first, __last,
+          __new_finish,
+          _M_get_Tp_allocator());
+      __new_finish
+        = std::__uninitialized_move_if_noexcept_a
+        (__position.base(), __old_finish,
+         __new_finish, _M_get_Tp_allocator());
+    }
+  catch(...)
+    {
+      std::_Destroy(__new_start, __new_finish,
+      _M_get_Tp_allocator());
+      _M_deallocate(__new_start, __len);
+      throw;
+    }
+  std::_Destroy(__old_start, __old_finish,
+         _M_get_Tp_allocator());
+  ;
+  _M_deallocate(__old_start,
+         this->_M_impl._M_end_of_storage - __old_start);
+  this->_M_impl._M_start = __new_start;
+  this->_M_impl._M_finish = __new_finish;
+  this->_M_impl._M_end_of_storage = __new_start + __len;
+       }
+   }
+      }
+
+
+
+  template<typename _Alloc>
+    constexpr
+    void
+    vector<bool, _Alloc>::
+    _M_reallocate(size_type __n)
+    {
+      _Bit_pointer __q = this->_M_allocate(__n);
+      iterator __start(std::__addressof(*__q), 0);
+      iterator __finish(_M_copy_aligned(begin(), end(), __start));
+      this->_M_deallocate();
+      this->_M_impl._M_start = __start;
+      this->_M_impl._M_finish = __finish;
+      this->_M_impl._M_end_of_storage = __q + _S_nword(__n);
+    }
+
+  template<typename _Alloc>
+    constexpr
+    void
+    vector<bool, _Alloc>::
+    _M_fill_insert(iterator __position, size_type __n, bool __x)
+    {
+      if (__n == 0)
+ return;
+      if (capacity() - size() >= __n)
+ {
+   std::copy_backward(__position, end(),
+        this->_M_impl._M_finish + difference_type(__n));
+   std::fill(__position, __position + difference_type(__n), __x);
+   this->_M_impl._M_finish += difference_type(__n);
+ }
+      else
+ {
+   const size_type __len =
+     _M_check_len(__n, "vector<bool>::_M_fill_insert");
+   _Bit_pointer __q = this->_M_allocate(__len);
+   iterator __start(std::__addressof(*__q), 0);
+   iterator __i = _M_copy_aligned(begin(), __position, __start);
+   std::fill(__i, __i + difference_type(__n), __x);
+   iterator __finish = std::copy(__position, end(),
+     __i + difference_type(__n));
+   this->_M_deallocate();
+   this->_M_impl._M_end_of_storage = __q + _S_nword(__len);
+   this->_M_impl._M_start = __start;
+   this->_M_impl._M_finish = __finish;
+ }
+    }
+
+  template<typename _Alloc>
+    template<typename _ForwardIterator>
+      constexpr
+      void
+      vector<bool, _Alloc>::
+      _M_insert_range(iterator __position, _ForwardIterator __first,
+        _ForwardIterator __last, std::forward_iterator_tag)
+      {
+ if (__first != __last)
+   {
+     size_type __n = std::distance(__first, __last);
+     if (capacity() - size() >= __n)
+       {
+  std::copy_backward(__position, end(),
+       this->_M_impl._M_finish
+       + difference_type(__n));
+  std::copy(__first, __last, __position);
+  this->_M_impl._M_finish += difference_type(__n);
+       }
+     else
+       {
+  const size_type __len =
+    _M_check_len(__n, "vector<bool>::_M_insert_range");
+  const iterator __begin = begin(), __end = end();
+  _Bit_pointer __q = this->_M_allocate(__len);
+  iterator __start(std::__addressof(*__q), 0);
+  iterator __i = _M_copy_aligned(__begin, __position, __start);
+  __i = std::copy(__first, __last, __i);
+  iterator __finish = std::copy(__position, __end, __i);
+  this->_M_deallocate();
+  this->_M_impl._M_end_of_storage = __q + _S_nword(__len);
+  this->_M_impl._M_start = __start;
+  this->_M_impl._M_finish = __finish;
+       }
+   }
+      }
+
+  template<typename _Alloc>
+    constexpr
+    void
+    vector<bool, _Alloc>::
+    _M_insert_aux(iterator __position, bool __x)
+    {
+      if (this->_M_impl._M_finish._M_p != this->_M_impl._M_end_addr())
+ {
+   std::copy_backward(__position, this->_M_impl._M_finish,
+        this->_M_impl._M_finish + 1);
+   *__position = __x;
+   ++this->_M_impl._M_finish;
+ }
+      else
+ {
+   const size_type __len =
+     _M_check_len(size_type(1), "vector<bool>::_M_insert_aux");
+   _Bit_pointer __q = this->_M_allocate(__len);
+   iterator __start(std::__addressof(*__q), 0);
+   iterator __i = _M_copy_aligned(begin(), __position, __start);
+   *__i++ = __x;
+   iterator __finish = std::copy(__position, end(), __i);
+   this->_M_deallocate();
+   this->_M_impl._M_end_of_storage = __q + _S_nword(__len);
+   this->_M_impl._M_start = __start;
+   this->_M_impl._M_finish = __finish;
+ }
+    }
+
+  template<typename _Alloc>
+    constexpr
+    typename vector<bool, _Alloc>::iterator
+    vector<bool, _Alloc>::
+    _M_erase(iterator __position)
+    {
+      if (__position + 1 != end())
+        std::copy(__position + 1, end(), __position);
+      --this->_M_impl._M_finish;
+      return __position;
+    }
+
+  template<typename _Alloc>
+    constexpr
+    typename vector<bool, _Alloc>::iterator
+    vector<bool, _Alloc>::
+    _M_erase(iterator __first, iterator __last)
+    {
+      if (__first != __last)
+ _M_erase_at_end(std::copy(__last, end(), __first));
+      return __first;
+    }
+
+
+  template<typename _Alloc>
+    constexpr
+    bool
+    vector<bool, _Alloc>::
+    _M_shrink_to_fit()
+    {
+      if (capacity() - size() < int(_S_word_bit))
+ return false;
+      try
+ {
+   if (size_type __n = size())
+     _M_reallocate(__n);
+   else
+     {
+       this->_M_deallocate();
+       this->_M_impl._M_reset();
+     }
+   return true;
+ }
+      catch(...)
+ { return false; }
+    }
+
+
+
+
+}
+
+
+
+namespace std
+{
+
+
+  template<typename _Alloc>
+    size_t
+    hash<std::vector<bool, _Alloc>>::
+    operator()(const std::vector<bool, _Alloc>& __b) const noexcept
+    {
+      size_t __hash = 0;
+      const size_t __words = __b.size() / _S_word_bit;
+      if (__words)
+ {
+   const size_t __clength = __words * sizeof(_Bit_type);
+   __hash = std::_Hash_impl::hash(__b._M_impl._M_start._M_p, __clength);
+ }
+
+      const size_t __extrabits = __b.size() % _S_word_bit;
+      if (__extrabits)
+ {
+   _Bit_type __hiword = *__b._M_impl._M_finish._M_p;
+   __hiword &= ~((~static_cast<_Bit_type>(0)) << __extrabits);
+
+   const size_t __clength
+     = (__extrabits + 8 - 1) / 8;
+   if (__words)
+     __hash = std::_Hash_impl::hash(&__hiword, __clength, __hash);
+   else
+     __hash = std::_Hash_impl::hash(&__hiword, __clength);
+ }
+
+      return __hash;
+    }
+
+
+}
+# 73 "C:/mingw64/include/c++/14.2.0/vector" 2 3
+# 83 "C:/mingw64/include/c++/14.2.0/vector" 3
+# 1 "C:/mingw64/include/c++/14.2.0/bits/version.h" 1 3
+# 47 "C:/mingw64/include/c++/14.2.0/bits/version.h" 3
+       
+# 48 "C:/mingw64/include/c++/14.2.0/bits/version.h" 3
+# 84 "C:/mingw64/include/c++/14.2.0/vector" 2 3
+
+
+
+namespace std
+{
+
+  namespace pmr {
+    template<typename _Tp>
+      using vector = std::vector<_Tp, polymorphic_allocator<_Tp>>;
+  }
+
+
+
+
+
+
+
+
+}
+
+
+
+namespace std
+{
+
+
+  template<typename _Tp, typename _Alloc, typename _Predicate>
+    constexpr
+    inline typename vector<_Tp, _Alloc>::size_type
+    erase_if(vector<_Tp, _Alloc>& __cont, _Predicate __pred)
+    {
+      using namespace __gnu_cxx;
+      std::vector<_Tp, _Alloc>& __ucont = __cont;
+      const auto __osz = __cont.size();
+      const auto __end = __ucont.end();
+      auto __removed = std::__remove_if(__ucont.begin(), __end,
+     __ops::__pred_iter(std::ref(__pred)));
+      if (__removed != __end)
+ {
+   __cont.erase(__niter_wrap(__cont.begin(), __removed),
+         __cont.end());
+   return __osz - __cont.size();
+ }
+
+      return 0;
+    }
+
+  template<typename _Tp, typename _Alloc, typename _Up>
+    constexpr
+    inline typename vector<_Tp, _Alloc>::size_type
+    erase(vector<_Tp, _Alloc>& __cont, const _Up& __value)
+    {
+      using namespace __gnu_cxx;
+      std::vector<_Tp, _Alloc>& __ucont = __cont;
+      const auto __osz = __cont.size();
+      const auto __end = __ucont.end();
+      auto __removed = std::__remove_if(__ucont.begin(), __end,
+     __ops::__iter_equals_val(__value));
+      if (__removed != __end)
+ {
+   __cont.erase(__niter_wrap(__cont.begin(), __removed),
+         __cont.end());
+   return __osz - __cont.size();
+ }
+
+      return 0;
+    }
+
+}
+# 48 "C:/mingw64/include/c++/14.2.0/chrono" 2 3
 
 # 1 "C:/mingw64/include/c++/14.2.0/bits/shared_ptr.h" 1 3
 # 53 "C:/mingw64/include/c++/14.2.0/bits/shared_ptr.h" 3
@@ -103576,6 +103575,2037 @@ namespace __detail
 # 51 "C:/mingw64/include/c++/14.2.0/random" 2 3
 # 6 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 
+# 1 "C:/mingw64/include/c++/14.2.0/fstream" 1 3
+# 36 "C:/mingw64/include/c++/14.2.0/fstream" 3
+       
+# 37 "C:/mingw64/include/c++/14.2.0/fstream" 3
+
+
+
+
+
+
+# 1 "C:/mingw64/include/c++/14.2.0/cstdio" 1 3
+# 39 "C:/mingw64/include/c++/14.2.0/cstdio" 3
+       
+# 40 "C:/mingw64/include/c++/14.2.0/cstdio" 3
+# 44 "C:/mingw64/include/c++/14.2.0/fstream" 2 3
+# 1 "C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/basic_file.h" 1 3
+# 37 "C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/basic_file.h" 3
+       
+# 38 "C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/basic_file.h" 3
+
+
+# 1 "C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/c++io.h" 1 3
+# 35 "C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/c++io.h" 3
+# 1 "C:/mingw64/include/c++/14.2.0/cstdio" 1 3
+# 39 "C:/mingw64/include/c++/14.2.0/cstdio" 3
+       
+# 40 "C:/mingw64/include/c++/14.2.0/cstdio" 3
+# 36 "C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/c++io.h" 2 3
+
+
+namespace std
+{
+
+
+
+
+
+
+
+
+  typedef __gthread_mutex_t __c_lock;
+
+
+
+  typedef FILE __c_file;
+
+
+}
+# 41 "C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/basic_file.h" 2 3
+
+
+
+namespace std
+{
+
+
+
+  template<typename _CharT>
+    class __basic_file;
+
+
+  template<>
+    class __basic_file<char>
+    {
+
+      __c_file* _M_cfile;
+
+
+      bool _M_cfile_created;
+
+    public:
+      __basic_file(__c_lock* __lock = 0) throw ();
+
+
+      __basic_file(__basic_file&& __rv, __c_lock* = 0) noexcept
+      : _M_cfile(__rv._M_cfile), _M_cfile_created(__rv._M_cfile_created)
+      {
+ __rv._M_cfile = nullptr;
+ __rv._M_cfile_created = false;
+      }
+
+      __basic_file& operator=(const __basic_file&) = delete;
+      __basic_file& operator=(__basic_file&&) = delete;
+
+      void
+      swap(__basic_file& __f) noexcept
+      {
+ std::swap(_M_cfile, __f._M_cfile);
+ std::swap(_M_cfile_created, __f._M_cfile_created);
+      }
+
+
+      __basic_file*
+      open(const char* __name, ios_base::openmode __mode, int __prot = 0664);
+
+
+      __basic_file*
+      open(const wchar_t* __name, ios_base::openmode __mode);
+
+
+      __basic_file*
+      sys_open(__c_file* __file, ios_base::openmode);
+
+      __basic_file*
+      sys_open(int __fd, ios_base::openmode __mode) throw ();
+
+      __basic_file*
+      close();
+
+      __attribute__ ((__pure__)) bool
+      is_open() const throw ();
+
+      __attribute__ ((__pure__)) int
+      fd() throw ();
+
+      __attribute__ ((__pure__)) __c_file*
+      file() throw ();
+
+      ~__basic_file();
+
+      streamsize
+      xsputn(const char* __s, streamsize __n);
+
+      streamsize
+      xsputn_2(const char* __s1, streamsize __n1,
+        const char* __s2, streamsize __n2);
+
+      streamsize
+      xsgetn(char* __s, streamsize __n);
+
+      streamoff
+      seekoff(streamoff __off, ios_base::seekdir __way) throw ();
+
+      int
+      sync();
+
+      streamsize
+      showmanyc();
+
+
+
+
+
+      using native_handle_type = void*;
+
+
+
+
+      native_handle_type
+      native_handle() const noexcept;
+
+    };
+
+
+}
+# 45 "C:/mingw64/include/c++/14.2.0/fstream" 2 3
+
+
+
+
+
+# 1 "C:/mingw64/include/c++/14.2.0/bits/version.h" 1 3
+# 47 "C:/mingw64/include/c++/14.2.0/bits/version.h" 3
+       
+# 48 "C:/mingw64/include/c++/14.2.0/bits/version.h" 3
+# 51 "C:/mingw64/include/c++/14.2.0/fstream" 2 3
+
+
+
+
+
+
+namespace std
+{
+
+
+
+
+  template<typename _Path, typename _Result = _Path, typename _Path2
+    = decltype(std::declval<_Path&>().make_preferred().filename())>
+    using _If_fs_path = enable_if_t<is_same_v<_Path, _Path2>, _Result>;
+# 89 "C:/mingw64/include/c++/14.2.0/fstream" 3
+  template<typename _CharT, typename _Traits>
+    class basic_filebuf : public basic_streambuf<_CharT, _Traits>
+    {
+
+      template<typename _Tp>
+ using __chk_state = __and_<is_copy_assignable<_Tp>,
+       is_copy_constructible<_Tp>,
+       is_default_constructible<_Tp>>;
+
+      static_assert(__chk_state<typename _Traits::state_type>::value,
+      "state_type must be CopyAssignable, CopyConstructible"
+      " and DefaultConstructible");
+
+      static_assert(is_same<typename _Traits::pos_type,
+       fpos<typename _Traits::state_type>>::value,
+      "pos_type must be fpos<state_type>");
+
+    public:
+
+      typedef _CharT char_type;
+      typedef _Traits traits_type;
+      typedef typename traits_type::int_type int_type;
+      typedef typename traits_type::pos_type pos_type;
+      typedef typename traits_type::off_type off_type;
+
+      typedef basic_streambuf<char_type, traits_type> __streambuf_type;
+      typedef basic_filebuf<char_type, traits_type> __filebuf_type;
+      typedef __basic_file<char> __file_type;
+      typedef typename traits_type::state_type __state_type;
+      typedef codecvt<char_type, char, __state_type> __codecvt_type;
+
+      friend class ios_base;
+
+    protected:
+
+
+      __c_lock _M_lock;
+
+
+      __file_type _M_file;
+
+
+      ios_base::openmode _M_mode;
+
+
+      __state_type _M_state_beg;
+
+
+
+
+      __state_type _M_state_cur;
+
+
+
+      __state_type _M_state_last;
+
+
+      char_type* _M_buf;
+
+
+
+
+
+
+      size_t _M_buf_size;
+
+
+      bool _M_buf_allocated;
+# 165 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      bool _M_reading;
+      bool _M_writing;
+
+
+
+
+
+
+
+      char_type _M_pback;
+      char_type* _M_pback_cur_save;
+      char_type* _M_pback_end_save;
+      bool _M_pback_init;
+
+
+
+      const __codecvt_type* _M_codecvt;
+
+
+
+
+
+
+      char* _M_ext_buf;
+
+
+
+
+      streamsize _M_ext_buf_size;
+
+
+
+
+
+
+      const char* _M_ext_next;
+      char* _M_ext_end;
+
+
+
+
+
+
+      void
+      _M_create_pback()
+      {
+ if (!_M_pback_init)
+   {
+     _M_pback_cur_save = this->gptr();
+     _M_pback_end_save = this->egptr();
+     this->setg(&_M_pback, &_M_pback, &_M_pback + 1);
+     _M_pback_init = true;
+   }
+      }
+
+
+
+
+
+
+      void
+      _M_destroy_pback() throw()
+      {
+ if (_M_pback_init)
+   {
+
+     _M_pback_cur_save += this->gptr() != this->eback();
+     this->setg(_M_buf, _M_pback_cur_save, _M_pback_end_save);
+     _M_pback_init = false;
+   }
+      }
+
+    public:
+
+
+
+
+
+
+
+      basic_filebuf();
+
+
+      basic_filebuf(const basic_filebuf&) = delete;
+      basic_filebuf(basic_filebuf&&);
+
+
+
+
+
+      virtual
+      ~basic_filebuf()
+      {
+ try
+   { this->close(); }
+ catch(...)
+   { }
+      }
+
+
+      basic_filebuf& operator=(const basic_filebuf&) = delete;
+      basic_filebuf& operator=(basic_filebuf&&);
+      void swap(basic_filebuf&);
+
+
+
+
+
+
+      bool
+      is_open() const throw()
+      { return _M_file.is_open(); }
+# 319 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      __filebuf_type*
+      open(const char* __s, ios_base::openmode __mode);
+# 329 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      __filebuf_type*
+      open(const wchar_t* __s, ios_base::openmode __mode);
+# 340 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      __filebuf_type*
+      open(const std::string& __s, ios_base::openmode __mode)
+      { return open(__s.c_str(), __mode); }
+# 351 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      template<typename _Path>
+ _If_fs_path<_Path, __filebuf_type*>
+ open(const _Path& __s, ios_base::openmode __mode)
+ { return open(__s.c_str(), __mode); }
+# 370 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      __filebuf_type*
+      close();
+# 403 "C:/mingw64/include/c++/14.2.0/fstream" 3
+    protected:
+      void
+      _M_allocate_internal_buffer();
+
+      void
+      _M_destroy_internal_buffer() throw();
+
+
+      virtual streamsize
+      showmanyc();
+
+
+
+
+
+
+      virtual int_type
+      underflow();
+
+      virtual int_type
+      pbackfail(int_type __c = _Traits::eof());
+# 432 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      virtual int_type
+      overflow(int_type __c = _Traits::eof());
+
+
+
+      bool
+      _M_convert_to_external(char_type*, streamsize);
+# 452 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      virtual __streambuf_type*
+      setbuf(char_type* __s, streamsize __n);
+
+      virtual pos_type
+      seekoff(off_type __off, ios_base::seekdir __way,
+       ios_base::openmode __mode = ios_base::in | ios_base::out);
+
+      virtual pos_type
+      seekpos(pos_type __pos,
+       ios_base::openmode __mode = ios_base::in | ios_base::out);
+
+
+      pos_type
+      _M_seek(off_type __off, ios_base::seekdir __way, __state_type __state);
+
+      int
+      _M_get_ext_pos(__state_type &__state);
+
+      virtual int
+      sync();
+
+      virtual void
+      imbue(const locale& __loc);
+
+      virtual streamsize
+      xsgetn(char_type* __s, streamsize __n);
+
+      virtual streamsize
+      xsputn(const char_type* __s, streamsize __n);
+
+
+      bool
+      _M_terminate_output();
+# 498 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      _M_set_buffer(streamsize __off)
+      {
+ const bool __testin = _M_mode & ios_base::in;
+ const bool __testout = (_M_mode & ios_base::out
+    || _M_mode & ios_base::app);
+
+ if (__testin && __off > 0)
+   this->setg(_M_buf, _M_buf, _M_buf + __off);
+ else
+   this->setg(_M_buf, _M_buf, _M_buf);
+
+ if (__testout && __off == 0 && _M_buf_size > 1 )
+   this->setp(_M_buf, _M_buf + _M_buf_size - 1);
+ else
+   this->setp(0, 0);
+      }
+    };
+# 531 "C:/mingw64/include/c++/14.2.0/fstream" 3
+  template<typename _CharT, typename _Traits>
+    class basic_ifstream : public basic_istream<_CharT, _Traits>
+    {
+    public:
+
+      typedef _CharT char_type;
+      typedef _Traits traits_type;
+      typedef typename traits_type::int_type int_type;
+      typedef typename traits_type::pos_type pos_type;
+      typedef typename traits_type::off_type off_type;
+
+
+      typedef basic_filebuf<char_type, traits_type> __filebuf_type;
+      typedef basic_istream<char_type, traits_type> __istream_type;
+
+    private:
+      __filebuf_type _M_filebuf;
+
+    public:
+# 558 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      basic_ifstream() : __istream_type(), _M_filebuf()
+      { this->init(&_M_filebuf); }
+# 568 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      explicit
+      basic_ifstream(const char* __s, ios_base::openmode __mode = ios_base::in)
+      : __istream_type(), _M_filebuf()
+      {
+ this->init(&_M_filebuf);
+ this->open(__s, __mode);
+      }
+# 584 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      basic_ifstream(const wchar_t* __s,
+       ios_base::openmode __mode = ios_base::in)
+      : __istream_type(), _M_filebuf()
+      {
+ this->init(&_M_filebuf);
+ this->open(__s, __mode);
+      }
+# 601 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      explicit
+      basic_ifstream(const std::string& __s,
+       ios_base::openmode __mode = ios_base::in)
+      : __istream_type(), _M_filebuf()
+      {
+ this->init(&_M_filebuf);
+ this->open(__s, __mode);
+      }
+# 618 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      template<typename _Path, typename _Require = _If_fs_path<_Path>>
+ basic_ifstream(const _Path& __s,
+         ios_base::openmode __mode = ios_base::in)
+ : basic_ifstream(__s.c_str(), __mode)
+ { }
+
+
+      basic_ifstream(const basic_ifstream&) = delete;
+
+      basic_ifstream(basic_ifstream&& __rhs)
+      : __istream_type(std::move(__rhs)),
+      _M_filebuf(std::move(__rhs._M_filebuf))
+      { __istream_type::set_rdbuf(&_M_filebuf); }
+# 639 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      ~basic_ifstream()
+      { }
+
+
+
+
+      basic_ifstream&
+      operator=(const basic_ifstream&) = delete;
+
+      basic_ifstream&
+      operator=(basic_ifstream&& __rhs)
+      {
+ __istream_type::operator=(std::move(__rhs));
+ _M_filebuf = std::move(__rhs._M_filebuf);
+ return *this;
+      }
+
+      void
+      swap(basic_ifstream& __rhs)
+      {
+ __istream_type::swap(__rhs);
+ _M_filebuf.swap(__rhs._M_filebuf);
+      }
+# 671 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      __filebuf_type*
+      rdbuf() const
+      { return const_cast<__filebuf_type*>(&_M_filebuf); }
+
+
+
+
+
+      bool
+      is_open()
+      { return _M_filebuf.is_open(); }
+
+
+
+      bool
+      is_open() const
+      { return _M_filebuf.is_open(); }
+# 697 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      open(const char* __s, ios_base::openmode __mode = ios_base::in)
+      {
+ if (!_M_filebuf.open(__s, __mode | ios_base::in))
+   this->setstate(ios_base::failbit);
+ else
+
+
+   this->clear();
+      }
+# 717 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      open(const wchar_t* __s, ios_base::openmode __mode = ios_base::in)
+      {
+ if (!_M_filebuf.open(__s, __mode | ios_base::in))
+   this->setstate(ios_base::failbit);
+ else
+   this->clear();
+      }
+# 736 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      open(const std::string& __s, ios_base::openmode __mode = ios_base::in)
+      {
+ if (!_M_filebuf.open(__s, __mode | ios_base::in))
+   this->setstate(ios_base::failbit);
+ else
+
+
+   this->clear();
+      }
+# 756 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      template<typename _Path>
+ _If_fs_path<_Path, void>
+ open(const _Path& __s, ios_base::openmode __mode = ios_base::in)
+ { open(__s.c_str(), __mode); }
+# 769 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      close()
+      {
+ if (!_M_filebuf.close())
+   this->setstate(ios_base::failbit);
+      }
+# 784 "C:/mingw64/include/c++/14.2.0/fstream" 3
+    };
+# 801 "C:/mingw64/include/c++/14.2.0/fstream" 3
+  template<typename _CharT, typename _Traits>
+    class basic_ofstream : public basic_ostream<_CharT,_Traits>
+    {
+    public:
+
+      typedef _CharT char_type;
+      typedef _Traits traits_type;
+      typedef typename traits_type::int_type int_type;
+      typedef typename traits_type::pos_type pos_type;
+      typedef typename traits_type::off_type off_type;
+
+
+      typedef basic_filebuf<char_type, traits_type> __filebuf_type;
+      typedef basic_ostream<char_type, traits_type> __ostream_type;
+
+    private:
+      __filebuf_type _M_filebuf;
+
+    public:
+# 828 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      basic_ofstream(): __ostream_type(), _M_filebuf()
+      { this->init(&_M_filebuf); }
+# 838 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      explicit
+      basic_ofstream(const char* __s,
+       ios_base::openmode __mode = ios_base::out)
+      : __ostream_type(), _M_filebuf()
+      {
+ this->init(&_M_filebuf);
+ this->open(__s, __mode);
+      }
+# 856 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      basic_ofstream(const wchar_t* __s,
+       ios_base::openmode __mode = ios_base::out|ios_base::trunc)
+      : __ostream_type(), _M_filebuf()
+      {
+ this->init(&_M_filebuf);
+ this->open(__s, __mode);
+      }
+# 873 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      explicit
+      basic_ofstream(const std::string& __s,
+       ios_base::openmode __mode = ios_base::out)
+      : __ostream_type(), _M_filebuf()
+      {
+ this->init(&_M_filebuf);
+ this->open(__s, __mode);
+      }
+# 890 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      template<typename _Path, typename _Require = _If_fs_path<_Path>>
+ basic_ofstream(const _Path& __s,
+         ios_base::openmode __mode = ios_base::out)
+ : basic_ofstream(__s.c_str(), __mode)
+ { }
+
+
+      basic_ofstream(const basic_ofstream&) = delete;
+
+      basic_ofstream(basic_ofstream&& __rhs)
+      : __ostream_type(std::move(__rhs)),
+      _M_filebuf(std::move(__rhs._M_filebuf))
+      { __ostream_type::set_rdbuf(&_M_filebuf); }
+# 911 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      ~basic_ofstream()
+      { }
+
+
+
+
+      basic_ofstream&
+      operator=(const basic_ofstream&) = delete;
+
+      basic_ofstream&
+      operator=(basic_ofstream&& __rhs)
+      {
+ __ostream_type::operator=(std::move(__rhs));
+ _M_filebuf = std::move(__rhs._M_filebuf);
+ return *this;
+      }
+
+      void
+      swap(basic_ofstream& __rhs)
+      {
+ __ostream_type::swap(__rhs);
+ _M_filebuf.swap(__rhs._M_filebuf);
+      }
+# 943 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      __filebuf_type*
+      rdbuf() const
+      { return const_cast<__filebuf_type*>(&_M_filebuf); }
+
+
+
+
+
+      bool
+      is_open()
+      { return _M_filebuf.is_open(); }
+
+
+
+      bool
+      is_open() const
+      { return _M_filebuf.is_open(); }
+# 969 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      open(const char* __s, ios_base::openmode __mode = ios_base::out)
+      {
+ if (!_M_filebuf.open(__s, __mode | ios_base::out))
+   this->setstate(ios_base::failbit);
+ else
+
+
+   this->clear();
+      }
+# 989 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      open(const wchar_t* __s, ios_base::openmode __mode = ios_base::out)
+      {
+ if (!_M_filebuf.open(__s, __mode | ios_base::out))
+   this->setstate(ios_base::failbit);
+ else
+   this->clear();
+      }
+# 1008 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      open(const std::string& __s, ios_base::openmode __mode = ios_base::out)
+      {
+ if (!_M_filebuf.open(__s, __mode | ios_base::out))
+   this->setstate(ios_base::failbit);
+ else
+
+
+   this->clear();
+      }
+# 1028 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      template<typename _Path>
+ _If_fs_path<_Path, void>
+ open(const _Path& __s, ios_base::openmode __mode = ios_base::out)
+ { open(__s.c_str(), __mode); }
+# 1041 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      close()
+      {
+ if (!_M_filebuf.close())
+   this->setstate(ios_base::failbit);
+      }
+# 1056 "C:/mingw64/include/c++/14.2.0/fstream" 3
+    };
+# 1073 "C:/mingw64/include/c++/14.2.0/fstream" 3
+  template<typename _CharT, typename _Traits>
+    class basic_fstream : public basic_iostream<_CharT, _Traits>
+    {
+    public:
+
+      typedef _CharT char_type;
+      typedef _Traits traits_type;
+      typedef typename traits_type::int_type int_type;
+      typedef typename traits_type::pos_type pos_type;
+      typedef typename traits_type::off_type off_type;
+
+
+      typedef basic_filebuf<char_type, traits_type> __filebuf_type;
+      typedef basic_ios<char_type, traits_type> __ios_type;
+      typedef basic_iostream<char_type, traits_type> __iostream_type;
+
+    private:
+      __filebuf_type _M_filebuf;
+
+    public:
+# 1101 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      basic_fstream()
+      : __iostream_type(), _M_filebuf()
+      { this->init(&_M_filebuf); }
+
+
+
+
+
+
+      explicit
+      basic_fstream(const char* __s,
+      ios_base::openmode __mode = ios_base::in | ios_base::out)
+      : __iostream_type(0), _M_filebuf()
+      {
+ this->init(&_M_filebuf);
+ this->open(__s, __mode);
+      }
+
+
+
+
+
+
+
+      basic_fstream(const wchar_t* __s,
+      ios_base::openmode __mode = ios_base::in | ios_base::out)
+      : __iostream_type(0), _M_filebuf()
+      {
+ this->init(&_M_filebuf);
+ this->open(__s, __mode);
+      }
+# 1140 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      explicit
+      basic_fstream(const std::string& __s,
+      ios_base::openmode __mode = ios_base::in | ios_base::out)
+      : __iostream_type(0), _M_filebuf()
+      {
+ this->init(&_M_filebuf);
+ this->open(__s, __mode);
+      }
+
+
+
+
+
+
+
+      template<typename _Path, typename _Require = _If_fs_path<_Path>>
+ basic_fstream(const _Path& __s,
+        ios_base::openmode __mode = ios_base::in | ios_base::out)
+ : basic_fstream(__s.c_str(), __mode)
+ { }
+
+
+      basic_fstream(const basic_fstream&) = delete;
+
+      basic_fstream(basic_fstream&& __rhs)
+      : __iostream_type(std::move(__rhs)),
+      _M_filebuf(std::move(__rhs._M_filebuf))
+      { __iostream_type::set_rdbuf(&_M_filebuf); }
+# 1176 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      ~basic_fstream()
+      { }
+
+
+
+
+      basic_fstream&
+      operator=(const basic_fstream&) = delete;
+
+      basic_fstream&
+      operator=(basic_fstream&& __rhs)
+      {
+ __iostream_type::operator=(std::move(__rhs));
+ _M_filebuf = std::move(__rhs._M_filebuf);
+ return *this;
+      }
+
+      void
+      swap(basic_fstream& __rhs)
+      {
+ __iostream_type::swap(__rhs);
+ _M_filebuf.swap(__rhs._M_filebuf);
+      }
+# 1208 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      __filebuf_type*
+      rdbuf() const
+      { return const_cast<__filebuf_type*>(&_M_filebuf); }
+
+
+
+
+
+      bool
+      is_open()
+      { return _M_filebuf.is_open(); }
+
+
+
+      bool
+      is_open() const
+      { return _M_filebuf.is_open(); }
+# 1234 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      open(const char* __s,
+    ios_base::openmode __mode = ios_base::in | ios_base::out)
+      {
+ if (!_M_filebuf.open(__s, __mode))
+   this->setstate(ios_base::failbit);
+ else
+
+
+   this->clear();
+      }
+# 1255 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      open(const wchar_t* __s,
+    ios_base::openmode __mode = ios_base::in | ios_base::out)
+      {
+ if (!_M_filebuf.open(__s, __mode))
+   this->setstate(ios_base::failbit);
+ else
+   this->clear();
+      }
+# 1275 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      open(const std::string& __s,
+    ios_base::openmode __mode = ios_base::in | ios_base::out)
+      {
+ if (!_M_filebuf.open(__s, __mode))
+   this->setstate(ios_base::failbit);
+ else
+
+
+   this->clear();
+      }
+# 1296 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      template<typename _Path>
+ _If_fs_path<_Path, void>
+ open(const _Path& __s,
+      ios_base::openmode __mode = ios_base::in | ios_base::out)
+ { open(__s.c_str(), __mode); }
+# 1310 "C:/mingw64/include/c++/14.2.0/fstream" 3
+      void
+      close()
+      {
+ if (!_M_filebuf.close())
+   this->setstate(ios_base::failbit);
+      }
+# 1325 "C:/mingw64/include/c++/14.2.0/fstream" 3
+    };
+
+
+
+  template <class _CharT, class _Traits>
+    inline void
+    swap(basic_filebuf<_CharT, _Traits>& __x,
+  basic_filebuf<_CharT, _Traits>& __y)
+    { __x.swap(__y); }
+
+
+  template <class _CharT, class _Traits>
+    inline void
+    swap(basic_ifstream<_CharT, _Traits>& __x,
+  basic_ifstream<_CharT, _Traits>& __y)
+    { __x.swap(__y); }
+
+
+  template <class _CharT, class _Traits>
+    inline void
+    swap(basic_ofstream<_CharT, _Traits>& __x,
+  basic_ofstream<_CharT, _Traits>& __y)
+    { __x.swap(__y); }
+
+
+  template <class _CharT, class _Traits>
+    inline void
+    swap(basic_fstream<_CharT, _Traits>& __x,
+  basic_fstream<_CharT, _Traits>& __y)
+    { __x.swap(__y); }
+
+
+
+}
+
+# 1 "C:/mingw64/include/c++/14.2.0/bits/fstream.tcc" 1 3
+# 37 "C:/mingw64/include/c++/14.2.0/bits/fstream.tcc" 3
+       
+# 38 "C:/mingw64/include/c++/14.2.0/bits/fstream.tcc" 3
+
+
+
+# 1 "C:/mingw64/include/c++/14.2.0/cerrno" 1 3
+# 39 "C:/mingw64/include/c++/14.2.0/cerrno" 3
+       
+# 40 "C:/mingw64/include/c++/14.2.0/cerrno" 3
+# 42 "C:/mingw64/include/c++/14.2.0/bits/fstream.tcc" 2 3
+
+namespace std
+{
+
+
+  template<typename _CharT, typename _Traits>
+    void
+    basic_filebuf<_CharT, _Traits>::
+    _M_allocate_internal_buffer()
+    {
+
+
+      if (!_M_buf_allocated && !_M_buf)
+ {
+   _M_buf = new char_type[_M_buf_size];
+   _M_buf_allocated = true;
+ }
+    }
+
+  template<typename _CharT, typename _Traits>
+    void
+    basic_filebuf<_CharT, _Traits>::
+    _M_destroy_internal_buffer() throw()
+    {
+      if (_M_buf_allocated)
+ {
+   delete [] _M_buf;
+   _M_buf = 0;
+   _M_buf_allocated = false;
+ }
+      delete [] _M_ext_buf;
+      _M_ext_buf = 0;
+      _M_ext_buf_size = 0;
+      _M_ext_next = 0;
+      _M_ext_end = 0;
+    }
+
+  template<typename _CharT, typename _Traits>
+    basic_filebuf<_CharT, _Traits>::
+    basic_filebuf() : __streambuf_type(), _M_lock(), _M_file(&_M_lock),
+    _M_mode(ios_base::openmode(0)), _M_state_beg(), _M_state_cur(),
+    _M_state_last(), _M_buf(0), _M_buf_size(4096),
+    _M_buf_allocated(false), _M_reading(false), _M_writing(false), _M_pback(),
+    _M_pback_cur_save(0), _M_pback_end_save(0), _M_pback_init(false),
+    _M_codecvt(0), _M_ext_buf(0), _M_ext_buf_size(0), _M_ext_next(0),
+    _M_ext_end(0)
+    {
+      _M_codecvt = std::__try_use_facet<__codecvt_type>(this->_M_buf_locale);
+    }
+
+
+  template<typename _CharT, typename _Traits>
+    basic_filebuf<_CharT, _Traits>::
+    basic_filebuf(basic_filebuf&& __rhs)
+    : __streambuf_type(__rhs),
+    _M_lock(), _M_file(std::move(__rhs._M_file), &_M_lock),
+    _M_mode(std::__exchange(__rhs._M_mode, ios_base::openmode(0))),
+    _M_state_beg(std::move(__rhs._M_state_beg)),
+    _M_state_cur(std::move(__rhs._M_state_cur)),
+    _M_state_last(std::move(__rhs._M_state_last)),
+    _M_buf(std::__exchange(__rhs._M_buf, nullptr)),
+    _M_buf_size(std::__exchange(__rhs._M_buf_size, 1)),
+    _M_buf_allocated(std::__exchange(__rhs._M_buf_allocated, false)),
+    _M_reading(std::__exchange(__rhs._M_reading, false)),
+    _M_writing(std::__exchange(__rhs._M_writing, false)),
+    _M_pback(__rhs._M_pback),
+    _M_pback_cur_save(std::__exchange(__rhs._M_pback_cur_save, nullptr)),
+    _M_pback_end_save(std::__exchange(__rhs._M_pback_end_save, nullptr)),
+    _M_pback_init(std::__exchange(__rhs._M_pback_init, false)),
+    _M_codecvt(__rhs._M_codecvt),
+    _M_ext_buf(std::__exchange(__rhs._M_ext_buf, nullptr)),
+    _M_ext_buf_size(std::__exchange(__rhs._M_ext_buf_size, 0)),
+    _M_ext_next(std::__exchange(__rhs._M_ext_next, nullptr)),
+    _M_ext_end(std::__exchange(__rhs._M_ext_end, nullptr))
+    {
+      __rhs._M_set_buffer(-1);
+      __rhs._M_state_last = __rhs._M_state_cur = __rhs._M_state_beg;
+    }
+
+  template<typename _CharT, typename _Traits>
+    basic_filebuf<_CharT, _Traits>&
+    basic_filebuf<_CharT, _Traits>::
+    operator=(basic_filebuf&& __rhs)
+    {
+      this->close();
+      __streambuf_type::operator=(__rhs);
+      _M_file.swap(__rhs._M_file);
+      _M_mode = std::__exchange(__rhs._M_mode, ios_base::openmode(0));
+      _M_state_beg = std::move(__rhs._M_state_beg);
+      _M_state_cur = std::move(__rhs._M_state_cur);
+      _M_state_last = std::move(__rhs._M_state_last);
+      _M_buf = std::__exchange(__rhs._M_buf, nullptr);
+      _M_buf_size = std::__exchange(__rhs._M_buf_size, 1);
+      _M_buf_allocated = std::__exchange(__rhs._M_buf_allocated, false);
+      _M_ext_buf = std::__exchange(__rhs._M_ext_buf, nullptr);
+      _M_ext_buf_size = std::__exchange(__rhs._M_ext_buf_size, 0);
+      _M_ext_next = std::__exchange(__rhs._M_ext_next, nullptr);
+      _M_ext_end = std::__exchange(__rhs._M_ext_end, nullptr);
+      _M_reading = std::__exchange(__rhs._M_reading, false);
+      _M_writing = std::__exchange(__rhs._M_writing, false);
+      _M_pback_cur_save = std::__exchange(__rhs._M_pback_cur_save, nullptr);
+      _M_pback_end_save = std::__exchange(__rhs._M_pback_end_save, nullptr);
+      _M_pback_init = std::__exchange(__rhs._M_pback_init, false);
+      __rhs._M_set_buffer(-1);
+      __rhs._M_state_last = __rhs._M_state_cur = __rhs._M_state_beg;
+      return *this;
+    }
+
+  template<typename _CharT, typename _Traits>
+    void
+    basic_filebuf<_CharT, _Traits>::
+    swap(basic_filebuf& __rhs)
+    {
+      __streambuf_type::swap(__rhs);
+      _M_file.swap(__rhs._M_file);
+      std::swap(_M_mode, __rhs._M_mode);
+      std::swap(_M_state_beg, __rhs._M_state_beg);
+      std::swap(_M_state_cur, __rhs._M_state_cur);
+      std::swap(_M_state_last, __rhs._M_state_last);
+      std::swap(_M_buf, __rhs._M_buf);
+      std::swap(_M_buf_size, __rhs._M_buf_size);
+      std::swap(_M_buf_allocated, __rhs._M_buf_allocated);
+      std::swap(_M_ext_buf, __rhs._M_ext_buf);
+      std::swap(_M_ext_buf_size, __rhs._M_ext_buf_size);
+      std::swap(_M_ext_next, __rhs._M_ext_next);
+      std::swap(_M_ext_end, __rhs._M_ext_end);
+      std::swap(_M_reading, __rhs._M_reading);
+      std::swap(_M_writing, __rhs._M_writing);
+      std::swap(_M_pback_cur_save, __rhs._M_pback_cur_save);
+      std::swap(_M_pback_end_save, __rhs._M_pback_end_save);
+      std::swap(_M_pback_init, __rhs._M_pback_init);
+    }
+
+
+  template<typename _CharT, typename _Traits>
+    typename basic_filebuf<_CharT, _Traits>::__filebuf_type*
+    basic_filebuf<_CharT, _Traits>::
+    open(const char* __s, ios_base::openmode __mode)
+    {
+      __filebuf_type *__ret = 0;
+      if (!this->is_open())
+ {
+   _M_file.open(__s, __mode);
+   if (this->is_open())
+     {
+       _M_allocate_internal_buffer();
+       _M_mode = __mode;
+
+
+       _M_reading = false;
+       _M_writing = false;
+       _M_set_buffer(-1);
+
+
+       _M_state_last = _M_state_cur = _M_state_beg;
+
+
+       if ((__mode & ios_base::ate)
+    && this->seekoff(0, ios_base::end, __mode)
+    == pos_type(off_type(-1)))
+  this->close();
+       else
+  __ret = this;
+     }
+ }
+      return __ret;
+    }
+
+
+  template<typename _CharT, typename _Traits>
+    basic_filebuf<_CharT, _Traits>*
+    basic_filebuf<_CharT, _Traits>::
+    open(const wchar_t* __s, ios_base::openmode __mode)
+    {
+      __filebuf_type *__ret = 0;
+      if (!this->is_open())
+ {
+   _M_file.open(__s, __mode);
+   if (this->is_open())
+     {
+       _M_allocate_internal_buffer();
+       _M_mode = __mode;
+
+
+       _M_reading = false;
+       _M_writing = false;
+       _M_set_buffer(-1);
+
+
+       _M_state_last = _M_state_cur = _M_state_beg;
+
+
+       if ((__mode & ios_base::ate)
+    && this->seekoff(0, ios_base::end, __mode)
+    == pos_type(off_type(-1)))
+  this->close();
+       else
+  __ret = this;
+     }
+ }
+      return __ret;
+    }
+
+
+  template<typename _CharT, typename _Traits>
+    typename basic_filebuf<_CharT, _Traits>::__filebuf_type*
+    basic_filebuf<_CharT, _Traits>::
+    close()
+    {
+      if (!this->is_open())
+ return 0;
+
+      bool __testfail = false;
+      {
+
+ struct __close_sentry
+ {
+   basic_filebuf *__fb;
+   __close_sentry (basic_filebuf *__fbi): __fb(__fbi) { }
+   ~__close_sentry ()
+   {
+     __fb->_M_mode = ios_base::openmode(0);
+     __fb->_M_pback_init = false;
+     __fb->_M_destroy_internal_buffer();
+     __fb->_M_reading = false;
+     __fb->_M_writing = false;
+     __fb->_M_set_buffer(-1);
+     __fb->_M_state_last = __fb->_M_state_cur = __fb->_M_state_beg;
+   }
+ } __cs (this);
+
+ try
+   {
+     if (!_M_terminate_output())
+       __testfail = true;
+   }
+ catch(...)
+   {
+     _M_file.close();
+     throw;
+   }
+      }
+
+      if (!_M_file.close())
+ __testfail = true;
+
+      if (__testfail)
+ return 0;
+      else
+ return this;
+    }
+
+  template<typename _CharT, typename _Traits>
+    streamsize
+    basic_filebuf<_CharT, _Traits>::
+    showmanyc()
+    {
+      streamsize __ret = -1;
+      const bool __testin = _M_mode & ios_base::in;
+      if (__testin && this->is_open())
+ {
+
+
+   __ret = this->egptr() - this->gptr();
+
+
+
+   const bool __testbinary = _M_mode & ios_base::binary;
+   if (__check_facet(_M_codecvt).encoding() >= 0
+       && __testbinary)
+
+
+
+     __ret += _M_file.showmanyc() / _M_codecvt->max_length();
+ }
+      return __ret;
+    }
+
+  template<typename _CharT, typename _Traits>
+    typename basic_filebuf<_CharT, _Traits>::int_type
+    basic_filebuf<_CharT, _Traits>::
+    underflow()
+    {
+      int_type __ret = traits_type::eof();
+      const bool __testin = _M_mode & ios_base::in;
+      if (__testin)
+ {
+   if (_M_writing)
+     {
+       if (overflow() == traits_type::eof())
+  return __ret;
+       _M_set_buffer(-1);
+       _M_writing = false;
+     }
+
+
+
+   _M_destroy_pback();
+
+   if (this->gptr() < this->egptr())
+     return traits_type::to_int_type(*this->gptr());
+
+
+   const size_t __buflen = _M_buf_size > 1 ? _M_buf_size - 1 : 1;
+
+
+   bool __got_eof = false;
+
+   streamsize __ilen = 0;
+   codecvt_base::result __r = codecvt_base::ok;
+   if (__check_facet(_M_codecvt).always_noconv())
+     {
+       __ilen = _M_file.xsgetn(reinterpret_cast<char*>(this->eback()),
+          __buflen);
+       if (__ilen == 0)
+  __got_eof = true;
+     }
+   else
+     {
+
+
+       const int __enc = _M_codecvt->encoding();
+       streamsize __blen;
+       streamsize __rlen;
+       if (__enc > 0)
+  __blen = __rlen = __buflen * __enc;
+       else
+  {
+    __blen = __buflen + _M_codecvt->max_length() - 1;
+    __rlen = __buflen;
+  }
+       const streamsize __remainder = _M_ext_end - _M_ext_next;
+       __rlen = __rlen > __remainder ? __rlen - __remainder : 0;
+
+
+
+       if (_M_reading && this->egptr() == this->eback() && __remainder)
+  __rlen = 0;
+
+
+
+       if (_M_ext_buf_size < __blen)
+  {
+    char* __buf = new char[__blen];
+    if (__remainder)
+      __builtin_memcpy(__buf, _M_ext_next, __remainder);
+
+    delete [] _M_ext_buf;
+    _M_ext_buf = __buf;
+    _M_ext_buf_size = __blen;
+  }
+       else if (__remainder)
+  __builtin_memmove(_M_ext_buf, _M_ext_next, __remainder);
+
+       _M_ext_next = _M_ext_buf;
+       _M_ext_end = _M_ext_buf + __remainder;
+       _M_state_last = _M_state_cur;
+
+       do
+  {
+    if (__rlen > 0)
+      {
+
+
+
+        if (_M_ext_end - _M_ext_buf + __rlen > _M_ext_buf_size)
+   {
+     __throw_ios_failure(("basic_filebuf::underflow " "codecvt::max_length() " "is not valid")
+
+                          );
+   }
+        streamsize __elen = _M_file.xsgetn(_M_ext_end, __rlen);
+        if (__elen == 0)
+   __got_eof = true;
+        else if (__elen == -1)
+   break;
+        _M_ext_end += __elen;
+      }
+
+    char_type* __iend = this->eback();
+    if (_M_ext_next < _M_ext_end)
+      __r = _M_codecvt->in(_M_state_cur, _M_ext_next,
+      _M_ext_end, _M_ext_next,
+      this->eback(),
+      this->eback() + __buflen, __iend);
+    if (__r == codecvt_base::noconv)
+      {
+        size_t __avail = _M_ext_end - _M_ext_buf;
+        __ilen = std::min(__avail, __buflen);
+        traits_type::copy(this->eback(),
+     reinterpret_cast<char_type*>
+     (_M_ext_buf), __ilen);
+        _M_ext_next = _M_ext_buf + __ilen;
+      }
+    else
+      __ilen = __iend - this->eback();
+
+
+
+
+    if (__r == codecvt_base::error)
+      break;
+
+    __rlen = 1;
+  }
+       while (__ilen == 0 && !__got_eof);
+     }
+
+   if (__ilen > 0)
+     {
+       _M_set_buffer(__ilen);
+       _M_reading = true;
+       __ret = traits_type::to_int_type(*this->gptr());
+     }
+   else if (__got_eof)
+     {
+
+
+
+       _M_set_buffer(-1);
+       _M_reading = false;
+
+
+       if (__r == codecvt_base::partial)
+  __throw_ios_failure(("basic_filebuf::underflow " "incomplete character in file")
+                                       );
+     }
+   else if (__r == codecvt_base::error)
+     __throw_ios_failure(("basic_filebuf::underflow " "invalid byte sequence in file")
+                                    );
+   else
+     __throw_ios_failure(("basic_filebuf::underflow " "error reading the file")
+                             , (*_errno()));
+ }
+      return __ret;
+    }
+
+  template<typename _CharT, typename _Traits>
+    typename basic_filebuf<_CharT, _Traits>::int_type
+    basic_filebuf<_CharT, _Traits>::
+    pbackfail(int_type __i)
+    {
+      int_type __ret = traits_type::eof();
+      const bool __testin = _M_mode & ios_base::in;
+      if (__testin)
+ {
+   if (_M_writing)
+     {
+       if (overflow() == traits_type::eof())
+  return __ret;
+       _M_set_buffer(-1);
+       _M_writing = false;
+     }
+
+
+   const bool __testpb = _M_pback_init;
+   const bool __testeof = traits_type::eq_int_type(__i, __ret);
+   int_type __tmp;
+   if (this->eback() < this->gptr())
+     {
+       this->gbump(-1);
+       __tmp = traits_type::to_int_type(*this->gptr());
+     }
+   else if (this->seekoff(-1, ios_base::cur) != pos_type(off_type(-1)))
+     {
+       __tmp = this->underflow();
+       if (traits_type::eq_int_type(__tmp, __ret))
+  return __ret;
+     }
+   else
+     {
+
+
+
+
+
+       return __ret;
+     }
+
+
+
+   if (!__testeof && traits_type::eq_int_type(__i, __tmp))
+     __ret = __i;
+   else if (__testeof)
+     __ret = traits_type::not_eof(__i);
+   else if (!__testpb)
+     {
+       _M_create_pback();
+       _M_reading = true;
+       *this->gptr() = traits_type::to_char_type(__i);
+       __ret = __i;
+     }
+ }
+      return __ret;
+    }
+
+  template<typename _CharT, typename _Traits>
+    typename basic_filebuf<_CharT, _Traits>::int_type
+    basic_filebuf<_CharT, _Traits>::
+    overflow(int_type __c)
+    {
+      int_type __ret = traits_type::eof();
+      const bool __testeof = traits_type::eq_int_type(__c, __ret);
+      const bool __testout = (_M_mode & ios_base::out
+         || _M_mode & ios_base::app);
+      if (__testout)
+ {
+          if (_M_reading)
+            {
+              _M_destroy_pback();
+              const int __gptr_off = _M_get_ext_pos(_M_state_last);
+              if (_M_seek(__gptr_off, ios_base::cur, _M_state_last)
+                  == pos_type(off_type(-1)))
+                return __ret;
+            }
+   if (this->pbase() < this->pptr())
+     {
+
+       if (!__testeof)
+  {
+    *this->pptr() = traits_type::to_char_type(__c);
+    this->pbump(1);
+  }
+
+
+
+       if (_M_convert_to_external(this->pbase(),
+      this->pptr() - this->pbase()))
+  {
+    _M_set_buffer(0);
+    __ret = traits_type::not_eof(__c);
+  }
+     }
+   else if (_M_buf_size > 1)
+     {
+
+
+
+       _M_set_buffer(0);
+       _M_writing = true;
+       if (!__testeof)
+  {
+    *this->pptr() = traits_type::to_char_type(__c);
+    this->pbump(1);
+  }
+       __ret = traits_type::not_eof(__c);
+     }
+   else
+     {
+
+       char_type __conv = traits_type::to_char_type(__c);
+       if (__testeof || _M_convert_to_external(&__conv, 1))
+  {
+    _M_writing = true;
+    __ret = traits_type::not_eof(__c);
+  }
+     }
+ }
+      return __ret;
+    }
+
+  template<typename _CharT, typename _Traits>
+    bool
+    basic_filebuf<_CharT, _Traits>::
+    _M_convert_to_external(_CharT* __ibuf, streamsize __ilen)
+    {
+
+      streamsize __elen;
+      streamsize __plen;
+      if (__check_facet(_M_codecvt).always_noconv())
+ {
+   __elen = _M_file.xsputn(reinterpret_cast<char*>(__ibuf), __ilen);
+   __plen = __ilen;
+ }
+      else
+ {
+
+
+   streamsize __blen = __ilen * _M_codecvt->max_length();
+   char* __buf = static_cast<char*>(__builtin_alloca(__blen));
+
+   char* __bend;
+   const char_type* __iend;
+   codecvt_base::result __r;
+   __r = _M_codecvt->out(_M_state_cur, __ibuf, __ibuf + __ilen,
+    __iend, __buf, __buf + __blen, __bend);
+
+   if (__r == codecvt_base::ok || __r == codecvt_base::partial)
+     __blen = __bend - __buf;
+   else if (__r == codecvt_base::noconv)
+     {
+
+       __buf = reinterpret_cast<char*>(__ibuf);
+       __blen = __ilen;
+     }
+   else
+     __throw_ios_failure(("basic_filebuf::_M_convert_to_external " "conversion error")
+                           );
+
+   __elen = _M_file.xsputn(__buf, __blen);
+   __plen = __blen;
+
+
+   if (__r == codecvt_base::partial && __elen == __plen)
+     {
+       const char_type* __iresume = __iend;
+       streamsize __rlen = this->pptr() - __iend;
+       __r = _M_codecvt->out(_M_state_cur, __iresume,
+        __iresume + __rlen, __iend, __buf,
+        __buf + __blen, __bend);
+       if (__r != codecvt_base::error)
+  {
+    __rlen = __bend - __buf;
+    __elen = _M_file.xsputn(__buf, __rlen);
+    __plen = __rlen;
+  }
+       else
+  __throw_ios_failure(("basic_filebuf::_M_convert_to_external " "conversion error")
+                        );
+     }
+ }
+      return __elen == __plen;
+    }
+
+  template<typename _CharT, typename _Traits>
+    streamsize
+    basic_filebuf<_CharT, _Traits>::
+    xsgetn(_CharT* __s, streamsize __n)
+    {
+
+      streamsize __ret = 0;
+      if (_M_pback_init)
+ {
+   if (__n > 0 && this->gptr() == this->eback())
+     {
+       *__s++ = *this->gptr();
+       this->gbump(1);
+       __ret = 1;
+       --__n;
+     }
+   _M_destroy_pback();
+ }
+      else if (_M_writing)
+ {
+   if (overflow() == traits_type::eof())
+     return __ret;
+   _M_set_buffer(-1);
+   _M_writing = false;
+ }
+
+
+
+
+      const bool __testin = _M_mode & ios_base::in;
+      const streamsize __buflen = _M_buf_size > 1 ? _M_buf_size - 1 : 1;
+
+      if (__n > __buflen && __check_facet(_M_codecvt).always_noconv()
+   && __testin)
+ {
+
+   const streamsize __avail = this->egptr() - this->gptr();
+   if (__avail != 0)
+     {
+       traits_type::copy(__s, this->gptr(), __avail);
+       __s += __avail;
+       this->setg(this->eback(), this->gptr() + __avail, this->egptr());
+       __ret += __avail;
+       __n -= __avail;
+     }
+
+
+
+   streamsize __len;
+   for (;;)
+     {
+       __len = _M_file.xsgetn(reinterpret_cast<char*>(__s), __n);
+       if (__len == -1)
+  __throw_ios_failure(("basic_filebuf::xsgetn " "error reading the file")
+                              , (*_errno()));
+       if (__len == 0)
+  break;
+
+       __n -= __len;
+       __ret += __len;
+       if (__n == 0)
+  break;
+
+       __s += __len;
+     }
+
+   if (__n == 0)
+     {
+
+       _M_reading = true;
+     }
+   else if (__len == 0)
+     {
+
+
+
+       _M_set_buffer(-1);
+       _M_reading = false;
+     }
+ }
+      else
+ __ret += __streambuf_type::xsgetn(__s, __n);
+
+      return __ret;
+    }
+
+  template<typename _CharT, typename _Traits>
+    streamsize
+    basic_filebuf<_CharT, _Traits>::
+    xsputn(const _CharT* __s, streamsize __n)
+    {
+      streamsize __ret = 0;
+
+
+
+      const bool __testout = (_M_mode & ios_base::out
+         || _M_mode & ios_base::app);
+      if (__check_facet(_M_codecvt).always_noconv()
+   && __testout && !_M_reading)
+ {
+   streamsize __bufavail = this->epptr() - this->pptr();
+
+
+   if (!_M_writing && _M_buf_size > 1)
+     __bufavail = _M_buf_size - 1;
+
+   if (__n >= __bufavail)
+     {
+       const streamsize __buffill = this->pptr() - this->pbase();
+       const char* __buf = reinterpret_cast<const char*>(this->pbase());
+       __ret = _M_file.xsputn_2(__buf, __buffill,
+           reinterpret_cast<const char*>(__s),
+           __n);
+       if (__ret == __buffill + __n)
+  {
+    _M_set_buffer(0);
+    _M_writing = true;
+  }
+       if (__ret > __buffill)
+  __ret -= __buffill;
+       else
+  __ret = 0;
+     }
+   else
+     __ret = __streambuf_type::xsputn(__s, __n);
+ }
+       else
+  __ret = __streambuf_type::xsputn(__s, __n);
+       return __ret;
+    }
+
+  template<typename _CharT, typename _Traits>
+    typename basic_filebuf<_CharT, _Traits>::__streambuf_type*
+    basic_filebuf<_CharT, _Traits>::
+    setbuf(char_type* __s, streamsize __n)
+    {
+      if (!this->is_open())
+ {
+   if (__s == 0 && __n == 0)
+     _M_buf_size = 1;
+   else if (__s && __n > 0)
+     {
+# 816 "C:/mingw64/include/c++/14.2.0/bits/fstream.tcc" 3
+       _M_buf = __s;
+       _M_buf_size = __n;
+     }
+ }
+      return this;
+    }
+
+
+
+
+  template<typename _CharT, typename _Traits>
+    typename basic_filebuf<_CharT, _Traits>::pos_type
+    basic_filebuf<_CharT, _Traits>::
+    seekoff(off_type __off, ios_base::seekdir __way, ios_base::openmode)
+    {
+      int __width = 0;
+      if (_M_codecvt)
+ __width = _M_codecvt->encoding();
+      if (__width < 0)
+ __width = 0;
+
+      pos_type __ret = pos_type(off_type(-1));
+      const bool __testfail = __off != 0 && __width <= 0;
+      if (this->is_open() && !__testfail)
+ {
+
+
+
+
+   bool __no_movement = __way == ios_base::cur && __off == 0
+     && (!_M_writing || _M_codecvt->always_noconv());
+
+
+   if (!__no_movement)
+     _M_destroy_pback();
+
+
+
+
+
+
+   __state_type __state = _M_state_beg;
+   off_type __computed_off = __off * __width;
+   if (_M_reading && __way == ios_base::cur)
+     {
+       __state = _M_state_last;
+       __computed_off += _M_get_ext_pos(__state);
+     }
+   if (!__no_movement)
+     __ret = _M_seek(__computed_off, __way, __state);
+   else
+     {
+       if (_M_writing)
+  __computed_off = this->pptr() - this->pbase();
+
+       off_type __file_off = _M_file.seekoff(0, ios_base::cur);
+       if (__file_off != off_type(-1))
+  {
+    __ret = __file_off + __computed_off;
+    __ret.state(__state);
+  }
+     }
+ }
+      return __ret;
+    }
+
+
+
+
+
+  template<typename _CharT, typename _Traits>
+    typename basic_filebuf<_CharT, _Traits>::pos_type
+    basic_filebuf<_CharT, _Traits>::
+    seekpos(pos_type __pos, ios_base::openmode)
+    {
+      pos_type __ret = pos_type(off_type(-1));
+      if (this->is_open())
+ {
+
+   _M_destroy_pback();
+   __ret = _M_seek(off_type(__pos), ios_base::beg, __pos.state());
+ }
+      return __ret;
+    }
+
+  template<typename _CharT, typename _Traits>
+    typename basic_filebuf<_CharT, _Traits>::pos_type
+    basic_filebuf<_CharT, _Traits>::
+    _M_seek(off_type __off, ios_base::seekdir __way, __state_type __state)
+    {
+      pos_type __ret = pos_type(off_type(-1));
+      if (_M_terminate_output())
+ {
+   off_type __file_off = _M_file.seekoff(__off, __way);
+   if (__file_off != off_type(-1))
+     {
+       _M_reading = false;
+       _M_writing = false;
+       _M_ext_next = _M_ext_end = _M_ext_buf;
+       _M_set_buffer(-1);
+       _M_state_cur = __state;
+       __ret = __file_off;
+       __ret.state(_M_state_cur);
+     }
+ }
+      return __ret;
+    }
+
+
+
+
+  template<typename _CharT, typename _Traits>
+    int basic_filebuf<_CharT, _Traits>::
+    _M_get_ext_pos(__state_type& __state)
+    {
+      if (_M_codecvt->always_noconv())
+        return this->gptr() - this->egptr();
+      else
+        {
+
+
+
+          const int __gptr_off =
+            _M_codecvt->length(__state, _M_ext_buf, _M_ext_next,
+                               this->gptr() - this->eback());
+          return _M_ext_buf + __gptr_off - _M_ext_end;
+        }
+    }
+
+  template<typename _CharT, typename _Traits>
+    bool
+    basic_filebuf<_CharT, _Traits>::
+    _M_terminate_output()
+    {
+
+      bool __testvalid = true;
+      if (this->pbase() < this->pptr())
+ {
+   const int_type __tmp = this->overflow();
+   if (traits_type::eq_int_type(__tmp, traits_type::eof()))
+     __testvalid = false;
+ }
+
+
+      if (_M_writing && !__check_facet(_M_codecvt).always_noconv()
+   && __testvalid)
+ {
+
+
+
+   const size_t __blen = 128;
+   char __buf[__blen];
+   codecvt_base::result __r;
+   streamsize __ilen = 0;
+
+   do
+     {
+       char* __next;
+       __r = _M_codecvt->unshift(_M_state_cur, __buf,
+     __buf + __blen, __next);
+       if (__r == codecvt_base::error)
+  __testvalid = false;
+       else if (__r == codecvt_base::ok ||
+         __r == codecvt_base::partial)
+  {
+    __ilen = __next - __buf;
+    if (__ilen > 0)
+      {
+        const streamsize __elen = _M_file.xsputn(__buf, __ilen);
+        if (__elen != __ilen)
+   __testvalid = false;
+      }
+  }
+     }
+   while (__r == codecvt_base::partial && __ilen > 0 && __testvalid);
+
+   if (__testvalid)
+     {
+
+
+
+
+       const int_type __tmp = this->overflow();
+       if (traits_type::eq_int_type(__tmp, traits_type::eof()))
+  __testvalid = false;
+     }
+ }
+      return __testvalid;
+    }
+
+  template<typename _CharT, typename _Traits>
+    int
+    basic_filebuf<_CharT, _Traits>::
+    sync()
+    {
+
+
+      int __ret = 0;
+      if (this->pbase() < this->pptr())
+ {
+   const int_type __tmp = this->overflow();
+   if (traits_type::eq_int_type(__tmp, traits_type::eof()))
+     __ret = -1;
+ }
+      return __ret;
+    }
+
+  template<typename _CharT, typename _Traits>
+    void
+    basic_filebuf<_CharT, _Traits>::
+    imbue(const locale& __loc)
+    {
+      bool __testvalid = true;
+
+      const __codecvt_type* const _M_codecvt_tmp
+ = __try_use_facet<__codecvt_type>(__loc);
+
+      if (this->is_open())
+ {
+
+   if ((_M_reading || _M_writing)
+       && __check_facet(_M_codecvt).encoding() == -1)
+     __testvalid = false;
+   else
+     {
+       if (_M_reading)
+  {
+    if (__check_facet(_M_codecvt).always_noconv())
+      {
+        if (_M_codecvt_tmp
+     && !__check_facet(_M_codecvt_tmp).always_noconv())
+   __testvalid = this->seekoff(0, ios_base::cur, _M_mode)
+                 != pos_type(off_type(-1));
+      }
+    else
+      {
+
+        _M_ext_next = _M_ext_buf
+   + _M_codecvt->length(_M_state_last, _M_ext_buf,
+          _M_ext_next,
+          this->gptr() - this->eback());
+        const streamsize __remainder = _M_ext_end - _M_ext_next;
+        if (__remainder)
+   __builtin_memmove(_M_ext_buf, _M_ext_next, __remainder);
+
+        _M_ext_next = _M_ext_buf;
+        _M_ext_end = _M_ext_buf + __remainder;
+        _M_set_buffer(-1);
+        _M_state_last = _M_state_cur = _M_state_beg;
+      }
+  }
+       else if (_M_writing && (__testvalid = _M_terminate_output()))
+  _M_set_buffer(-1);
+     }
+ }
+
+      if (__testvalid)
+ _M_codecvt = _M_codecvt_tmp;
+      else
+ _M_codecvt = 0;
+    }
+
+
+
+
+  extern template class basic_filebuf<char>;
+  extern template class basic_ifstream<char>;
+  extern template class basic_ofstream<char>;
+  extern template class basic_fstream<char>;
+
+
+  extern template class basic_filebuf<wchar_t>;
+  extern template class basic_ifstream<wchar_t>;
+  extern template class basic_ofstream<wchar_t>;
+  extern template class basic_fstream<wchar_t>;
+
+
+
+
+}
+# 1361 "C:/mingw64/include/c++/14.2.0/fstream" 2 3
+# 8 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h" 1
 
 
@@ -103607,7 +105637,7 @@ public:
 
     virtual ~Sequence() {}
 };
-# 8 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 9 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArraySmart.h" 1
 
 
@@ -103854,7 +105884,7 @@ public:
         data[index] = item;
     }
 };
-# 9 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 10 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedListSmart.h" 1
 
 
@@ -104218,7 +106248,7 @@ public:
         *(current->data) = item;
     }
 };
-# 10 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 11 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedList.h" 1
 # 10 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedList.h"
 template<class T>
@@ -104455,9 +106485,8 @@ void LinkedList<T>::Set(int index, const T& value) {
     current->value = value;
 }
 # 96 "C:/Users/makar/CLionProjects/laba2/DataStructures/LinkedList.h" 2
-# 11 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 12 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/ISorter.h" 1
-
 
 
 
@@ -104465,10 +106494,10 @@ void LinkedList<T>::Set(int index, const T& value) {
 template <typename T>
 class ISorter {
 public:
-    virtual Sequence<T>* sort(Sequence<T>* seq, int (*cmp)(T, T)) = 0;
+    virtual Sequence<T>* sort(Sequence<T>& seq, int (*cmp)(T, T)) = 0;
     virtual ~ISorter() {}
 };
-# 12 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 13 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/HeapSorter.h" 1
 
 
@@ -104478,46 +106507,46 @@ public:
 template <typename T>
 class HeapSorter : public ISorter<T> {
 public:
-    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
-        int n = seq->GetLength();
+    Sequence<T>* sort(Sequence<T>& seq, int (*Compare)(T, T)) override {
+        int n = seq.GetLength();
 
         for (int i = n / 2 - 1; i >= 0; i--)
             heapify(seq, n, i, Compare);
 
         for (int i = n - 1; i >= 0; i--) {
 
-            T temp = seq->Get(0);
-            seq->Set(0, seq->Get(i));
-            seq->Set(i, temp);
+            T temp = seq.Get(0);
+            seq.Set(0, seq.Get(i));
+            seq.Set(i, temp);
 
             heapify(seq, i, 0, Compare);
         }
-
-        return seq;
+        Sequence<T>* returnSequence = &seq;
+        return returnSequence;
     }
 
 private:
-    void heapify(Sequence<T>* seq, int n, int i, int (*Compare)(T, T)) {
+    void heapify(Sequence<T>& seq, int n, int i, int (*Compare)(T, T)) {
         int largest = i;
         int left = 2 * i + 1;
         int right = 2 * i + 2;
 
-        if (left < n && Compare(seq->Get(left), seq->Get(largest)) > 0)
+        if (left < n && Compare(seq.Get(left), seq.Get(largest)) > 0)
             largest = left;
 
-        if (right < n && Compare(seq->Get(right), seq->Get(largest)) > 0)
+        if (right < n && Compare(seq.Get(right), seq.Get(largest)) > 0)
             largest = right;
 
         if (largest != i) {
-            T swap = seq->Get(i);
-            seq->Set(i, seq->Get(largest));
-            seq->Set(largest, swap);
+            T swap = seq.Get(i);
+            seq.Set(i, seq.Get(largest));
+            seq.Set(largest, swap);
 
             heapify(seq, n, largest, Compare);
         }
     }
 };
-# 13 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 14 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/MergeSorter.h" 1
 
 
@@ -104527,13 +106556,14 @@ private:
 template <typename T>
 class MergeSorter : public ISorter<T> {
 public:
-    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
-        mergeSort(seq, 0, seq->GetLength() - 1, Compare);
-        return seq;
+    Sequence<T>* sort(Sequence<T>& seq, int (*Compare)(T, T)) override {
+        mergeSort(seq, 0, seq.GetLength() - 1, Compare);
+        Sequence<T>* returnSequence = &seq;
+        return returnSequence;
     }
 
 private:
-    void mergeSort(Sequence<T>* seq, int left, int right, int (*Compare)(T, T)) {
+    void mergeSort(Sequence<T>& seq, int left, int right, int (*Compare)(T, T)) {
         if (left < right) {
             int mid = left + (right - left) / 2;
 
@@ -104544,12 +106574,12 @@ private:
         }
     }
 
-    void merge(Sequence<T>* seq, int left, int mid, int right, int (*Compare)(T, T)) {
+    void merge(Sequence<T>& seq, int left, int mid, int right, int (*Compare)(T, T)) {
         int n1 = mid - left + 1;
         int n2 = right - mid;
 
-        Sequence<T>* LeftSeq = seq->GetSubsequence(left, mid);
-        Sequence<T>* RightSeq = seq->GetSubsequence(mid + 1, right);
+        Sequence<T>* LeftSeq = seq.GetSubsequence(left, mid);
+        Sequence<T>* RightSeq = seq.GetSubsequence(mid + 1, right);
 
         int i = 0;
         int j = 0;
@@ -104557,23 +106587,23 @@ private:
 
         while (i < n1 && j < n2) {
             if (Compare(LeftSeq->Get(i), RightSeq->Get(j)) <= 0) {
-                seq->Set(k, LeftSeq->Get(i));
+                seq.Set(k, LeftSeq->Get(i));
                 i++;
             } else {
-                seq->Set(k, RightSeq->Get(j));
+                seq.Set(k, RightSeq->Get(j));
                 j++;
             }
             k++;
         }
 
         while (i < n1) {
-            seq->Set(k, LeftSeq->Get(i));
+            seq.Set(k, LeftSeq->Get(i));
             i++;
             k++;
         }
 
         while (j < n2) {
-            seq->Set(k, RightSeq->Get(j));
+            seq.Set(k, RightSeq->Get(j));
             j++;
             k++;
         }
@@ -104582,7 +106612,7 @@ private:
         delete RightSeq;
     }
 };
-# 14 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 15 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/BubbleSorter.h" 1
 
 
@@ -104592,26 +106622,27 @@ private:
 template <typename T>
 class BubbleSorter : public ISorter<T> {
 public:
-    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
+    Sequence<T>* sort(Sequence<T>& seq, int (*Compare)(T, T)) override {
         bubbleSort(seq, Compare);
-        return seq;
+        Sequence<T>* returnSequence = &seq;
+        return returnSequence;
     }
 
 private:
-    void bubbleSort(Sequence<T>* seq, int (*Compare)(T, T)) {
-        int n = seq->GetLength();
+    void bubbleSort(Sequence<T>& seq, int (*Compare)(T, T)) {
+        int n = seq.GetLength();
         for (int i = 0; i < n - 1; ++i) {
             for (int j = 0; j < n - i - 1; ++j) {
-                if (Compare(seq->Get(j), seq->Get(j + 1)) > 0) {
-                    T temp = seq->Get(j);
-                    seq->Set(j, seq->Get(j + 1));
-                    seq->Set(j + 1, temp);
+                if (Compare(seq.Get(j), seq.Get(j + 1)) > 0) {
+                    T temp = seq.Get(j);
+                    seq.Set(j, seq.Get(j + 1));
+                    seq.Set(j + 1, temp);
                 }
             }
         }
     }
 };
-# 15 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 16 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 # 1 "C:/Users/makar/CLionProjects/laba2/CountingSorter.h" 1
 
 
@@ -104621,24 +106652,25 @@ private:
 template <typename T>
 class CountingSorter : public ISorter<T> {
 public:
-    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
+    Sequence<T>* sort(Sequence<T>& seq, int (*Compare)(T, T)) override {
         countingSort(seq, Compare);
-        return seq;
+        Sequence<T>* returnSequence = &seq;
+        return returnSequence;
     }
 
 private:
-    void countingSort(Sequence<T>* seq, int (*Compare)(T, T)) {
-        int n = seq->GetLength();
+    void countingSort(Sequence<T>& seq, int (*Compare)(T, T)) {
+        int n = seq.GetLength();
 
-        T minElement = seq->Get(0);
-        T maxElement = seq->Get(0);
+        T minElement = seq.Get(0);
+        T maxElement = seq.Get(0);
 
         for (int i = 1; i < n; ++i) {
-            if (Compare(seq->Get(i), minElement) < 0) {
-                minElement = seq->Get(i);
+            if (Compare(seq.Get(i), minElement) < 0) {
+                minElement = seq.Get(i);
             }
-            if (Compare(seq->Get(i), maxElement) > 0) {
-                maxElement = seq->Get(i);
+            if (Compare(seq.Get(i), maxElement) > 0) {
+                maxElement = seq.Get(i);
             }
         }
 
@@ -104647,13 +106679,13 @@ private:
         int* count = new int[range]();
 
         for (int i = 0; i < n; ++i) {
-            count[seq->Get(i) - minElement]++;
+            count[seq.Get(i) - minElement]++;
         }
 
         int index = 0;
         for (int i = 0; i < range; ++i) {
             while (count[i] > 0) {
-                seq->Set(index, minElement + i);
+                seq.Set(index, minElement + i);
                 index++;
                 count[i]--;
             }
@@ -104662,7 +106694,304 @@ private:
         delete[] count;
     }
 };
-# 16 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 17 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
+# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 1
+
+
+
+
+
+# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 1
+# 9 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h"
+template<class T>
+class DynamicArray {
+private:
+    T* data;
+    size_t length;
+
+public:
+    DynamicArray();
+    DynamicArray(T* items, int count);
+    DynamicArray(int size);
+    DynamicArray(const DynamicArray<T>& dynamicArray);
+    ~DynamicArray();
+
+    T Get(int index) const;
+    void Set(int index, T value);
+    int GetSize() const;
+    void Resize(int newSize);
+
+    T& operator[](int index);
+    const T& operator[](int index) const;
+};
+
+# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.tpp" 1
+
+
+
+# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 1
+# 5 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.tpp" 2
+
+template<class T>
+T& DynamicArray<T>::operator[](int index) {
+    if (index < 0 || index >= length) {
+        throw std::out_of_range("Index out of range");
+    }
+    return data[index];
+}
+
+template<class T>
+const T& DynamicArray<T>::operator[](int index) const {
+    if (index < 0 || index >= length) {
+        throw std::out_of_range("Index out of range");
+    }
+    return data[index];
+}
+
+template<class T>
+DynamicArray<T>::DynamicArray() : data(nullptr), length(0) {}
+
+template<class T>
+DynamicArray<T>::DynamicArray(T* items, int count) : length(count) {
+    data = new T[length];
+    for (int i = 0; i < count; ++i) {
+        data[i] = items[i];
+    }
+}
+
+template<class T>
+DynamicArray<T>::DynamicArray(int size) : length(size) {
+    data = new T[length];
+}
+
+template<class T>
+DynamicArray<T>::DynamicArray(const DynamicArray<T>& dynamicArray)
+        : length(dynamicArray.length) {
+    data = new T[length];
+    for (size_t i = 0; i < length; ++i) {
+        data[i] = dynamicArray.data[i];
+    }
+}
+
+template<class T>
+DynamicArray<T>::~DynamicArray() {
+    delete[] data;
+}
+
+template<class T>
+T DynamicArray<T>::Get(int index) const {
+    if (index < 0 || index >= length) {
+        throw std::out_of_range("Index out of range");
+    }
+    return data[index];
+}
+
+template<class T>
+void DynamicArray<T>::Set(int index, T value) {
+    if (index < 0 || index >= length) {
+        throw std::out_of_range("Index out of range");
+    }
+    data[index] = value;
+}
+
+template<class T>
+int DynamicArray<T>::GetSize() const {
+    return length;
+}
+
+template<class T>
+void DynamicArray<T>::Resize(int newSize) {
+    if (newSize < 0) {
+        throw std::length_error("New size must be greater than or equal to zero.");
+    }
+
+    T* newData = (newSize > 0) ? new T[newSize] : nullptr;
+    int elementsToCopy = (newSize > length) ? length : newSize;
+
+
+    for (int i = 0; i < elementsToCopy; ++i) {
+        newData[i] = data[i];
+    }
+
+    delete[] data;
+    data = newData;
+    length = newSize;
+
+}
+# 32 "C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h" 2
+# 7 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 2
+
+
+
+
+template<class T>
+class ArraySequence : public Sequence<T> {
+private:
+    DynamicArray<T>* data;
+    int length;
+    int capacity;
+
+    void ensureCapacity(int minCapacity);
+
+public:
+    ArraySequence();
+    ArraySequence(const T* items, int count);
+    ArraySequence(const ArraySequence<T>& arraySequence);
+    ~ArraySequence();
+
+    T GetFirst() const override;
+    T GetLast() const override;
+    T Get(int index) const override;
+    Sequence<T>* GetSubsequence(int startIndex, int endIndex) const override;
+    int GetLength() const override;
+    void Append(const T& item) override;
+    void Prepend(const T& item) override;
+    void InsertAt(const T& item, int index) override;
+    void Set(int index, const T& item) override;
+    Sequence<T>* Concat(Sequence<T>* list) const override;
+};
+
+# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.tpp" 1
+
+
+
+# 1 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 1
+# 5 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.tpp" 2
+
+
+template<class T>
+ArraySequence<T>::ArraySequence() : data(new DynamicArray<T>(10)), length(0), capacity(10) {}
+
+template<class T>
+ArraySequence<T>::ArraySequence(const T* items, int count) : data(new DynamicArray<T>(count)), length(count), capacity(count) {
+    for (int i = 0; i < count; ++i) {
+        data->Set(i, items[i]);
+    }
+}
+
+template<class T>
+ArraySequence<T>::ArraySequence(const ArraySequence<T>& arraySequence)
+        : data(new DynamicArray<T>(arraySequence.capacity)), length(arraySequence.length), capacity(arraySequence.capacity) {
+    for (int i = 0; i < length; ++i) {
+        data->Set(i, arraySequence.data->Get(i));
+    }
+}
+
+template<class T>
+ArraySequence<T>::~ArraySequence() {
+    delete data;
+}
+
+template<class T>
+T ArraySequence<T>::GetFirst() const {
+    if (length == 0) {
+        throw std::out_of_range("Array is empty");
+    }
+    return data->Get(0);
+}
+
+template<class T>
+T ArraySequence<T>::GetLast() const {
+    if (length == 0) {
+        throw std::out_of_range("Array is empty");
+    }
+    return data->Get(length - 1);
+}
+
+template<class T>
+T ArraySequence<T>::Get(int index) const {
+    if (index < 0 || index >= length) {
+        throw std::out_of_range("Index out of range");
+    }
+    return data->Get(index);
+}
+
+template<class T>
+Sequence<T>* ArraySequence<T>::GetSubsequence(int startIndex, int endIndex) const {
+    if (startIndex < 0 || endIndex >= length || startIndex > endIndex) {
+        throw std::out_of_range("Index out of range");
+    }
+    int subLength = endIndex - startIndex + 1;
+    T* items = new T[subLength];
+    for (int i = 0; i < subLength; ++i) {
+        items[i] = data->Get(startIndex + i);
+    }
+    Sequence<T>* subsequence = new ArraySequence<T>(items, subLength);
+    delete[] items;
+    return subsequence;
+}
+
+template<class T>
+int ArraySequence<T>::GetLength() const {
+    return length;
+}
+
+template<class T>
+void ArraySequence<T>::ensureCapacity(int minCapacity) {
+    if (minCapacity > capacity) {
+        int newCapacity = capacity * 2;
+        if (newCapacity < minCapacity) {
+            newCapacity = minCapacity;
+        }
+        data->Resize(newCapacity);
+        capacity = newCapacity;
+    }
+}
+
+template<class T>
+void ArraySequence<T>::Append(const T& item) {
+    ensureCapacity(length + 1);
+    data->Set(length, item);
+    length++;
+}
+
+template<class T>
+void ArraySequence<T>::Prepend(const T& item) {
+    ensureCapacity(length + 1);
+    for (int i = length; i > 0; --i) {
+        data->Set(i, data->Get(i - 1));
+    }
+    data->Set(0, item);
+    length++;
+}
+
+template<class T>
+void ArraySequence<T>::InsertAt(const T& item, int index) {
+    if (index < 0 || index > length) {
+        throw std::out_of_range("Index out of range");
+    }
+    ensureCapacity(length + 1);
+    for (int i = length; i > index; --i) {
+        data->Set(i, data->Get(i - 1));
+    }
+    data->Set(index, item);
+    length++;
+}
+
+template<class T>
+void ArraySequence<T>::Set(int index, const T& item) {
+    if (index < 0 || index >= length) {
+        throw std::out_of_range("Index out of range");
+    }
+    data->Set(index, item);
+}
+
+template<class T>
+Sequence<T>* ArraySequence<T>::Concat(Sequence<T>* list) const {
+    int newLength = length + list->GetLength();
+    T* newArray = new T[newLength];
+    for (int i = 0; i < length; ++i) {
+        newArray[i] = data->Get(i);
+    }
+    for (int i = 0; i < list->GetLength(); ++i) {
+        newArray[length + i] = list->Get(i);
+    }
+    Sequence<T>* newSequence = new ArraySequence<T>(newArray, newLength);
+    delete[] newArray;
+    return newSequence;
+}
+# 39 "C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h" 2
+# 18 "C:/Users/makar/CLionProjects/laba2/test.cpp" 2
 
 namespace {
 
@@ -104752,6 +107081,7 @@ int compareInt(int a, int b) {
 
 void runFunctionalTests() {
     std::cout << "Running functional tests...\n";
+
 
     LinkedList<TestScenario> testScenarios;
     testScenarios.Append({"Random data", LinkedList<int>()});
@@ -104844,35 +107174,35 @@ void runFunctionalTests() {
                     delete[] dataArray;
                 }
 
-                sorterInfo.sorter->sort(seq, compareInt);
+                sorterInfo.sorter->sort(*seq, compareInt);
 
                 if (scenario.data.GetLength() == 0) {
                     
-# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 203 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                    (void) ((!!(
-# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 203 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                    seq->GetLength() == 0 && "Sorted empty sequence should have length 0."
-# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 203 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                    )) || (_assert(
-# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 203 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                    "seq->GetLength() == 0 && \"Sorted empty sequence should have length 0.\""
-# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
-                   ,"C:/Users/makar/CLionProjects/laba2/test.cpp",200),0))
-# 200 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 203 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+                   ,"C:/Users/makar/CLionProjects/laba2/test.cpp",203),0))
+# 203 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                                                                                                  ;
                 } else {
                     
-# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 205 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                    (void) ((!!(
-# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 205 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                    isSorted(seq, compareInt) && "Sequence is not sorted correctly."
-# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 205 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                    )) || (_assert(
-# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 205 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                    "isSorted(seq, compareInt) && \"Sequence is not sorted correctly.\""
-# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
-                   ,"C:/Users/makar/CLionProjects/laba2/test.cpp",202),0))
-# 202 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 205 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+                   ,"C:/Users/makar/CLionProjects/laba2/test.cpp",205),0))
+# 205 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                                                                                            ;
                 }
 
@@ -104910,7 +107240,7 @@ void runPerformanceTests() {
 
     sorters.Append({"HeapSorter", new HeapSorter<int>()});
     sorters.Append({"MergeSorter", new MergeSorter<int>()});
-    sorters.Append({"BubbleSorter", new BubbleSorter<int>()});
+
     sorters.Append({"CountingSorter", new CountingSorter<int>()});
 
     LinkedList<SequenceInfo> sequences;
@@ -104930,8 +107260,8 @@ void runPerformanceTests() {
             for (auto& seqInfo : sequences) {
                 for (auto& sorterInfo : sorters) {
                     double totalTime = 0.0;
-
                     LinkedList<int> data = generateData(size, genInfo.type, genInfo.sortedElements);
+
                     Sequence<int>* seq = nullptr;
                     if (data.GetLength() == 0) {
                         seq = seqInfo.createSequence(nullptr, 0);
@@ -104945,35 +107275,35 @@ void runPerformanceTests() {
                         delete[] dataArray;
                     }
                     auto start = std::chrono::high_resolution_clock::now();
-                    sorterInfo.sorter->sort(seq, compareInt);
+                    sorterInfo.sorter->sort(*seq, compareInt);
                     auto end = std::chrono::high_resolution_clock::now();
                     if (!data.GetLength()) {
                         
-# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 280 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                        (void) ((!!(
-# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 280 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                        seq->GetLength() == 0 && "Sorted empty sequence should have length 0."
-# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 280 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                        )) || (_assert(
-# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 280 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                        "seq->GetLength() == 0 && \"Sorted empty sequence should have length 0.\""
-# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
-                       ,"C:/Users/makar/CLionProjects/laba2/test.cpp",277),0))
-# 277 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 280 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+                       ,"C:/Users/makar/CLionProjects/laba2/test.cpp",280),0))
+# 280 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                                                                                                      ;
                     } else {
                         
-# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 282 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                        (void) ((!!(
-# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 282 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                        isSorted(seq, compareInt) && "Sequence is not sorted correctly."
-# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+# 282 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
                        )) || (_assert(
-# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 282 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                        "isSorted(seq, compareInt) && \"Sequence is not sorted correctly.\""
-# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
-                       ,"C:/Users/makar/CLionProjects/laba2/test.cpp",279),0))
-# 279 "C:/Users/makar/CLionProjects/laba2/test.cpp"
+# 282 "C:/Users/makar/CLionProjects/laba2/test.cpp" 3
+                       ,"C:/Users/makar/CLionProjects/laba2/test.cpp",282),0))
+# 282 "C:/Users/makar/CLionProjects/laba2/test.cpp"
                                                                                                ;
                     }
                     std::chrono::duration<double> duration = end - start;
@@ -104983,11 +107313,26 @@ void runPerformanceTests() {
                     double averageTime = totalTime;
                     performanceResults.Append({size, genInfo.name, sorterInfo.name, averageTime});
                     std::cout << "    " << sorterInfo.name << " with ArraySequence: "
-                              << averageTime << " seconds\n\n";
+                              << averageTime << " seconds\n";
                 }
             }
         }
     }
+
+
+    std::ofstream csvFile("performance_results.csv");
+    csvFile << "Data Size,Data Generator,Sorter,Average Time (seconds)\n";
+
+    for (const auto& result : performanceResults) {
+        csvFile << result.dataSize << ","
+                << result.dataGenerator << ","
+                << result.sorter << ","
+                << std::fixed << std::setprecision(6) << result.averageTime << "\n";
+    }
+
+    csvFile.close();
+    std::cout << "\nResults saved to 'performance_results.csv'.\n";
+
     for (auto& sorterInfo : sorters) {
         delete sorterInfo.sorter;
     }

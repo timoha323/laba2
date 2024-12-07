@@ -107,11 +107,6 @@ CMakeFiles\laba2.dir\test.cpp.obj.ddi: \
  C:/mingw64/include/c++/14.2.0/bits/uses_allocator_args.h \
  C:/mingw64/include/c++/14.2.0/tuple \
  C:/mingw64/include/c++/14.2.0/bits/ranges_util.h \
- C:/mingw64/include/c++/14.2.0/vector \
- C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h \
- C:/mingw64/include/c++/14.2.0/bits/stl_vector.h \
- C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h \
- C:/mingw64/include/c++/14.2.0/bits/vector.tcc \
  C:/mingw64/include/c++/14.2.0/iostream \
  C:/mingw64/include/c++/14.2.0/ostream C:/mingw64/include/c++/14.2.0/ios \
  C:/mingw64/include/c++/14.2.0/exception \
@@ -189,6 +184,11 @@ CMakeFiles\laba2.dir\test.cpp.obj.ddi: \
  C:/mingw64/include/c++/14.2.0/ratio \
  C:/mingw64/include/c++/14.2.0/sstream \
  C:/mingw64/include/c++/14.2.0/bits/sstream.tcc \
+ C:/mingw64/include/c++/14.2.0/vector \
+ C:/mingw64/include/c++/14.2.0/bits/stl_uninitialized.h \
+ C:/mingw64/include/c++/14.2.0/bits/stl_vector.h \
+ C:/mingw64/include/c++/14.2.0/bits/stl_bvector.h \
+ C:/mingw64/include/c++/14.2.0/bits/vector.tcc \
  C:/mingw64/include/c++/14.2.0/bits/shared_ptr.h \
  C:/mingw64/include/c++/14.2.0/bits/shared_ptr_base.h \
  C:/mingw64/include/c++/14.2.0/bits/allocated_ptr.h \
@@ -221,6 +221,10 @@ CMakeFiles\laba2.dir\test.cpp.obj.ddi: \
  C:/mingw64/include/c++/14.2.0/bits/stl_numeric.h \
  C:/mingw64/include/c++/14.2.0/pstl/glue_numeric_defs.h \
  C:/mingw64/include/c++/14.2.0/pstl/execution_defs.h \
+ C:/mingw64/include/c++/14.2.0/fstream \
+ C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/basic_file.h \
+ C:/mingw64/include/c++/14.2.0/x86_64-w64-mingw32/bits/c++io.h \
+ C:/mingw64/include/c++/14.2.0/bits/fstream.tcc \
  C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h \
  C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArraySmart.h \
  C:/Users/makar/CLionProjects/laba2/DataStructures/Sequence.h \
@@ -234,4 +238,9 @@ CMakeFiles\laba2.dir\test.cpp.obj.ddi: \
  C:/Users/makar/CLionProjects/laba2/HeapSorter.h \
  C:/Users/makar/CLionProjects/laba2/MergeSorter.h \
  C:/Users/makar/CLionProjects/laba2/BubbleSorter.h \
- C:/Users/makar/CLionProjects/laba2/CountingSorter.h
+ C:/Users/makar/CLionProjects/laba2/CountingSorter.h \
+ C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h \
+ C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.h \
+ C:/Users/makar/CLionProjects/laba2/DataStructures/DynamicArray.tpp \
+ C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.tpp \
+ C:/Users/makar/CLionProjects/laba2/DataStructures/ArraySequence.h

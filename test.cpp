@@ -4,6 +4,7 @@
 #include <chrono>
 #include <random>
 #include <vector>
+#include <fstream>
 #include "DataStructures/Sequence.h"
 #include "DataStructures/DynamicArraySmart.h"
 #include "DataStructures/LinkedListSmart.h"
@@ -13,6 +14,7 @@
 #include "MergeSorter.h"
 #include "BubbleSorter.h"
 #include "CountingSorter.h"
+#include "DataStructures/ArraySequence.h"
 
 namespace {
 
@@ -102,6 +104,7 @@ int compareInt(int a, int b) {
 
 void runFunctionalTests() {
     std::cout << "Running functional tests...\n";
+    //для 1 2 и 3 эл тесты функциональные
 
     LinkedList<TestScenario> testScenarios;
     testScenarios.Append({"Random data", LinkedList<int>()});
@@ -194,7 +197,7 @@ void runFunctionalTests() {
                     delete[] dataArray;
                 }
 
-                sorterInfo.sorter->sort(seq, compareInt);
+                sorterInfo.sorter->sort(*seq, compareInt);
 
                 if (scenario.data.GetLength() == 0) {
                     assert(seq->GetLength() == 0 && "Sorted empty sequence should have length 0.");
@@ -236,7 +239,7 @@ void runPerformanceTests() {
 
     sorters.Append({"HeapSorter", new HeapSorter<int>()});
     sorters.Append({"MergeSorter", new MergeSorter<int>()});
-    sorters.Append({"BubbleSorter", new BubbleSorter<int>()});
+    ///sorters.Append({"BubbleSorter", new BubbleSorter<int>()});
     sorters.Append({"CountingSorter", new CountingSorter<int>()});
 
     LinkedList<SequenceInfo> sequences;
@@ -256,8 +259,8 @@ void runPerformanceTests() {
             for (auto& seqInfo : sequences) {
                 for (auto& sorterInfo : sorters) {
                     double totalTime = 0.0;
-
                     LinkedList<int> data = generateData(size, genInfo.type, genInfo.sortedElements);
+
                     Sequence<int>* seq = nullptr;
                     if (data.GetLength() == 0) {
                         seq = seqInfo.createSequence(nullptr, 0);
@@ -271,7 +274,7 @@ void runPerformanceTests() {
                         delete[] dataArray;
                     }
                     auto start = std::chrono::high_resolution_clock::now();
-                    sorterInfo.sorter->sort(seq, compareInt);
+                    sorterInfo.sorter->sort(*seq, compareInt);
                     auto end = std::chrono::high_resolution_clock::now();
                     if (!data.GetLength()) {
                         assert(seq->GetLength() == 0 && "Sorted empty sequence should have length 0.");
@@ -285,11 +288,26 @@ void runPerformanceTests() {
                     double averageTime = totalTime;
                     performanceResults.Append({size, genInfo.name, sorterInfo.name, averageTime});
                     std::cout << "    " << sorterInfo.name << " with ArraySequence: "
-                              << averageTime << " seconds\n\n";
+                              << averageTime << " seconds\n";
                 }
             }
         }
     }
+
+    // Сохраняем результаты в CSV
+    std::ofstream csvFile("performance_results.csv");
+    csvFile << "Data Size,Data Generator,Sorter,Average Time (seconds)\n";
+
+    for (const auto& result : performanceResults) {
+        csvFile << result.dataSize << ","
+                << result.dataGenerator << ","
+                << result.sorter << ","
+                << std::fixed << std::setprecision(6) << result.averageTime << "\n";
+    }
+
+    csvFile.close();
+    std::cout << "\nResults saved to 'performance_results.csv'.\n";
+
     for (auto& sorterInfo : sorters) {
         delete sorterInfo.sorter;
     }

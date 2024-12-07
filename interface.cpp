@@ -169,7 +169,7 @@ void runInterface() {
 
         auto start = std::chrono::high_resolution_clock::now();
         try {
-            sorter->sort(seq.get(), compareInt);
+            sorter->sort(*seq, compareInt);
         } catch (const std::exception &e) {
             std::cout << "An error occurred during sorting: " << e.what() << "\n";
             continue;

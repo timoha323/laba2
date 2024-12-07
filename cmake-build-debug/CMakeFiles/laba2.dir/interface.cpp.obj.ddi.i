@@ -113250,11 +113250,10 @@ public:
     virtual ~Sequence() {}
 };
 # 5 "C:/Users/makar/CLionProjects/laba2/ISorter.h" 2
-
 template <typename T>
 class ISorter {
 public:
-    virtual Sequence<T>* sort(Sequence<T>* seq, int (*cmp)(T, T)) = 0;
+    virtual Sequence<T>* sort(Sequence<T>& seq, int (*cmp)(T, T)) = 0;
     virtual ~ISorter() {}
 };
 # 5 "C:/Users/makar/CLionProjects/laba2/BubbleSorter.h" 2
@@ -113262,20 +113261,21 @@ public:
 template <typename T>
 class BubbleSorter : public ISorter<T> {
 public:
-    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
+    Sequence<T>* sort(Sequence<T>& seq, int (*Compare)(T, T)) override {
         bubbleSort(seq, Compare);
-        return seq;
+        Sequence<T>* returnSequence = &seq;
+        return returnSequence;
     }
 
 private:
-    void bubbleSort(Sequence<T>* seq, int (*Compare)(T, T)) {
-        int n = seq->GetLength();
+    void bubbleSort(Sequence<T>& seq, int (*Compare)(T, T)) {
+        int n = seq.GetLength();
         for (int i = 0; i < n - 1; ++i) {
             for (int j = 0; j < n - i - 1; ++j) {
-                if (Compare(seq->Get(j), seq->Get(j + 1)) > 0) {
-                    T temp = seq->Get(j);
-                    seq->Set(j, seq->Get(j + 1));
-                    seq->Set(j + 1, temp);
+                if (Compare(seq.Get(j), seq.Get(j + 1)) > 0) {
+                    T temp = seq.Get(j);
+                    seq.Set(j, seq.Get(j + 1));
+                    seq.Set(j + 1, temp);
                 }
             }
         }
@@ -113289,12 +113289,11 @@ private:
 
 
 
-
 struct PerformanceResult {
-    int data_size;
-    std::string generator_name;
-    std::string sorter_name;
-    double average_time;
+    int dataSize;
+    std::string dataGenerator;
+    std::string sorter;
+    double averageTime;
 };
 
 void runTests();
@@ -113968,40 +113967,40 @@ Sequence<T>* ListSequence<T>::Concat(Sequence<T>* otherList) const {
 template <typename T>
 class HeapSorter : public ISorter<T> {
 public:
-    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
-        int n = seq->GetLength();
+    Sequence<T>* sort(Sequence<T>& seq, int (*Compare)(T, T)) override {
+        int n = seq.GetLength();
 
         for (int i = n / 2 - 1; i >= 0; i--)
             heapify(seq, n, i, Compare);
 
         for (int i = n - 1; i >= 0; i--) {
 
-            T temp = seq->Get(0);
-            seq->Set(0, seq->Get(i));
-            seq->Set(i, temp);
+            T temp = seq.Get(0);
+            seq.Set(0, seq.Get(i));
+            seq.Set(i, temp);
 
             heapify(seq, i, 0, Compare);
         }
-
-        return seq;
+        Sequence<T>* returnSequence = &seq;
+        return returnSequence;
     }
 
 private:
-    void heapify(Sequence<T>* seq, int n, int i, int (*Compare)(T, T)) {
+    void heapify(Sequence<T>& seq, int n, int i, int (*Compare)(T, T)) {
         int largest = i;
         int left = 2 * i + 1;
         int right = 2 * i + 2;
 
-        if (left < n && Compare(seq->Get(left), seq->Get(largest)) > 0)
+        if (left < n && Compare(seq.Get(left), seq.Get(largest)) > 0)
             largest = left;
 
-        if (right < n && Compare(seq->Get(right), seq->Get(largest)) > 0)
+        if (right < n && Compare(seq.Get(right), seq.Get(largest)) > 0)
             largest = right;
 
         if (largest != i) {
-            T swap = seq->Get(i);
-            seq->Set(i, seq->Get(largest));
-            seq->Set(largest, swap);
+            T swap = seq.Get(i);
+            seq.Set(i, seq.Get(largest));
+            seq.Set(largest, swap);
 
             heapify(seq, n, largest, Compare);
         }
@@ -114017,13 +114016,14 @@ private:
 template <typename T>
 class MergeSorter : public ISorter<T> {
 public:
-    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
-        mergeSort(seq, 0, seq->GetLength() - 1, Compare);
-        return seq;
+    Sequence<T>* sort(Sequence<T>& seq, int (*Compare)(T, T)) override {
+        mergeSort(seq, 0, seq.GetLength() - 1, Compare);
+        Sequence<T>* returnSequence = &seq;
+        return returnSequence;
     }
 
 private:
-    void mergeSort(Sequence<T>* seq, int left, int right, int (*Compare)(T, T)) {
+    void mergeSort(Sequence<T>& seq, int left, int right, int (*Compare)(T, T)) {
         if (left < right) {
             int mid = left + (right - left) / 2;
 
@@ -114034,12 +114034,12 @@ private:
         }
     }
 
-    void merge(Sequence<T>* seq, int left, int mid, int right, int (*Compare)(T, T)) {
+    void merge(Sequence<T>& seq, int left, int mid, int right, int (*Compare)(T, T)) {
         int n1 = mid - left + 1;
         int n2 = right - mid;
 
-        Sequence<T>* LeftSeq = seq->GetSubsequence(left, mid);
-        Sequence<T>* RightSeq = seq->GetSubsequence(mid + 1, right);
+        Sequence<T>* LeftSeq = seq.GetSubsequence(left, mid);
+        Sequence<T>* RightSeq = seq.GetSubsequence(mid + 1, right);
 
         int i = 0;
         int j = 0;
@@ -114047,23 +114047,23 @@ private:
 
         while (i < n1 && j < n2) {
             if (Compare(LeftSeq->Get(i), RightSeq->Get(j)) <= 0) {
-                seq->Set(k, LeftSeq->Get(i));
+                seq.Set(k, LeftSeq->Get(i));
                 i++;
             } else {
-                seq->Set(k, RightSeq->Get(j));
+                seq.Set(k, RightSeq->Get(j));
                 j++;
             }
             k++;
         }
 
         while (i < n1) {
-            seq->Set(k, LeftSeq->Get(i));
+            seq.Set(k, LeftSeq->Get(i));
             i++;
             k++;
         }
 
         while (j < n2) {
-            seq->Set(k, RightSeq->Get(j));
+            seq.Set(k, RightSeq->Get(j));
             j++;
             k++;
         }
@@ -114083,24 +114083,25 @@ private:
 template <typename T>
 class CountingSorter : public ISorter<T> {
 public:
-    Sequence<T>* sort(Sequence<T>* seq, int (*Compare)(T, T)) override {
+    Sequence<T>* sort(Sequence<T>& seq, int (*Compare)(T, T)) override {
         countingSort(seq, Compare);
-        return seq;
+        Sequence<T>* returnSequence = &seq;
+        return returnSequence;
     }
 
 private:
-    void countingSort(Sequence<T>* seq, int (*Compare)(T, T)) {
-        int n = seq->GetLength();
+    void countingSort(Sequence<T>& seq, int (*Compare)(T, T)) {
+        int n = seq.GetLength();
 
-        T minElement = seq->Get(0);
-        T maxElement = seq->Get(0);
+        T minElement = seq.Get(0);
+        T maxElement = seq.Get(0);
 
         for (int i = 1; i < n; ++i) {
-            if (Compare(seq->Get(i), minElement) < 0) {
-                minElement = seq->Get(i);
+            if (Compare(seq.Get(i), minElement) < 0) {
+                minElement = seq.Get(i);
             }
-            if (Compare(seq->Get(i), maxElement) > 0) {
-                maxElement = seq->Get(i);
+            if (Compare(seq.Get(i), maxElement) > 0) {
+                maxElement = seq.Get(i);
             }
         }
 
@@ -114109,13 +114110,13 @@ private:
         int* count = new int[range]();
 
         for (int i = 0; i < n; ++i) {
-            count[seq->Get(i) - minElement]++;
+            count[seq.Get(i) - minElement]++;
         }
 
         int index = 0;
         for (int i = 0; i < range; ++i) {
             while (count[i] > 0) {
-                seq->Set(index, minElement + i);
+                seq.Set(index, minElement + i);
                 index++;
                 count[i]--;
             }
@@ -114396,7 +114397,7 @@ void runInterface() {
 
         auto start = std::chrono::high_resolution_clock::now();
         try {
-            sorter->sort(seq.get(), compareInt);
+            sorter->sort(*seq, compareInt);
         } catch (const std::exception &e) {
             std::cout << "An error occurred during sorting: " << e.what() << "\n";
             continue;

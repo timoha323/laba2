@@ -3,13 +3,12 @@
 #define TEST_H
 
 #include <string>
-#include <vector>
 
 struct PerformanceResult {
-    int data_size;
-    std::string generator_name;
-    std::string sorter_name;
-    double average_time;
+    int dataSize;
+    std::string dataGenerator;
+    std::string sorter;
+    double averageTime;
 };
 
 void runTests();
