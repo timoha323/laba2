@@ -242,6 +242,12 @@ CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//No help, variable specified on the command line.
+Python3_EXECUTABLE:UNINITIALIZED=C:/Users/makar/AppData/Local/Programs/Python/Python37-32/python.exe
+
+//No help, variable specified on the command line.
+Python_EXECUTABLE:UNINITIALIZED=C:/Users/makar/AppData/Local/Programs/Python/Python37-32/python.exe
+
 //Value Computed by CMake
 laba2_BINARY_DIR:STATIC=C:/Users/makar/CLionProjects/laba2/cmake-build-debug
 

@@ -107319,7 +107319,6 @@ void runPerformanceTests() {
         }
     }
 
-
     std::ofstream csvFile("performance_results.csv");
     csvFile << "Data Size,Data Generator,Sorter,Average Time (seconds)\n";
 
@@ -107337,6 +107336,9 @@ void runPerformanceTests() {
         delete sorterInfo.sorter;
     }
 
+    if (system("python3 generate_plots.py")) {
+        std::cout << "Graphics created successfully\n";
+    }
     std::cout << "\nPerformance tests completed.\n";
 }
 

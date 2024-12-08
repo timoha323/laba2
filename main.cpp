@@ -1,7 +1,6 @@
 #include "interface.h"
 
-//обработка файлов
-//графики
+//сортировка файлов
 
 int main() {
     runInterface();
