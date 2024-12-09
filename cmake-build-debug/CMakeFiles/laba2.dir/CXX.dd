@@ -7,3 +7,5 @@ build CMakeFiles/laba2.dir/test.cpp.obj: dyndep
 
 build CMakeFiles/laba2.dir/smart_pointers/Tests.cpp.obj: dyndep
 
+build CMakeFiles/laba2.dir/fileSorting.cpp.obj: dyndep
+

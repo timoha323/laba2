@@ -19,4 +19,6 @@ add_executable(laba2 main.cpp
         DataStructures/DynamicArraySmart.h
         DataStructures/ArraySequence.h
         DataStructures/ImmutableSequence.h
-        CountingSorter.h)
+        CountingSorter.h
+        fileSorting.h
+        fileSorting.cpp)
