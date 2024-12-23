@@ -76071,19 +76071,23 @@ void FileSorting::showData() {
 void FileSorting::HeapSort() {
     sorter_ = UniquePtr<ISorter<int>>(new HeapSorter<int>());
     sorter_->sort(ids_, compareInt);
+    showData();
 }
 void FileSorting::MergeSort() {
     sorter_ = UniquePtr<ISorter<int>>(new MergeSorter<int>());
     sorter_->sort(ids_, compareInt);
+    showData();
 }
 void FileSorting::BubbleSort() {
     sorter_ = UniquePtr<ISorter<int>>(new BubbleSorter<int>());
     sorter_->sort(ids_, compareInt);
+    showData();
 }
 
 void FileSorting::CountingSort() {
     sorter_ = UniquePtr<ISorter<int>>(new CountingSorter<int>());
     sorter_->sort(ids_, compareInt);
+    showData();
 }
 
 

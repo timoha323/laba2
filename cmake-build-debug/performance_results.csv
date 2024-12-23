@@ -1,55 +1,91 @@
 Data Size,Data Generator,Sorter,Average Time (seconds)
-10000,Random,HeapSorter,0.004033
-10000,Random,MergeSorter,0.006053
-10000,Random,CountingSorter,0.001796
-10000,Reverse Sorted,HeapSorter,0.003556
-10000,Reverse Sorted,MergeSorter,0.004953
-10000,Reverse Sorted,CountingSorter,0.000188
-10000,Partially Sorted (1 sorted),HeapSorter,0.003971
-10000,Partially Sorted (1 sorted),MergeSorter,0.005722
-10000,Partially Sorted (1 sorted),CountingSorter,0.002202
-10000,Partially Sorted (2 sorted),HeapSorter,0.003947
-10000,Partially Sorted (2 sorted),MergeSorter,0.005722
-10000,Partially Sorted (2 sorted),CountingSorter,0.002124
-10000,Partially Sorted (3 sorted),HeapSorter,0.003956
-10000,Partially Sorted (3 sorted),MergeSorter,0.005699
-10000,Partially Sorted (3 sorted),CountingSorter,0.002031
-10000,Already Sorted,HeapSorter,0.003804
-10000,Already Sorted,MergeSorter,0.004803
-10000,Already Sorted,CountingSorter,0.000201
-50000,Random,HeapSorter,0.023873
-50000,Random,MergeSorter,0.032636
-50000,Random,CountingSorter,0.003467
-50000,Reverse Sorted,HeapSorter,0.022001
-50000,Reverse Sorted,MergeSorter,0.027310
-50000,Reverse Sorted,CountingSorter,0.001046
-50000,Partially Sorted (1 sorted),HeapSorter,0.024057
-50000,Partially Sorted (1 sorted),MergeSorter,0.032901
-50000,Partially Sorted (1 sorted),CountingSorter,0.003372
-50000,Partially Sorted (2 sorted),HeapSorter,0.024916
-50000,Partially Sorted (2 sorted),MergeSorter,0.032397
-50000,Partially Sorted (2 sorted),CountingSorter,0.003671
-50000,Partially Sorted (3 sorted),HeapSorter,0.024231
-50000,Partially Sorted (3 sorted),MergeSorter,0.033645
-50000,Partially Sorted (3 sorted),CountingSorter,0.003618
-50000,Already Sorted,HeapSorter,0.025425
-50000,Already Sorted,MergeSorter,0.026370
-50000,Already Sorted,CountingSorter,0.001051
-100000,Random,HeapSorter,0.054137
-100000,Random,MergeSorter,0.064757
-100000,Random,CountingSorter,0.004901
-100000,Reverse Sorted,HeapSorter,0.049780
-100000,Reverse Sorted,MergeSorter,0.054596
-100000,Reverse Sorted,CountingSorter,0.001927
-100000,Partially Sorted (1 sorted),HeapSorter,0.051789
-100000,Partially Sorted (1 sorted),MergeSorter,0.068816
-100000,Partially Sorted (1 sorted),CountingSorter,0.005506
-100000,Partially Sorted (2 sorted),HeapSorter,0.052437
-100000,Partially Sorted (2 sorted),MergeSorter,0.065309
-100000,Partially Sorted (2 sorted),CountingSorter,0.005092
-100000,Partially Sorted (3 sorted),HeapSorter,0.052226
-100000,Partially Sorted (3 sorted),MergeSorter,0.068675
-100000,Partially Sorted (3 sorted),CountingSorter,0.004739
-100000,Already Sorted,HeapSorter,0.051106
-100000,Already Sorted,MergeSorter,0.055945
-100000,Already Sorted,CountingSorter,0.002068
+20000,Random,HeapSorter,0.007865
+20000,Random,MergeSorter,0.012155
+20000,Random,CountingSorter,0.002238
+20000,Reverse Sorted,HeapSorter,0.007009
+20000,Reverse Sorted,MergeSorter,0.010187
+20000,Reverse Sorted,CountingSorter,0.000368
+20000,Partially Sorted (1 sorted),HeapSorter,0.007936
+20000,Partially Sorted (1 sorted),MergeSorter,0.011641
+20000,Partially Sorted (1 sorted),CountingSorter,0.002119
+20000,Partially Sorted (2 sorted),HeapSorter,0.007850
+20000,Partially Sorted (2 sorted),MergeSorter,0.011987
+20000,Partially Sorted (2 sorted),CountingSorter,0.002100
+20000,Partially Sorted (3 sorted),HeapSorter,0.007832
+20000,Partially Sorted (3 sorted),MergeSorter,0.011585
+20000,Partially Sorted (3 sorted),CountingSorter,0.001978
+20000,Already Sorted,HeapSorter,0.007867
+20000,Already Sorted,MergeSorter,0.009478
+20000,Already Sorted,CountingSorter,0.000431
+40000,Random,HeapSorter,0.017075
+40000,Random,MergeSorter,0.024788
+40000,Random,CountingSorter,0.003019
+40000,Reverse Sorted,HeapSorter,0.015154
+40000,Reverse Sorted,MergeSorter,0.020138
+40000,Reverse Sorted,CountingSorter,0.000754
+40000,Partially Sorted (1 sorted),HeapSorter,0.016949
+40000,Partially Sorted (1 sorted),MergeSorter,0.024173
+40000,Partially Sorted (1 sorted),CountingSorter,0.003036
+40000,Partially Sorted (2 sorted),HeapSorter,0.017453
+40000,Partially Sorted (2 sorted),MergeSorter,0.025103
+40000,Partially Sorted (2 sorted),CountingSorter,0.003023
+40000,Partially Sorted (3 sorted),HeapSorter,0.016857
+40000,Partially Sorted (3 sorted),MergeSorter,0.024227
+40000,Partially Sorted (3 sorted),CountingSorter,0.002813
+40000,Already Sorted,HeapSorter,0.016037
+40000,Already Sorted,MergeSorter,0.019697
+40000,Already Sorted,CountingSorter,0.000774
+60000,Random,HeapSorter,0.033856
+60000,Random,MergeSorter,0.035632
+60000,Random,CountingSorter,0.003567
+60000,Reverse Sorted,HeapSorter,0.024115
+60000,Reverse Sorted,MergeSorter,0.028150
+60000,Reverse Sorted,CountingSorter,0.001130
+60000,Partially Sorted (1 sorted),HeapSorter,0.026510
+60000,Partially Sorted (1 sorted),MergeSorter,0.035052
+60000,Partially Sorted (1 sorted),CountingSorter,0.003290
+60000,Partially Sorted (2 sorted),HeapSorter,0.027177
+60000,Partially Sorted (2 sorted),MergeSorter,0.035453
+60000,Partially Sorted (2 sorted),CountingSorter,0.003500
+60000,Partially Sorted (3 sorted),HeapSorter,0.026765
+60000,Partially Sorted (3 sorted),MergeSorter,0.035791
+60000,Partially Sorted (3 sorted),CountingSorter,0.003306
+60000,Already Sorted,HeapSorter,0.027418
+60000,Already Sorted,MergeSorter,0.032848
+60000,Already Sorted,CountingSorter,0.001140
+80000,Random,HeapSorter,0.036635
+80000,Random,MergeSorter,0.050528
+80000,Random,CountingSorter,0.004309
+80000,Reverse Sorted,HeapSorter,0.032614
+80000,Reverse Sorted,MergeSorter,0.040801
+80000,Reverse Sorted,CountingSorter,0.001484
+80000,Partially Sorted (1 sorted),HeapSorter,0.036018
+80000,Partially Sorted (1 sorted),MergeSorter,0.049881
+80000,Partially Sorted (1 sorted),CountingSorter,0.004886
+80000,Partially Sorted (2 sorted),HeapSorter,0.037205
+80000,Partially Sorted (2 sorted),MergeSorter,0.051644
+80000,Partially Sorted (2 sorted),CountingSorter,0.004164
+80000,Partially Sorted (3 sorted),HeapSorter,0.036214
+80000,Partially Sorted (3 sorted),MergeSorter,0.050136
+80000,Partially Sorted (3 sorted),CountingSorter,0.004123
+80000,Already Sorted,HeapSorter,0.035298
+80000,Already Sorted,MergeSorter,0.042874
+80000,Already Sorted,CountingSorter,0.001604
+100000,Random,HeapSorter,0.046860
+100000,Random,MergeSorter,0.081692
+100000,Random,CountingSorter,0.004645
+100000,Reverse Sorted,HeapSorter,0.041937
+100000,Reverse Sorted,MergeSorter,0.086718
+100000,Reverse Sorted,CountingSorter,0.001813
+100000,Partially Sorted (1 sorted),HeapSorter,0.046268
+100000,Partially Sorted (1 sorted),MergeSorter,0.183594
+100000,Partially Sorted (1 sorted),CountingSorter,0.004608
+100000,Partially Sorted (2 sorted),HeapSorter,0.048107
+100000,Partially Sorted (2 sorted),MergeSorter,0.161630
+100000,Partially Sorted (2 sorted),CountingSorter,0.004972
+100000,Partially Sorted (3 sorted),HeapSorter,0.048805
+100000,Partially Sorted (3 sorted),MergeSorter,0.062468
+100000,Partially Sorted (3 sorted),CountingSorter,0.004691
+100000,Already Sorted,HeapSorter,0.045082
+100000,Already Sorted,MergeSorter,0.049538
+100000,Already Sorted,CountingSorter,0.002041

@@ -34,7 +34,7 @@ struct GeneratorInfo {
 
 struct TestScenario {
     std::string description;
-    LinkedList<int> data;
+    std::vector<int> data;
 };
 
 struct SorterInfo {
@@ -57,8 +57,8 @@ bool isSorted(Sequence<T>* seq, int (*cmp)(T, T)) {
     return true;
 }
 
-LinkedList<int> generateData(int size, DataType type, int sortedElements = 0) {
-    LinkedList<int> data;
+std::vector<int> generateData(int size, DataType type, int sortedElements = 0) {
+    std::vector<int> data;
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(1, 1000000);
@@ -66,25 +66,25 @@ LinkedList<int> generateData(int size, DataType type, int sortedElements = 0) {
     switch (type) {
         case DataType::RANDOM:
             for (int i = 0; i < size; ++i) {
-                data.Append(dis(gen));
+                data.push_back(dis(gen));
             }
         break;
         case DataType::REVERSE:
             for (int i = 0; i < size; ++i) {
-                data.Append(size - i);
+                data.push_back(size - i);
             }
         break;
         case DataType::PARTIAL_SORTED:
             for (int i = 0; i < sortedElements && i < size; ++i) {
-                data.Append(i);
+                data.push_back(i);
             }
-        for (int i = sortedElements; i < size; ++i) {
-            data.Append(dis(gen));
-        }
+            for (int i = sortedElements; i < size; ++i) {
+                data.push_back(dis(gen));
+            }
         break;
         case DataType::ALREADY_SORTED:
             for (int i = 0; i < size; ++i) {
-                data.Append(i);
+                data.push_back(i);
             }
         break;
         case DataType::EMPTY:
@@ -104,102 +104,48 @@ int compareInt(int a, int b) {
 
 void runFunctionalTests() {
     std::cout << "Running functional tests...\n";
-    //для 1 2 и 3 эл тесты функциональные
 
-    LinkedList<TestScenario> testScenarios;
-    testScenarios.Append({"Random data", LinkedList<int>()});
-    testScenarios.Append({"Reverse sorted data", LinkedList<int>()});
-    testScenarios.Append({"Partially sorted data (1 element sorted)", LinkedList<int>()});
-    testScenarios.Append({"Partially sorted data (2 elements sorted)", LinkedList<int>()});
-    testScenarios.Append({"Partially sorted data (3 elements sorted)", LinkedList<int>()});
-    testScenarios.Append({"Already sorted data", LinkedList<int>()});
-    testScenarios.Append({"Empty data", LinkedList<int>()});
+    std::vector<TestScenario> testScenarios = {
+        {"Random data", {5, 3, 8, 1, 9, 2}},
+        {"Reverse sorted data", {9, 8, 7, 6, 5, 4, 3, 2, 1}},
+        {"Partially sorted data (1 element sorted)", {1, 3, 8, 6, 5, 2}},
+        {"Partially sorted data (2 elements sorted)", {1, 2, 8, 6, 5, 3}},
+        {"Partially sorted data (3 elements sorted)", {1, 2, 3, 6, 5, 4}},
+        {"Already sorted data", {1, 2, 3, 4, 5, 6}},
+        {"Empty data", {}}
+    };
 
-    testScenarios[0].data.Append(5);
-    testScenarios[0].data.Append(3);
-    testScenarios[0].data.Append(8);
-    testScenarios[0].data.Append(1);
-    testScenarios[0].data.Append(9);
-    testScenarios[0].data.Append(2);
+    std::vector<SorterInfo> sorters = {
+        {"HeapSorter", new HeapSorter<int>()},
+        {"MergeSorter", new MergeSorter<int>()},
+        {"BubbleSorter", new BubbleSorter<int>()}
+    };
 
-    testScenarios[1].data.Append(9);
-    testScenarios[1].data.Append(8);
-    testScenarios[1].data.Append(7);
-    testScenarios[1].data.Append(6);
-    testScenarios[1].data.Append(5);
-    testScenarios[1].data.Append(4);
-    testScenarios[1].data.Append(3);
-    testScenarios[1].data.Append(2);
-    testScenarios[1].data.Append(1);
+    std::vector<SequenceInfo> sequences = {
+        {"ArraySequence", [](const int* data, int size) -> Sequence<int>* {
+            return new DynamicArraySmart<int>(data, size);
+        }},
+        {"ListSequence", [](const int* data, int size) -> Sequence<int>* {
+            return new LinkedListSmart<int>(data, size);
+        }}
+    };
 
-    testScenarios[2].data.Append(1);
-    testScenarios[2].data.Append(3);
-    testScenarios[2].data.Append(8);
-    testScenarios[2].data.Append(6);
-    testScenarios[2].data.Append(5);
-    testScenarios[2].data.Append(2);
-
-    testScenarios[3].data.Append(1);
-    testScenarios[3].data.Append(2);
-    testScenarios[3].data.Append(8);
-    testScenarios[3].data.Append(6);
-    testScenarios[3].data.Append(5);
-    testScenarios[3].data.Append(3);
-
-    testScenarios[4].data.Append(1);
-    testScenarios[4].data.Append(2);
-    testScenarios[4].data.Append(3);
-    testScenarios[4].data.Append(6);
-    testScenarios[4].data.Append(5);
-    testScenarios[4].data.Append(4);
-
-    testScenarios[5].data.Append(1);
-    testScenarios[5].data.Append(2);
-    testScenarios[5].data.Append(3);
-    testScenarios[5].data.Append(4);
-    testScenarios[5].data.Append(5);
-    testScenarios[5].data.Append(6);
-
-    testScenarios[6].data.Clear();
-
-    LinkedList<SorterInfo> sorters;
-    sorters.Append({"HeapSorter", new HeapSorter<int>()});
-    sorters.Append({"MergeSorter", new MergeSorter<int>()});
-    sorters.Append({"BubbleSorter", new BubbleSorter<int>()});
-
-    LinkedList<SequenceInfo> sequences;
-    sequences.Append({"ArraySequence", [](const int* data, int size) -> Sequence<int>* {
-        return new DynamicArraySmart <int>(data, size);
-    }});
-    sequences.Append({"ListSequence", [](const int* data, int size) -> Sequence<int>* {
-        return new LinkedListSmart<int>(data, size);
-    }});
-
-    for (auto scenarioIt = testScenarios.begin(); scenarioIt != testScenarios.end(); ++scenarioIt) {
-        const auto& scenario = *scenarioIt;
+    for (const auto& scenario : testScenarios) {
         std::cout << "Testing: " << scenario.description << "\n";
 
-        for (auto seqInfoIt = sequences.begin(); seqInfoIt != sequences.end(); ++seqInfoIt) {
-            const auto& seqInfo = *seqInfoIt;
-            for (auto sorterIt = sorters.begin(); sorterIt != sorters.end(); ++sorterIt) {
-                const auto& sorterInfo = *sorterIt;
+        for (const auto& seqInfo : sequences) {
+            for (const auto& sorterInfo : sorters) {
 
                 Sequence<int>* seq = nullptr;
-                if (scenario.data.GetLength() == 0) {
+                if (scenario.data.empty()) {
                     seq = seqInfo.createSequence(nullptr, 0);
                 } else {
-                    int* dataArray = new int[scenario.data.GetLength()];
-                    int i = 0;
-                    for (auto it = scenario.data.begin(); it != scenario.data.end(); ++it) {
-                        dataArray[i++] = *it;
-                    }
-                    seq = seqInfo.createSequence(dataArray, scenario.data.GetLength());
-                    delete[] dataArray;
+                    seq = seqInfo.createSequence(scenario.data.data(), scenario.data.size());
                 }
 
                 sorterInfo.sorter->sort(*seq, compareInt);
 
-                if (scenario.data.GetLength() == 0) {
+                if (scenario.data.empty()) {
                     assert(seq->GetLength() == 0 && "Sorted empty sequence should have length 0.");
                 } else {
                     assert(isSorted(seq, compareInt) && "Sequence is not sorted correctly.");
@@ -210,73 +156,80 @@ void runFunctionalTests() {
         }
     }
 
-    for (auto sorterIt = sorters.begin(); sorterIt != sorters.end(); ++sorterIt) {
-        delete sorterIt->sorter;
+    for (const auto& sorterInfo : sorters) {
+        delete sorterInfo.sorter;
     }
 
     std::cout << "Functional tests passed.\n";
 }
 
-void runPerformanceTests() {
+void runPerformanceTests(const int& size) {
     std::cout << "Running performance tests...\n";
-    LinkedList<int> sizes;
+    std::vector<int> sizes = {20000, 40000, 60000, 80000, 100000};
+    if (size < 0) {
+        std::cout << "Size must be positive.\n";
+        return;
+    }
+    if(size) {
+        sizes = {size, size*2, size*4, size*8, size*16};
+    }
 
-    sizes.Append(10000);
-    sizes.Append(50000);
-    sizes.Append(100000);
+    std::vector<GeneratorInfo> generators = {
+        {"Random", DataType::RANDOM, 0},
+        {"Reverse Sorted", DataType::REVERSE, 0},
+        {"Partially Sorted (1 sorted)", DataType::PARTIAL_SORTED, 1},
+        {"Partially Sorted (2 sorted)", DataType::PARTIAL_SORTED, 2},
+        {"Partially Sorted (3 sorted)", DataType::PARTIAL_SORTED, 3},
+        {"Already Sorted", DataType::ALREADY_SORTED, 0},
+        {"Empty", DataType::EMPTY, 0}
+    };
 
-    LinkedList<GeneratorInfo> generators;
+    std::vector<SorterInfo> sorters = {
+        {"HeapSorter", new HeapSorter<int>()},
+        {"MergeSorter", new MergeSorter<int>()},
+        {"CountingSorter", new CountingSorter<int>()},
+        {"BubbleSorter", new BubbleSorter<int>()}
+    };
 
-    generators.Append({"Random", DataType::RANDOM, 0});
-    generators.Append({"Reverse Sorted", DataType::REVERSE, 0});
-    generators.Append({"Partially Sorted (1 sorted)", DataType::PARTIAL_SORTED, 1});
-    generators.Append({"Partially Sorted (2 sorted)", DataType::PARTIAL_SORTED, 2});
-    generators.Append({"Partially Sorted (3 sorted)", DataType::PARTIAL_SORTED, 3});
-    generators.Append({"Already Sorted", DataType::ALREADY_SORTED, 0});
-    generators.Append({"Empty", DataType::EMPTY, 0});
+    std::vector<SequenceInfo> sequences = {
+        {"ArraySequence", [](const int* data, int size) -> Sequence<int>* {
+            return new DynamicArraySmart<int>(data, size);
+        }}
+    };
 
-    LinkedList<SorterInfo> sorters;
+    struct PerformanceResult {
+        int dataSize;
+        std::string dataGenerator;
+        std::string sorter;
+        double averageTime;
+    };
 
-    sorters.Append({"HeapSorter", new HeapSorter<int>()});
-    sorters.Append({"MergeSorter", new MergeSorter<int>()});
-    ///sorters.Append({"BubbleSorter", new BubbleSorter<int>()});
-    sorters.Append({"CountingSorter", new CountingSorter<int>()});
+    std::vector<PerformanceResult> performanceResults;
 
-    LinkedList<SequenceInfo> sequences;
-
-    sequences.Append({"ArraySequence", [](const int* data, int size) -> Sequence<int>* {
-        return new DynamicArraySmart<int>(data, size);
-    }});
-
-    LinkedList<PerformanceResult> performanceResults;
-
-    for (auto sizeIt = sizes.begin(); sizeIt != sizes.end(); ++sizeIt) {
-        int size = *sizeIt;
+    for (int size : sizes) {
         std::cout << "\nData Size: " << size << " elements\n";
-        for (auto& genInfo : generators) {
+        for (const auto& genInfo : generators) {
             if (genInfo.type == DataType::EMPTY && size != 0) continue;
             std::cout << "  Data Generator: " << genInfo.name << "\n";
-            for (auto& seqInfo : sequences) {
-                for (auto& sorterInfo : sorters) {
+            for (const auto& seqInfo : sequences) {
+                for (const auto& sorterInfo : sorters) {
                     double totalTime = 0.0;
-                    LinkedList<int> data = generateData(size, genInfo.type, genInfo.sortedElements);
+                    std::vector<int> data = generateData(size, genInfo.type, genInfo.sortedElements);
 
                     Sequence<int>* seq = nullptr;
-                    if (data.GetLength() == 0) {
+                    if (data.empty()) {
                         seq = seqInfo.createSequence(nullptr, 0);
                     } else {
-                        int* dataArray = new int[data.GetLength()];
-                        int i = 0;
-                        for (auto it = data.begin(); it != data.end(); ++it) {
-                            dataArray[i++] = *it;
-                        }
-                        seq = seqInfo.createSequence(dataArray, data.GetLength());
-                        delete[] dataArray;
+                        seq = seqInfo.createSequence(data.data(), data.size());
+                    }
+                    if (size >= 10000 && sorterInfo.name == "BubbleSorter") {
+                        std::cout << "\nToo much for bubble sort\n";
+                        continue;
                     }
                     auto start = std::chrono::high_resolution_clock::now();
                     sorterInfo.sorter->sort(*seq, compareInt);
                     auto end = std::chrono::high_resolution_clock::now();
-                    if (!data.GetLength()) {
+                    if (data.empty()) {
                         assert(seq->GetLength() == 0 && "Sorted empty sequence should have length 0.");
                     } else {
                         assert(isSorted(seq, compareInt) && "Sequence is not sorted correctly.");
@@ -286,7 +239,7 @@ void runPerformanceTests() {
                     delete seq;
 
                     double averageTime = totalTime;
-                    performanceResults.Append({size, genInfo.name, sorterInfo.name, averageTime});
+                    performanceResults.push_back({size, genInfo.name, sorterInfo.name, averageTime});
                     std::cout << "    " << sorterInfo.name << " with ArraySequence: "
                               << averageTime << " seconds\n";
                 }
@@ -307,17 +260,20 @@ void runPerformanceTests() {
     csvFile.close();
     std::cout << "\nResults saved to 'performance_results.csv'.\n";
 
-    for (auto& sorterInfo : sorters) {
+    for (const auto& sorterInfo : sorters) {
         delete sorterInfo.sorter;
     }
 
-    if (system("python3 generate_plots.py")) {
+    if (system("python3 ../py_script.py")) {
         std::cout << "Graphics created successfully\n";
     }
     std::cout << "\nPerformance tests completed.\n";
 }
 
 void runTests() {
+    int size;
+    std::cout << "\nENTER SIZE FOR TEST DATA (if u can't imagine enter 0)\nP.S. it will be doubled five times\n";
+    std::cin >> size;
     runFunctionalTests();
-    runPerformanceTests();
+    runPerformanceTests(size);
 }

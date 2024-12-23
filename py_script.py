@@ -17,5 +17,5 @@ for generator in generators:
     plt.ylabel("Average Time (seconds)")
     plt.legend(title="Sorter")
     plt.grid(True)
-    plt.savefig(f"plot_{generator.replace(' ', '_').replace('(', '').replace(')', '')}.png")
+    plt.savefig(f"../plot_{generator.replace(' ', '_').replace('(', '').replace(')', '')}.png")
     plt.close()

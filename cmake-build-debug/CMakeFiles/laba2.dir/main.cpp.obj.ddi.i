@@ -74651,8 +74651,6 @@ public:
 };
 # 3 "C:/Users/makar/CLionProjects/laba2/main.cpp" 2
 
-
-
 int main() {
     try {
         FileSorting fileSorting("peoples.txt");
